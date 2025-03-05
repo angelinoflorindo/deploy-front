@@ -5,9 +5,10 @@ import Image from "next/image";
 const Header = () => {
     return (
 
-        <header className="h-14 bg-blue-600 text-white flex items-center justify-center font-bold shadow-md">
+        <header className="h-15 bg-white  p-[20px] flex items-center justify-start font-bold">
             
-            <span className="text-lg">🚀 Minha Startup</span>
+            <Image src="/img/logo.png" alt="Onix Corporation"  width={30} height={30} />
+            <span className="text-lg p-[5px]"> Onix</span>
         
         </header>
     );

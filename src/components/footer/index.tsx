@@ -1,21 +1,21 @@
+import Image from "next/image";
+import global from  "@/modules/global.module.css"
+import Link from "next/link";
 const Footer = () => {
-    return (
+  return (
 
-        <footer className="h-14 bg-white flex items-center justify-around shadow-md border-t">
-        <button className="flex flex-col items-center text-gray-600 hover:text-blue-600">
-          
-          <span className="text-xs">Home</span>
-        </button>
-        <button className="flex flex-col items-center text-gray-600 hover:text-blue-600">
-       
-          <span className="text-xs">Crédito</span>
-        </button>
-        <button className="flex flex-col items-center text-gray-600 hover:text-blue-600">
-          
-          <span className="text-xs">Config</span>
-        </button>
-      </footer>
-    );
+    <footer className={global.footer}  >
+      <Link href="" className={global.footerButton}>
+        <Image src="/img/home.png" width={25} height={25} alt="imagem" className={global.footerImagem}  />
+      </Link>
+      <Link href="" className={global.footerButton}>
+        <Image src="/img/credit.png" width={25} height={25} alt="imagem" className={global.footerImagem} />
+      </Link>
+      <Link  href="" className={global.footerButton}>
+        <Image src="/img/ferramenta.png" width={25} height={25} alt="imagem" className={global.footerImagem}/>
+      </Link>
+    </footer>
+  );
 };
 
 export default Footer;

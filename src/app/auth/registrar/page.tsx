@@ -1,8 +1,8 @@
 'use client'
 
 import React from "react";
-import styles from "../../../modules/Login.module.css"
-import Image from "next/image";
+import styles from "@/modules/Login.module.css"
+import Header from "@/components/header";
 
 
 import { useState } from "react";
@@ -10,12 +10,14 @@ import { useState } from "react";
 const RegisterForm = () => {
     const [step, setStep] = useState(1); // Controla a etapa do formulário
     const [formData, setFormData] = useState({
-        name: "",
+        nome_completo: "",
+        telemovel:"",
         email: "",
         password: "",
-        address: "",
-        phone: "",
-        profilePicture: null,
+        genero: "",
+        estado_civil: "",
+        bilhete: "",
+        scanner: null,
     });
 
     // Manipula mudanças nos inputs
@@ -32,150 +34,142 @@ const RegisterForm = () => {
     };
 
     return (
-        <div className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-bold text-center mb-4">
-                {step === 1 ? "Dados Pessoais" : "Informações Adicionais"}
-            </h2>
 
-            <form onSubmit={handleSubmit}>
-                {/* Etapa 1: Dados Pessoais */}
-                {step === 1 && (
-                    <div className="space-y-4">
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Nome Completo"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                            className="w-full p-2 border rounded"
-                        />
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                            className="w-full p-2 border rounded"
-                        />
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Senha"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                            className="w-full p-2 border rounded"
-                        />
-                    </div>
-                )}
+        <div className={styles.container}>
+            <div className="flex flex-col h-screen w-[400px] bg-white mx-auto shadow-lg" >
+                <Header />
+                <div className=" p-[20px]">
 
-                {/* Etapa 2: Informações Adicionais */}
-                {step === 2 && (
-                    <div className="space-y-4">
-                        <input
-                            type="text"
-                            name="address"
-                            placeholder="Endereço"
-                            value={formData.address}
-                            onChange={handleChange}
-                            required
-                            className="w-full p-2 border rounded"
-                        />
-                        <input
-                            type="tel"
-                            name="phone"
-                            placeholder="Telefone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            required
-                            className="w-full p-2 border rounded"
-                        />
-                        <input
-                            type="file"
-                            name="profilePicture"
-                            accept="image/*"
-                            onChange={(e) =>
-                                setFormData((prev:any) => ({
-                                    ...prev,
-                                    profilePicture: e.target.files?.[0] || null,
-                                }))
-                            }
-                            className="w-full p-2 border rounded"
-                        />
-                    </div>
-                )}
+                    <h2 className="text-xl font-bold text-start mb-4">
+                        {step === 1 ? "Criar uma conta" : "Criar uma conta"}
+                    </h2>
 
-                {/* Botões de Navegação */}
-                <div className="flex justify-between mt-6">
-                    {step > 1 && (
-                        <button
-                            type="button"
-                            onClick={() => setStep(step - 1)}
-                            className="px-4 py-2 bg-gray-300 rounded"
-                        >
-                            Voltar
-                        </button>
-                    )}
+                    <form onSubmit={handleSubmit}>
+                        {/* Etapa 1: Dados Pessoais */}
+                        {step === 1 && (
+                            <div className="space-y-4">
+                                <input
+                                    type="text"
+                                    name="nome_completo"
+                                    placeholder="Nome completo"
+                                    value={formData.nome_completo}
+                                    onChange={handleChange}
+                                    required
+                                    className={styles.input}
+                                />
 
-                    {step < 2 ? (
-                        <button
-                            type="button"
-                            onClick={() => setStep(step + 1)}
-                            className="px-4 py-2 bg-blue-500 text-white rounded"
-                        >
-                            Próximo
-                        </button>
-                    ) : (
-                        <button
-                            type="submit"
-                            className="px-4 py-2 bg-green-500 text-white rounded"
-                        >
-                            Registrar
-                        </button>
-                    )}
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Email (Opcional)"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                    className={styles.input}
+                                />
+
+                                <input
+                                    type="tel"
+                                    name="telemovel"
+                                    placeholder="Telemovel"
+                                    value={formData.telemovel}
+                                    onChange={handleChange}
+                                    required
+                                    className={styles.input}
+                                />
+                                <input
+                                    type="password"
+                                    name="password"
+                                    placeholder="Palavra passe"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    required
+                                    className={styles.input}
+                                />
+                            </div>
+                        )}
+
+                        {/* Etapa 2: Informações Adicionais */}
+                        {step === 2 && (
+                            <div className="space-y-4">
+                                <input
+                                    type="text"
+                                    name="genero"
+                                    placeholder="Gênero"
+                                    value={formData.genero}
+                                    onChange={handleChange}
+                                    required
+                                    className={styles.input}
+                                />
+                                <input
+                                    type="text"
+                                    name="estado_civil"
+                                    placeholder="Estado civil"
+                                    value={formData.estado_civil}
+                                    onChange={handleChange}
+                                    required
+                                    className={styles.input}
+                                />
+                                
+                                <input
+                                    type="text"
+                                    name="bilhete"
+                                    placeholder="Numero do bilhete"
+                                    value={formData.bilhete}
+                                    onChange={handleChange}
+                                    required
+                                    className={styles.input}
+                                />
+                                <input
+                                    type="file"
+                                    name="scanner"
+                                    accept="image/*"
+                                    onChange={(e) =>
+                                        setFormData((prev: any) => ({
+                                            ...prev,
+                                            profilePicture: e.target.files?.[0] || null,
+                                        }))
+                                    }
+                                    className="w-full  p-2 border rounded"
+                                />
+                            </div>
+                        )}
+
+                        {/* Botões de Navegação */}
+                        <div className="flex justify-between mt-6">
+                            {step > 1 && (
+                                <button
+                                    type="button"
+                                    onClick={() => setStep(step - 1)}
+                                    className="px-4 py-2 bg-gray-300 rounded"
+                                >
+                                    Voltar
+                                </button>
+                            )}
+
+                            {step < 2 ? (
+                                <button
+                                    type="button"
+                                    onClick={() => setStep(step + 1)}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded"
+                                >
+                                    Próximo
+                                </button>
+                            ) : (
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 bg-green-500 text-white rounded"
+                                >
+                                    Registrar
+                                </button>
+                            )}
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
+
     );
 };
 
 export default RegisterForm;
-
-
-
-
-
-/*
-
-        <div className={styles.container} >
-
-            <form action="" method="post" className={styles.form}>
-                <div className={styles.header} >
-                    <Image src="/img/logo.png" alt="Onix Corporation" width={50} height={50} />
-                    <h1 className={styles.h1} > Registrar </h1>
-
-                </div>
-                <input type="text" name="numero" placeholder="Primeiro nome" className={styles.input} />
-
-                <input type="text" name="password" placeholder="Segundo nome" className={styles.input} />
-                
-                <input type="text" name="password" placeholder="Numero de telefone" className={styles.input} />
-
-                <input type="text" name="password" placeholder="Genero" className={styles.input} />
-
-                <input type="text" name="password" placeholder="Estado civil" className={styles.input} />
-                
-                <input type="text" name="password" placeholder="Numero bilhete" className={styles.input} />
-
-                <input type="text" name="password" placeholder="Scanner bilhete" className={styles.input} />
-
-
-                <button type="submit"  className={styles.button}>
-                    Entrar
-                </button>
-            </form>
-        </div>
-
-*/
