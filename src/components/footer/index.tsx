@@ -5,13 +5,13 @@ const Footer = () => {
   return (
 
     <footer className={global.footer}  >
-      <Link href="" className={global.footerButton}>
+      <Link href="/dashboard" className={global.footerButton}>
         <Image src="/img/home.png" width={25} height={25} alt="imagem" className={global.footerImagem}  />
       </Link>
-      <Link href="" className={global.footerButton}>
+      <Link href="/dashboard/credito" className={global.footerButton}>
         <Image src="/img/credit.png" width={25} height={25} alt="imagem" className={global.footerImagem} />
       </Link>
-      <Link  href="" className={global.footerButton}>
+      <Link  href="/ferramenta" className={global.footerButton}>
         <Image src="/img/ferramenta.png" width={25} height={25} alt="imagem" className={global.footerImagem}/>
       </Link>
     </footer>

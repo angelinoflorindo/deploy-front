@@ -7,6 +7,14 @@
     height: 60px;
 }
 
+
+.divider{
+    margin: 20px 0;
+    border: 0;
+    height: 1px;
+    background: #ddd;
+}
+
 .imagens{
     margin-left: 30px;
     margin-right: 10px;
@@ -19,8 +27,6 @@
     display: flex;
     justify-content: center;
     border-radius: 8px;
-
-
 }
 
 .grid{
@@ -42,12 +48,7 @@
     justify-content: space-around;
     align-items: center;
     height: 50vh;
-
-
-
 }
-
-
 
 .footerButton:hover{
     background-color: #8a39c8
@@ -56,4 +57,64 @@
 .footerImagem{
     object-fit: contain;
     background-size: contain;
+    cursor: pointer;
 }
+
+.imagemGuardiao{
+    object-fit: contain;
+    background-size: contain;
+    background-position: initial;
+    margin-top: -50px;
+    padding: 5px;
+}
+
+.relatorio{
+    border: 1px solid gray;
+    border-radius: 8px;
+    height:14px;
+    width:14px;
+    margin-right: 2px;
+
+}
+
+.relatorioRed{
+    background-color: red;
+    border-radius: 8px;
+    height:14px;
+    width:14px;
+    margin: 2px;
+
+}
+
+.h1{
+    color: red;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    width: 80%;
+    text-align: start;
+
+}
+
+.h2{
+    color: green;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    width: 80%;
+    text-align: start;
+
+}
+
+
+.voltar{
+    color: white;
+    background-color: blue;
+    height:50px;
+    width: 80px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+}
+
