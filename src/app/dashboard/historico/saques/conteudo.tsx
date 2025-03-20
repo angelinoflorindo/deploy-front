@@ -5,6 +5,7 @@
 import React from "react";
 import global from "@/modules/global.module.css"
 import Image from "next/image";
+import Link from "next/link";
 
 
 const Conteudo = () => {
@@ -26,9 +27,16 @@ const Conteudo = () => {
                     </div>
                 </div>
             </div>
-            <button type="submit" className="px-4 w-[50%] py-2 bg-violet-500  text-white rounded" >
-                Confirmar
-            </button>
+
+            <div className="flex justify-between w-[100%] py-2 " >
+                <Link href="/dashboard/historico/3" className="px-4 py-2 bg-gray-500 text-white rounded" >
+                    Voltar
+                </Link>
+
+                <Link href="/dashboard/historico/" className="px-4 py-2 bg-violet-500  text-white rounded" >
+                    Confirmar
+                </Link>
+            </div>
         </div>
     );
 };

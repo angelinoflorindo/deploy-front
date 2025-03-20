@@ -19,7 +19,7 @@ const Conteudo = () => {
                 <div className="flex flex-col w-[100%] px-4" >
                     <div className="flex justify-between items-center">
                         <span >Celeste Domingos</span>
-                        <span className={global.relatorio}>
+                        <span className={global.relatorioRed}>
                         </span>
                     </div>
                     <div className="flex flex-row justify-between py-2 items-center" >
@@ -27,9 +27,9 @@ const Conteudo = () => {
                             <b className="px-2">8%</b> mensal
                         </span>
                         <div className="flex justify-center items-center ">
-                            <span className={global.relatorio}>
+                            <span  className={global.relatorioOrange}>
                             </span>
-                            <span className={global.relatorio}>
+                            <span className={global.relatorioGreen}>
                             </span>
                         </div>
                     </div>

@@ -5,6 +5,7 @@
 import React from "react";
 import global from "@/modules/global.module.css"
 import Image from "next/image";
+import Link from "next/link";
 
 
 const Conteudo = () => {
@@ -50,10 +51,14 @@ const Conteudo = () => {
                 />
 
             </div>
-            <div  className="flex justify-center">
-                <button type="submit" className="px-4 w-[50%] py-2 bg-violet-500  text-white rounded" >
+            <div className="flex justify-center">
+                <Link href="/dashboard/proponente/3" className="px-4 py-2 bg-gray-500 text-white rounded" >
+                    Voltar
+                </Link>
+
+                <Link href="/dashboard/proponente/3" className="px-4 py-2 bg-violet-500  text-white rounded" >
                     Confirmar
-                </button>
+                </Link>
             </div>
 
         </div>

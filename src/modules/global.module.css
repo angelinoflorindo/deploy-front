@@ -68,8 +68,18 @@
     padding: 5px;
 }
 
-.relatorio{
-    border: 1px solid gray;
+.relatorioGreen{
+    background-color:green;
+    border-radius: 8px;
+    height:14px;
+    width:14px;
+    margin-right: 2px;
+
+}
+
+
+.relatorioOrange{
+    background-color:orange;
     border-radius: 8px;
     height:14px;
     width:14px;

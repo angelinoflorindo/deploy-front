@@ -4,6 +4,7 @@ import React from "react";
 import styles from "@/modules/Login.module.css"
 import Image from "next/image";
 import global from "@/modules/global.module.css"
+import Link from "next/link";
 
 
 
@@ -28,7 +29,7 @@ const AvalSolidario = () => {
             {/* Resultados */}
             <div className="flex flex-col  mx-auto justify-around items-center  " >
                 <div className="flex flex-row justify-evenly shadow-md w-[100%]" >
-                    <Image src="/img/guardiao.png"  className={global.imagemGuardiao}  width={50} height={-50} alt="" />
+                    <Image src="/img/guardiao.png" className={global.imagemGuardiao} width={50} height={-50} alt="" />
                     <div className="flex flex-col w-[100%] p-5" >
                         <span >Nome do Guardião</span>
                         <div className="flex flex-row justify-evenly items-center" >
@@ -44,11 +45,20 @@ const AvalSolidario = () => {
                             <div className="flex flex-row justify-between  w-[100px]">
                                 <Image src="/img/parentesco.png" className={global.footerImagem} width={30} height={30} alt="" />
 
-                                <Image src="/img/convite.png" className={global.footerImagem}  width={30} height={30} alt="" />
+                                <Image src="/img/convite.png" className={global.footerImagem} width={30} height={30} alt="" />
 
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div className="flex flex-row w-[100%] justify-between items-center  h-14">
+                    <Link href="/dashboard/credito/garantia" type="submit" className="px-4 py-2 bg-gray-500 text-white rounded" >
+                        Voltar
+                    </Link>
+                    <Link  href="/dashboard/credito" type="submit" className="px-4 py-2 bg-violet-500 text-white rounded" >
+                        Proximo
+                    </Link>
                 </div>
 
             </div>

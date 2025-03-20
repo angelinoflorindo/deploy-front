@@ -10,6 +10,7 @@ import ConteudoInfo from "./conteudo-info";
 
 
 const Usuario = () => {
+
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg" >
@@ -18,8 +19,8 @@ const Usuario = () => {
 
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
-         {/*  <Conteudo />*/}
-         <ConteudoInfo />
+        <Conteudo />
+         {/*  <ConteudoInfo />*/ }
         </main>
 
         {/* Rodapé Fixo */}

@@ -1,12 +1,11 @@
 
 import React from "react";
-import   Login from  "./auth/login/page";
-
+import   Auth from  "@/app/auth/login/page";
 
 const Home: React.FC = () =>{
   return (
     <div>
-      <Login/>
+      <Auth/>
     </div>
   )
 }

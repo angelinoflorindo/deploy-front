@@ -1,17 +1,22 @@
-'use client'
 
+'use client';
 import React from "react";
 import styles from "@/modules/Login.module.css"
 import Header from "@/components/header";
+import { registrar } from '@/app/actions/auth'
 
 
 import { useState } from "react";
 
+
+
 const RegisterForm = () => {
+
     const [step, setStep] = useState(1); // Controla a etapa do formulário
-    const [formData, setFormData] = useState({
+
+     const [formData, setFormData] = useState({
         nome_completo: "",
-        telemovel:"",
+        telemovel: "",
         email: "",
         password: "",
         genero: "",
@@ -26,15 +31,13 @@ const RegisterForm = () => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    // Manipula envio do formulário
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        alert("Registro concluído com sucesso!");
-        console.log(formData);
-    };
+    const onSubmit = ()=>{
+        console.log('from client', formData )
+        registrar(formData)
+    }
+
 
     return (
-
         <div className={styles.container}>
             <div className="flex flex-col h-screen w-[400px] bg-white mx-auto shadow-lg" >
                 <Header />
@@ -44,7 +47,7 @@ const RegisterForm = () => {
                         {step === 1 ? "Criar uma conta" : "Criar uma conta"}
                     </h2>
 
-                    <form onSubmit={handleSubmit}>
+                    <form action={onSubmit}   >
                         {/* Etapa 1: Dados Pessoais */}
                         {step === 1 && (
                             <div className="space-y-4">
@@ -52,39 +55,35 @@ const RegisterForm = () => {
                                     type="text"
                                     name="nome_completo"
                                     placeholder="Nome completo"
-                                    value={formData.nome_completo}
-                                    onChange={handleChange}
                                     required
                                     className={styles.input}
+                                    onChange={handleChange}
                                 />
 
                                 <input
                                     type="email"
                                     name="email"
                                     placeholder="Email (Opcional)"
-                                    value={formData.email}
-                                    onChange={handleChange}
                                     required
                                     className={styles.input}
+                                    onChange={handleChange}
                                 />
 
                                 <input
                                     type="tel"
                                     name="telemovel"
                                     placeholder="Telemovel"
-                                    value={formData.telemovel}
-                                    onChange={handleChange}
                                     required
                                     className={styles.input}
+                                    onChange={handleChange}
                                 />
                                 <input
                                     type="password"
                                     name="password"
                                     placeholder="Palavra passe"
-                                    value={formData.password}
-                                    onChange={handleChange}
                                     required
                                     className={styles.input}
+                                    onChange={handleChange}
                                 />
                             </div>
                         )}
@@ -96,29 +95,26 @@ const RegisterForm = () => {
                                     type="text"
                                     name="genero"
                                     placeholder="Gênero"
-                                    value={formData.genero}
-                                    onChange={handleChange}
                                     required
                                     className={styles.input}
+                                    onChange={handleChange}
                                 />
                                 <input
                                     type="text"
                                     name="estado_civil"
                                     placeholder="Estado civil"
-                                    value={formData.estado_civil}
-                                    onChange={handleChange}
                                     required
                                     className={styles.input}
+                                    onChange={handleChange}
                                 />
-                                
+
                                 <input
                                     type="text"
                                     name="bilhete"
                                     placeholder="Numero do bilhete"
-                                    value={formData.bilhete}
-                                    onChange={handleChange}
                                     required
                                     className={styles.input}
+                                    onChange={handleChange}
                                 />
                                 <input
                                     type="file"

@@ -33,14 +33,10 @@ const Garantia = () => {
                             <Image src="/img/movel.png" className={global.imagens} alt="imagem" width={40} height={40} />
                             Moto como garantia
                         </Link>
-
-                        <div className="flex flex-row w-[100%] justify-between items-center  h-14">
-                            <button type="submit" className="px-4 py-2 bg-gray-500 text-white rounded" >
+                        <div>
+                            <Link href="/dashboard/credito/" className="px-4 py-2 bg-gray-500 text-white rounded" >
                                 Voltar
-                            </button>
-                            <button type="submit" className="px-4 py-2 bg-violet-500 text-white rounded" >
-                                Proximo
-                            </button>
+                            </Link>
                         </div>
                     </section>
 
