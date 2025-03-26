@@ -14,15 +14,14 @@ const RegisterForm = () => {
 
     const [step, setStep] = useState(1); // Controla a etapa do formulário
 
-     const [formData, setFormData] = useState({
-        nome_completo: "",
+    const [formData, setFormData] = useState({
+        primeiro_nome: "",
+        segundo_nome: "",
         telemovel: "",
         email: "",
         password: "",
         genero: "",
-        estado_civil: "",
         bilhete: "",
-        scanner: null,
     });
 
     // Manipula mudanças nos inputs
@@ -31,8 +30,8 @@ const RegisterForm = () => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const onSubmit = ()=>{
-        console.log('from client', formData )
+    const onSubmit = () => {
+       // console.log('from client', formData)
         registrar(formData)
     }
 
@@ -53,17 +52,26 @@ const RegisterForm = () => {
                             <div className="space-y-4">
                                 <input
                                     type="text"
-                                    name="nome_completo"
-                                    placeholder="Nome completo"
+                                    name="primeiro_nome"
+                                    placeholder="Primeiro Nome"
                                     required
                                     className={styles.input}
                                     onChange={handleChange}
                                 />
 
                                 <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="Email (Opcional)"
+                                    type="text"
+                                    name="segundo_nome"
+                                    placeholder="Segundo Nome"
+                                    required
+                                    className={styles.input}
+                                    onChange={handleChange}
+                                />
+
+                                <input
+                                    type="password"
+                                    name="password"
+                                    placeholder="Palavra passe"
                                     required
                                     className={styles.input}
                                     onChange={handleChange}
@@ -77,32 +85,26 @@ const RegisterForm = () => {
                                     className={styles.input}
                                     onChange={handleChange}
                                 />
-                                <input
-                                    type="password"
-                                    name="password"
-                                    placeholder="Palavra passe"
-                                    required
-                                    className={styles.input}
-                                    onChange={handleChange}
-                                />
                             </div>
                         )}
 
                         {/* Etapa 2: Informações Adicionais */}
                         {step === 2 && (
                             <div className="space-y-4">
+
+
                                 <input
-                                    type="text"
-                                    name="genero"
-                                    placeholder="Gênero"
+                                    type="email"
+                                    name="email"
+                                    placeholder="Email"
                                     required
                                     className={styles.input}
                                     onChange={handleChange}
                                 />
                                 <input
                                     type="text"
-                                    name="estado_civil"
-                                    placeholder="Estado civil"
+                                    name="genero"
+                                    placeholder="Gênero"
                                     required
                                     className={styles.input}
                                     onChange={handleChange}

@@ -1,70 +1,91 @@
 'use server'
 
-import { createSession, getCsrfToken } from "@/app/lib/session";
+import { createSession} from "@/app/lib/session";
 import { redirect } from "next/navigation";
 import { deleteSession } from '@/app/lib/session'
-import api from "../api/route";
+import bcrypt from "bcryptjs"
 
 
 
-function userApi() {
-    const url = `${api()}/usuario`
-    return url
+
+const web_domain = 'http://localhost:3000'
+const userApi = `${web_domain}/${process.env.SERVER_DOIS}/usuario`
+
+export async function buscarUser(email: any) {
+    
+    const response = await fetch(`${userApi}?email=${email}`);
+    if (!response.ok) {console.log("Usuário não encontrado"); return redirect('/')}
+    return response.json();
 }
 
-
-export async function signup(formData: FormData) {
-
-    const user = { id: formData.get('userId'), password: formData.get('password') }
-    await createSession(user.id)
-    redirect('/dashboard')
+export async function hashPassword(password: string) {
+    const saltRounds = 12; // Definir número de rounds (quanto maior, mais seguro, mas mais lento)
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    return hashedPassword;
 }
 
-export async function logout(formData: FormData) {
+export async function login(data:FormData) {
 
-    deleteSession()
+    const email = JSON.stringify(data.get('email')).replace(/"/g,'')
+    const password = JSON.stringify(data.get('password')).replace(/"/g,'')
+    
+
+    const user = await buscarUser(email)
+
+    const isValid = await bcrypt.compare(password, user.password, )
+
+    if(!isValid){
+        console.log('Senha incorreta!')
+        return redirect('/')
+    }
+    // guardando dados em tokens
+   // createSession(user.primeiro_nome, 'primeiro_nome')
+    createSession(user.email, 'user_email')
+    return redirect('/dashboard')
+
+}
+
+export async function logout() {
+
+    deleteSession('user_email')
+    // deleteSession('primeiro_nome')
+   // deleteSession('segundo_nome')
+    console.log("Session deleted!")
     redirect('/')
 }
 
-export async function login(formData: FormData) {
-    console.log(formData)
-}
-
 export async function registrar(formData: any) {
-
     const picture: File[] = formData.profilePicture
-
-    const csrf = await getCsrfToken()
-
-    // console.log('picture ',picture )
+    const hashPass = await hashPassword(formData.password)
 
     const usuario = {
-        nome_completo: formData.nome_completo,
-        password: formData.password,
+        primeiro_nome: formData.primeiro_nome,
+        password: hashPass,
         genero: formData.genero,
         email: formData.email,
         bilhete: formData.bilhete,
-        estado_civil: formData.estado_civil,
-        scanner: formData.scanner,
+        segundo_nome: formData.segundo_nome,
         telemovel: formData.telemovel,
     }
-    //console.log('usuario', usuario)
-    // const hashedpassword = await bcrypt.
-    
-    const res = await fetch(`${userApi()}/registrar/`, {
+
+    const res = await fetch(userApi, {
         method: "POST",
-        credentials:'include',
         headers: {
             "Content-type": "application/json",
-            "X-CSRFToken": csrf
+            //  "X-CSRFToken": csrf
         },
         body: JSON.stringify(usuario)
     })
 
     if (!res.ok) {
-        alert('Erro no servidor')
-        redirect('/auth/registrar')
+        console.log("Erro ao registro")
+        return redirect('/auth/registrar')
     }
-
-    return redirect('/dashboard')
+    
+    // Criar session
+    //createSession(usuario.primeiro_nome, 'primeiro_nome')
+   // createSession(usuario.segundo_nome, 'segundo_nome')
+    createSession(usuario.email, 'user_email')
+    
+    redirect('/dashboard')
 }

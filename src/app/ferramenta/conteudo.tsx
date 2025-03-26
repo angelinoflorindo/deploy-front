@@ -1,18 +1,19 @@
 import Image from "next/image";
 import global from "@/modules/global.module.css"
 import Link from "next/link";
+import { logout } from "@/app/actions/auth"
 
 const Conteudo = () => {
     return (
 
-    
+
         <div className={global.grid} >
             <h1 className="font-bold text-center">Ferramentas </h1>
 
             <section className={global.sectionLink}>
                 <Link href="/ferramenta/usuario" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md" >
                     <Image src="/img/minhaconta.png" className={global.imagens} alt="imagem" width={40} height={40} />
-                    Minha conta  
+                    Minha conta
                 </Link>
 
                 <Link href="/ferramenta/detalhes" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md" >
@@ -21,12 +22,17 @@ const Conteudo = () => {
                 </Link>
                 <Link href="/ferramenta/investidor" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md">
                     <Image src="/img/carteira.png" className={global.imagens} alt="imagem" width={40} height={40} />
-                    Perfil de investidor  
+                    Perfil de investidor
                 </Link>
                 <Link href="/ferramenta/reclamacao" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md">
                     <Image src="/img/mensagem.png" className={global.imagens} alt="imagem" width={40} height={40} />
-                    Comunicar um problema 
+                    Comunicar um problema
                 </Link>
+
+                <button type="submit" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md" onClick={logout} >
+                    <Image src="/img/reduzir.png" className={global.imagens} alt="imagem" width={40} height={40} />
+                    Terminar Sessão
+                </button>
             </section>
         </div>
 

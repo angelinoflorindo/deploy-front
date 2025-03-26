@@ -30,15 +30,7 @@ const ConteudoInfo = () => {
                 </div>
 
             </section>
-            <div className="flex justify-between py-1 " >
-                <button type="submit" className="px-4 py-2 bg-gray-500 text-white rounded" >
-                    voltar
-                </button>
-                <button type="submit" className="px-4 py-2 bg-violet-500 text-white rounded" >
-                    alterar
-                </button>
-            </div>
-
+           
         </div>
     );
 };

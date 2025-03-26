@@ -1,10 +1,11 @@
 import 'server-only'
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
-import api from '../api/route';
+
 
 const secretKey = process.env.JWT_SECRET
 const key = new TextEncoder().encode(secretKey)
+const serverUm = process.env.SERVER_UM
 
 export async function encrypt(payload: any) {
     return await new SignJWT(payload)
@@ -29,34 +30,47 @@ export async function decrypt(session: string | undefined = "") {
 
 }
 
-export async function createSession(userID: any) {
+export async function createSession(sessionId:any, nome:any) {
+
+    const expiresAt = new Date(Date.now() + 60 * 60 * 24)
 
     const cookieStore = await cookies()
-    const expiresAt = new Date(Date.now() + 10 * 1000)
-    const session = await encrypt({ userID, expiresAt })
+    const session = await encrypt({ sessionId, expiresAt })
 
-    cookieStore.set('session', session, {
+    cookieStore.set(nome, session, {
         httpOnly: true,
         secure: true,
         expires: expiresAt,
+        sameSite:'lax',
+        path:'/'
 
     })
-
-    return session
 }
 
-export async function updateSession() {
-
+export async function restoreSession(nome:any){
     const cookieStore = await cookies()
-    const expires = new Date(Date.now() + 10 * 1000)
-    const session = cookieStore.get('session')?.value
+    const session = cookieStore.get(nome)?.value
     const playload = await decrypt(session)
 
     if (!session || !playload) {
         return null
     }
 
-    cookieStore.set('session', session, {
+    return playload
+}
+
+export async function updateSession(nome:any) {
+
+    const cookieStore = await cookies()
+    const expires = new Date(Date.now() + 60 * 60 * 24)
+    const session = cookieStore.get(nome)?.value
+    const playload = await decrypt(session)
+
+    if (!session || !playload) {
+        return null
+    }
+
+    cookieStore.set(nome, session, {
         httpOnly: true,
         secure: true,
         expires: expires,
@@ -65,27 +79,18 @@ export async function updateSession() {
 }
 
 
-export async function deleteSession() {
+export async function deleteSession(nome:any) {
     const cookieStore = await cookies()
-    cookieStore.delete('session')
+    cookieStore.delete(nome)
 
 }
 
 
-export async function getSession() {
+export async function getSession(nome:any) {
     const cookieStore = await cookies()
-    const session =  cookieStore.get('session')
+    const session = cookieStore.get(nome)
     return session
 
 }
 
-export async function getCsrfToken() {
-    const res = await fetch(`${api()}/api/csrf/`, {
-        credentials:'include'
-    })
-   // console.log("csrf", res)
-    const data = await res.json()
-    //console.log("csrf", data.csrfToken)
-    return data.csrfToken
 
-}
