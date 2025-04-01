@@ -51,7 +51,7 @@ const [step, setStep] = useState(1)
               type="submit"
               className="px-4 py-2 bg-green-500 text-white rounded"
             >
-              Registrar
+              Alterar
             </button>
             </div>
           )}

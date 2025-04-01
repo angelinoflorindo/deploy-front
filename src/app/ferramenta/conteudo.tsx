@@ -1,12 +1,11 @@
 import Image from "next/image";
 import global from "@/modules/global.module.css"
 import Link from "next/link";
-import { logout } from "@/app/actions/auth"
 
 const Conteudo = () => {
+
+
     return (
-
-
         <div className={global.grid} >
             <h1 className="font-bold text-center">Ferramentas </h1>
 
@@ -29,7 +28,7 @@ const Conteudo = () => {
                     Comunicar um problema
                 </Link>
 
-                <button type="submit" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md" onClick={logout} >
+                <button type="submit" style={{cursor:"pointer"}} className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md"  >
                     <Image src="/img/reduzir.png" className={global.imagens} alt="imagem" width={40} height={40} />
                     Terminar Sessão
                 </button>

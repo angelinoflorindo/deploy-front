@@ -6,27 +6,26 @@ const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
-    const email = searchParams.get("email");
+    const userId = searchParams.get("id");
 
-    if (!email) {
+    if (!userId) {
 
-        const users = await prisma.user.findMany();
-        return NextResponse.json(users);
-
+        const pessoas = await prisma.pessoa.findMany();
+        return NextResponse.json(pessoas);
     }
-    
 
     try {
-        const user = await prisma.user.findUnique({
-            where: { email:email},
+        const id = Number(userId)
+        const pessoa = await prisma.pessoa.findUnique({
+            where: { user_id:id},
         });
-        if (!user) {
-            return NextResponse.json({ message: "Usuário não existe" }, { status: 404 });
+        if (!pessoa) {
+            return NextResponse.json({ message: "Dados não encontrados" }, { status: 404 });
         }
 
-        return NextResponse.json(user, { status: 200 });
+        return NextResponse.json(pessoa, { status: 200 });
     } catch (error) {
-        return NextResponse.json({ message: "Erro ao buscar usuário", error }, { status: 500 });
+        return NextResponse.json({ message: "Erro ao buscar os dados", error }, { status: 500 });
     }
 
 
@@ -34,9 +33,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
 
-    const user = await req.json();
+    const pessoa = await req.json();
 
-    const result = await prisma.user.create({ data: user });
+    const result = await prisma.pessoa.create({ data: pessoa });
     return NextResponse.json(result);
 
 }

@@ -1,74 +1,81 @@
-
-'use client';
-import styles from "@/modules/Login.module.css"
-import { UserProps, userResponse } from "@/services/user.service";
+"use client";
+import { clientAPI } from "@/app/lib/definitions";
+import styles from "@/modules/global.module.css";
+import { PessoaProps, UserProps } from "@/services/user.service";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
-export default  function Conteudo() {
-    const [user, setUser] = useState()
-    const [token, setToken] = useState()
-    const users: UserProps[] = []
-    let email:any[] = []
+const userApi = clientAPI;
+export default function Conteudo() {
+  const { data: session, status } = useSession();
+  const [user, setUser] = useState<UserProps | null>(null);
+  const [pessoa, setPessoa] = useState<PessoaProps | null>(null);
 
+  useEffect(() => {
+    fetch(`${userApi}/api/usuario?email=${session?.user?.email}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Erro ao buscar os dados");
+        return res.json();
+      })
+      .then((users:UserProps) => {
+        console.log("users", users)
+        setUser(users)
+        return
+      });
+  }, []);
 
-    useEffect( () => {
+  useEffect(() => {
+    fetch(`${userApi}/api/usuario?email=${session?.user?.email}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Erro ao buscar os dados");
+        return res.json();
+      })
+      .then((users:UserProps) => {
+        console.log("users", users)
+        setUser(users)
+        return
+      });
+  }, []);
 
-        fetch(`/api/cookies?nome=user_email`)
-            .then(async (data) => {
-
-                const res = await data.json()
-                const session = res.session.sessionId
-                email.push(session)
-               // setToken(session)
-                await new Promise(resolve => setTimeout(resolve, 3000))
-            })
-            .catch((err) => { console.log(err) })
-            
-            console.log("user email",email[0])
-
-            fetch(`/api/usuario?email=${email[0]}`)
-                .then(async (usuario) => {
-                    const req = await usuario.json()
-                    //console.log("user", req)
-                    //setUser(req)
-
-                    users.push(req)
-                })
-                .catch((err) => { console.log(err) })
-
-    }, []);
-
-
-
-    return (
-
-        <div >
-            <h1 className="font-bold text-center">Minha conta </h1>
-
-
-
-            {users.map((event) => (
-                <section key={event.id} className="shadow-md p-5" >
-                    <h2> <span> {event.primeiro_nome } </span><span>{event.segundo_nome}</span>  </h2>
-                    <div className="flex flex-row justify-between  py-2" >
-                        <div className="flex flex-col  ">
-                            <span className="py-1"> Gênero:  <b>{event.genero}</b> </span>
-                            <span className="py-1">Telemovel: <b>{event.telemovel}</b> </span>
-                            <span className="py-1"> Bilhete:  <b>{event.bilhete}</b> </span>
-                            <span className="py-1">Email: <b>{event.email} </b> </span>
-                        </div>
-                    </div>
-                    <hr className={styles.divider} />
-                    <div className="flex flex-col" >
-                        <span className="py-1"> Estado civil :  <b>nenhum</b> </span>
-                        <span className="py-1">Data nascimento : <b>1994</b> </span>
-                        <span className="py-1"> Morada atual :  <b>Luanda</b> </span>
-                        <span className="py-1">Município: <b>Cacuaco</b> </span>
-                    </div>
-                </section>
-            ))}
-
-
+  return (
+    <div>
+      <h1 className="font-bold text-center">Minha conta </h1>
+      <section className="shadow-md p-5">
+        <span>
+          @<b>{session?.user?.name}</b>
+        </span>
+        <div className="flex flex-row justify-between  py-2">
+          <div className="flex flex-col  ">
+            <span className="py-1">
+              Gênero: <b>{user?.genero}</b>
+            </span>
+            <span className="py-1">
+              Telemovel: <b>{user?.telemovel}</b>
+            </span>
+            <span className="py-1">
+              Bilhete: <b>{user?.bilhete}</b>
+            </span>
+            <span className="py-1">
+              Email: <b>{user?.email}</b>
+            </span>
+          </div>
         </div>
-    );
-};
+        <hr className={styles.divider} />
+        <div className="flex flex-col">
+          <span className="py-1">
+            Estado civil : <b>{}</b>
+          </span>
+          <span className="py-1">
+            Data nascimento : <b>1994</b>
+          </span>
+          <span className="py-1">
+            Morada atual : <b>Luanda</b>
+          </span>
+          <span className="py-1">
+            Município: <b>Cacuaco</b>
+          </span>
+        </div>
+      </section>
+    </div>
+  );
+}

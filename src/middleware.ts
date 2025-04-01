@@ -1,62 +1,65 @@
-
-
-
-import { getSession, restoreSession } from '@/app/lib/session'
-import {NextRequest, NextResponse} from  'next/server'
-
+import { NextRequest, NextResponse } from "next/server";
+import { getSession } from "next-auth/react";
+import { getToken } from "next-auth/jwt";
 
 const rotasProtegidas = [
-    '/dashboard',
-    '/dashboard/credito',
-    '/dashboard/credito/garantia',
-    '/dashboard/credito/garantia?id',
-    '/dashboard/credito/tipo-credito',
-    '/dashboard/credito/tipo-credito?id',
-    '/dashboard/historico',
-    '/dashboard/historico?id',
-    '/dashboard/historico/relatorio',
-    '/dashboard/historico/saques',
-    '/dashboard/proponente',
-    '/dashboard/proponente?id',
-    '/dashboard/proponente/avaliacao',
-    '/dashboard/proponente/protecao',
-    '/ferramenta', 
-    '/ferramenta/detalhes',
-    '/ferramenta/detalhes?id', 
-    '/ferramenta/investidor', 
-    '/ferramenta/reclamacao', 
-    '/ferramenta/usuario',  
-    '/ferramenta/usuario?id', 
-]
-const rotasPublicas = ['/', '/auth']
+  "/dashboard",
+  "/dashboard/credito",
+  "/dashboard/credito/garantia",
+  "/dashboard/credito/garantia?id",
+  "/dashboard/credito/tipo-credito",
+  "/dashboard/credito/tipo-credito?id",
+  "/dashboard/historico",
+  "/dashboard/historico?id",
+  "/dashboard/historico/relatorio",
+  "/dashboard/historico/saques",
+  "/dashboard/proponente",
+  "/dashboard/proponente?id",
+  "/dashboard/proponente/avaliacao",
+  "/dashboard/proponente/protecao",
+  "/ferramenta",
+  "/ferramenta/detalhes",
+  "/ferramenta/detalhes?id",
+  "/ferramenta/investidor",
+  "/ferramenta/reclamacao",
+  "/ferramenta/usuario",
+  "/ferramenta/usuario?id",
+];
 
-export default async function middleware(request:NextRequest){
+const rotasPublicas = ["/", "/auth"];
 
-    const path = request.nextUrl.pathname
-    const isProtegida = rotasProtegidas.includes(path)
-    const isPublica = rotasPublicas.includes(path)
-    const session = await getSession('user_email')
+// Função para verificar se a rota é protegida
+function isRotaProtegida(path:any) {
+  return rotasProtegidas.some((route) => path.startsWith(route));
+}
 
-    //console.log("session", session)
+// Função para verificar se a rota é pública
+function isRotaPublica(path:any) {
+  return rotasPublicas.includes(path);
+}
+export default async function middleware(req:NextRequest) {
+  const path = req.nextUrl.pathname;
 
-    if(isProtegida && !session?.value){
-        return NextResponse.redirect(new URL('/', request.nextUrl))
-    }
+  // Verificar se a rota é pública ou protegida
+  const isProtegida = isRotaProtegida(path);
+  const isPublica = isRotaPublica(path);
 
-    if(
-        isPublica &&
-        session?.value &&
-        !request.nextUrl.pathname.startsWith('/dashboard') &&
-        !request.nextUrl.pathname.startsWith('/ferramenta')
-    ){
-        return NextResponse.redirect(new URL('/dashboard', request.nextUrl))
-    }
+  // Recuperar o token do usuário (Verifica se está logado)
+  const token = await getToken({ req });
 
-    return NextResponse.next()
+  // Se a rota for protegida e o usuário não estiver logado, redireciona para a página inicial
+  if (isProtegida && !token) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  // Se a rota for pública, mas o usuário já estiver logado, redireciona para o dashboard
+  if (isPublica && token) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-   // matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
-
-    matcher:rotasProtegidas,
-}
+  matcher:["/dashboard/:path*", "/ferramenta/:path*"]
+};
