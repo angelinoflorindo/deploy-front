@@ -14,26 +14,365 @@ datasource db {
 }
 
 
+// Pre-definir valores de enumeração
+
+enum Genero {
+    MASCULINO
+    FEMININO
+}
+
+enum Propriedade{
+    PROPRIA
+    RENDA
+}
+
+
+enum Sector {
+    PUBLICO
+    PRIVADO
+}
+
+enum Area {
+    ADMINISTRACAO_PUBLICA
+    EDUCACAO
+    SAUDE
+    DEFESA_SEGURANCA
+    ENERGIA
+    PETROLEO
+    MINERACAO
+    FINANCAS
+    CONSTRUCAO
+    TECNOLOGIA
+    COMERCIO
+    AGRICULTURA
+    TURISMO
+}
+
+enum Comprovativo{
+    BILHETE 
+    DECLARACAO_TRABALHO
+    DECLARACAO_SEGURO
+    BEM_MOVEL 
+    PAGAMENTO  
+}
+
+enum Parentesco {
+  PAI
+  MAE
+  FILHO
+  FILHA
+  AVO
+  NETO
+  NETA
+  IRMAO
+  IRMA
+  TIO
+  TIA
+  SOBRINHO
+  SOBRINHA
+  PRIMO
+  PRIMA
+  CUNHADO
+  CUNHADA
+  SOGRO
+  SOGRA
+  GENRO
+  NORA
+  ENTEADO
+  ENTEADA
+  PADRASTO
+  MADRASTA
+}
+
+enum Aval{
+  CREDITO
+  EMPRESTIMO
+}
+
+enum Modelo{
+  CARRO
+  MOTO
+}
+
+enum Progresso{
+  PENDENTE
+  CONCLUIDO
+  CANCELADO
+}
+
+enum Produto{
+  CONSUMO
+  DECIMA
+  VIGESSIMA 
+  MENSAL 
+}
+
+enum Estado{
+    SOLTEIRO
+    CASADO
+}
+
+
 model User {
-  id    Int    @id @default(autoincrement())
-  primeiro_nome  String
-  segundo_nome   String
-  password  String @unique
-  genero   String 
-  bilhete  String @unique
-  telemovel String @unique
-  email String @unique
-  pessoa Pessoa?
+    id    Int    @id @default(autoincrement())
+    primeiro_nome  String
+    segundo_nome   String
+    password  String @unique
+    genero   Genero 
+    bilhete  String @unique
+    telemovel String @unique
+    email String @unique
+    pessoa Pessoa?
+    documento Documento[]
+    devedor Devedor?
+    investidor Investidor?
+    reclamacao Reclamacao[]
+    proponente Proponente?
+    saque Saque[]
+    deposito Deposito[]
+    carteira Carteira?
+}
+
+model Emprego{
+    id  Int  @id @default(autoincrement())
+    data_inicio DateTime
+    sector Sector
+    cargo String
+    area Area
+    pessoa Pessoa[]
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt 
+}
+
+model Residencia{
+    id    Int    @id @default(autoincrement())
+    tipo Propriedade
+    data_inicio DateTime
+    pessoa Pessoa[]
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt 
 }
 
 model Pessoa {
     id    Int    @id @default(autoincrement())
-    estado_civil  String
+    estado_civil  Estado
     provincia String
     municipio String
     profissao String
     nivel_instrucao String
     data_nascimento DateTime
-    user   User   @relation(fields: [user_id], references: [id])
-    user_id Int    @unique
+    user_id Int @unique
+    user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
+    emprego_id Int    @unique
+    emprego  Emprego   @relation(fields: [emprego_id], references:[id], onDelete: Cascade)
+    residencia_id Int    @unique
+    residencia  Residencia   @relation(fields: [residencia_id], references:[id], onDelete: Cascade)
+    conjugue Conjugue?
+    solidario Solidario?
+}
+
+
+
+model Conjugue{
+    id    Int    @id @default(autoincrement())
+    nome_completo String
+    dependentes Int
+    nivel_instrucao String
+    data_nascimento DateTime
+    pessoa_id Int    @unique
+    pessoa   Pessoa   @relation(fields: [pessoa_id], references:[id], onDelete: Cascade)
+}
+
+
+
+model Documento{
+    id    Int    @id @default(autoincrement())
+    tipo Comprovativo
+    titilo String
+    user_id Int @unique
+    user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt 
+}
+
+model Devedor{
+    id    Int    @id @default(autoincrement()) 
+    user_id Int @unique
+    user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
+    solicitacao Int
+    adimplencia Int
+    inadimplencia Int
+    estado Boolean
+    credito Credito[]
+    movel Movel[]
+    pagamento Pagamento[]
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt 
+}
+
+
+model Investidor{
+    id    Int    @id @default(autoincrement())  
+    maior_risco Boolean
+    maior_seguranca Boolean
+    estado Boolean
+    diversificacao Diversificacao[]
+    user_id Int @unique
+    user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt
+}
+
+
+model Reclamacao{
+    id    Int    @id @default(autoincrement())  
+    user_id Int @unique
+    user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
+    assunto String
+    conteudo String
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt
+}
+
+
+model Proponente{
+    id    Int    @id @default(autoincrement())  
+    user_id Int @unique
+    user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
+    solicitacao Int
+    reembolsar Int
+    satisfeitos Int
+    insatisfeitos Int
+    estado Boolean
+    emprestimo Emprestimo[]
+    reembolso Reembolso[]
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt
+}
+
+model Solidario{
+    id    Int    @id @default(autoincrement())  
+    tipo Aval
+    parentesco Parentesco
+    taxa Int
+    pessoa_id Int    @unique
+    pessoa   Pessoa   @relation(fields: [pessoa_id], references:[id], onDelete: Cascade)
+    emprestimo Emprestimo?
+    credito Credito?
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt
+}
+
+
+model Movel{
+    id    Int    @id @default(autoincrement())  
+    modelo Modelo
+    matricula String
+    detalhes String
+    devedor_id Int 
+    devedor   Devedor   @relation(fields: [devedor_id], references:[id], onDelete: Cascade)
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt 
+}
+
+
+model Credito{
+    id    Int    @id @default(autoincrement())  
+    tipo Produto 
+    valor Float
+    prestacao Int
+    juro Int
+    termino DateTime
+    estado Boolean
+    progresso Progresso
+    solidario_id Int    @unique
+    solidario   Solidario   @relation(fields: [solidario_id], references:[id], onDelete: Cascade)
+    devedor_id Int  
+    devedor   Devedor   @relation(fields: [devedor_id], references:[id], onDelete: Cascade)
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt 
+}
+
+
+model Emprestimo{
+    id    Int    @id @default(autoincrement())  
+    valor Float
+    juro_proponente Int
+    taxa_investidor Int
+    prestacao Int
+    termino DateTime 
+    estado Boolean
+    progresso Progresso
+    diversificacao Diversificacao[]
+    solidario_id Int    @unique
+    solidario   Solidario   @relation(fields: [solidario_id], references:[id], onDelete: Cascade)
+    proponente_id Int
+    proponente   Proponente   @relation(fields: [proponente_id], references:[id], onDelete: Cascade)
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt 
+}
+
+model Diversificacao{
+    investidor_id Int @unique
+    emprestimo_id Int @unique
+    taxa Int
+    protencao Boolean
+    investidor   Investidor   @relation(fields: [investidor_id], references:[id], onDelete: Cascade)
+    emprestimo   Emprestimo   @relation(fields: [emprestimo_id], references:[id], onDelete: Cascade) 
+    @@id([investidor_id,emprestimo_id])
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt
+}
+
+model Saque{  
+    id    Int    @id @default(autoincrement())  
+    valor Float
+    taxa Int
+    user_id Int @unique
+    user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt 
+}
+
+model Deposito {
+    id    Int    @id @default(autoincrement())  
+    valor Float
+    user_id Int @unique
+    user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt
+}
+
+model Carteira {
+    id    Int    @id @default(autoincrement())  
+    saldo Float
+    numero Int @unique
+    codigo Int @unique
+    user_id Int @unique
+    user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt
+}
+
+model Pagamento {
+    id    Int    @id @default(autoincrement())  
+    valor Float
+    detalhe String
+    prestacao Int
+    devedor_id Int  
+    devedor   Devedor   @relation(fields: [devedor_id], references:[id], onDelete: Cascade)
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt
+    
+}
+
+model Reembolso {
+    id    Int    @id @default(autoincrement())  
+    valor Float
+    prestacao Int
+    detalhe String
+    proponente_id Int  
+    proponente   Proponente   @relation(fields: [proponente_id], references:[id], onDelete: Cascade)
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt
 }

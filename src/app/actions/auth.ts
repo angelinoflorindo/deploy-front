@@ -4,10 +4,6 @@ import { createSession} from "@/app/lib/session";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs"
 
-
-
-
-
 export async function buscarUser(email: any) {
     
     const response = await fetch(`${process.env.CLIENT_URL}/api/usuario?email=${email}`);
@@ -22,13 +18,16 @@ export async function hashPassword(password: string) {
 }
 
  
-export async function registrar(formData: any) {
-    const picture: File[] = formData.profilePicture
-    const hashPass = await hashPassword(formData.password)
+export async function editarUsuario(formData: any) {
+    //const picture: File[] = formData.profilePicture
+    //const hashPass = await hashPassword(formData.password)
 
+    console.log("userInfo",formData)
+
+    return
     const usuario = {
         primeiro_nome: formData.primeiro_nome,
-        password: hashPass,
+        password: formData.password,
         genero: formData.genero,
         email: formData.email,
         bilhete: formData.bilhete,

@@ -7,10 +7,13 @@ import { UserInfo } from "@/services/user.service";
 import { redirect } from "next/navigation";
 
 const userApi = clientAPI;
-const ConteudoInfo = () => {
+const Body = () => {
   const { data: session, status } = useSession();
   const [user, setUser] = useState<UserInfo | null>(null);
-  if(!session?.user?.email) return redirect('/')
+  //const [pessoa, setPessoa] = useState<UserInfo | null>(null);
+  //const [conjugue, setConjugue] = useState<UserInfo | null>(null);
+  //const [residencia, setResidencia] = useState<UserInfo | null>(null);
+
   useEffect(() => {
     fetch(`${userApi}/api/usuario?email=${session?.user?.email}`)
       .then((res) => {
@@ -85,4 +88,4 @@ const ConteudoInfo = () => {
   );
 };
 
-export default ConteudoInfo;
+export default Body;

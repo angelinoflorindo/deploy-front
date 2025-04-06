@@ -7,10 +7,10 @@ import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const userApi = clientAPI;
-export default function Conteudo() {
+export default function Head() {
   const { data: session, status } = useSession();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-  if(!session?.user?.email) return redirect('/')
+
   useEffect(() => {
     fetch(`${userApi}/api/usuario?email=${session?.user?.email}`)
       .then((res) => {
@@ -78,3 +78,4 @@ export default function Conteudo() {
     </div>
   );
 }
+

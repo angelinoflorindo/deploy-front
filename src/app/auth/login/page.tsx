@@ -4,7 +4,6 @@ import styles from "@/modules/Login.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/router";
 import { redirect } from "next/navigation";
 
 export default function Auth() {
