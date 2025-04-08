@@ -16,12 +16,16 @@ const Conteudo = () => {
                 </Link>
 
                 <Link href="/ferramenta/detalhes" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md" >
-                    <Image src="/img/financeiro.png" className={global.imagens} alt="imagem" width={40} height={40} />
+                    <Image src="/img/movel.png" className={global.imagens} alt="imagem" width={40} height={40} />
                     Informações financeiras
                 </Link>
                 <Link href="/ferramenta/investidor" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md">
-                    <Image src="/img/carteira.png" className={global.imagens} alt="imagem" width={40} height={40} />
+                    <Image src="/img/minhaconta.png" className={global.imagens} alt="imagem" width={40} height={40} />
                     Perfil de investidor
+                </Link>
+                <Link href="/ferramenta/investidor" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md">
+                    <Image src="/img/financeiro.png" className={global.imagens} alt="imagem" width={40} height={40} />
+                    Cartão digital
                 </Link>
                 <Link href="/ferramenta/reclamacao" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md">
                     <Image src="/img/mensagem.png" className={global.imagens} alt="imagem" width={40} height={40} />

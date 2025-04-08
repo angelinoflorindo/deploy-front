@@ -3,9 +3,15 @@ import React, { useEffect, useState } from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import styles from "@/modules/Login.module.css";
-import { editarUsuario, hashPassword } from "@/app/actions/auth";
-import { PessoaProps, UserInfo, UserProps } from "@/services/user.service";
-import { signOut, useSession } from "next-auth/react";
+import {
+  ConjugueProps,
+  EmpregoProps,
+  PessoaProps,
+  ResidenciaProps,
+  UserInfo,
+  UserProps,
+} from "@/services/user.service";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { clientAPI } from "@/app/lib/definitions";
 
@@ -13,10 +19,13 @@ const userApi = clientAPI;
 export default function EditarUsuario() {
   const [step, setStep] = useState(1);
   const [genero, setGenero] = useState("");
-  const [estado, setEstado] = useState("");
+  const [estado_civil, setEstado] = useState("");
+  const [propriedade, setPropriedade] = useState("");
+  const [area, setArea] = useState("");
+  const [sector, setSector] = useState("");
   const { data: session, status } = useSession();
   const [userData, setUserData] = useState<UserProps>({
-    id:"",
+    id: "",
     primeiro_nome: "",
     segundo_nome: "",
     password: "",
@@ -26,14 +35,36 @@ export default function EditarUsuario() {
     genero: "",
   });
   const [pessoaData, setPessoaData] = useState<PessoaProps>({
-    id:"",
-    provincia:"",
-    municipio:"",
-    estado_civil:"",
-    profissao:"",
-    nivel_instrucao:"",
-    data_nascimento:""
-  })
+    id: "",
+    provincia: "",
+    municipio: "",
+    estado_civil: "",
+    profissao: "",
+    nivel_instrucao: "",
+    data_nascimento: "",
+    emprego_id: "",
+    residencia_id: "",
+    user_id: "",
+  });
+
+  const [empregoData, setEmpregoData] = useState<EmpregoProps>({
+    id: "",
+    area: "",
+    cargo: "",
+    sector: "",
+    data_inicio: "",
+    createdAt: "",
+    updatedAt: "",
+  });
+
+
+  const [residenciaData, setResidenciaData] = useState<ResidenciaProps>({
+    id: "",
+    tipo: "",
+    data_inicio: "",
+    createdAt: "",
+    updatedAt: "",
+  });
 
   const email = session?.user?.email;
   if (!email) return redirect("/");
@@ -43,63 +74,154 @@ export default function EditarUsuario() {
     setGenero(selected);
   };
 
+  const mudarArea = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = event.target.value;
+    setArea(selected);
+  };
+
   const mudarEstado = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = event.target.value;
     setEstado(selected);
   };
+
+  const mudarPropriedade = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = event.target.value;
+    setPropriedade(selected);
+  };
+
+  const mudarSector = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = event.target.value;
+    setSector(selected);
+  };
+
   // Manipula mudanças nos inputs
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUser = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev: UserProps) => ({ ...prev, [name]: value }));
+    setUserData((prev: UserProps) => ({ ...prev, [name]: value }));
+  };
+
+  const handlePessoa = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setPessoaData((prev: PessoaProps) => ({ ...prev, [name]: value }));
+  };
+
+
+
+  const handleEmprego = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setEmpregoData((prev: EmpregoProps) => ({ ...prev, [name]: value }));
+  };
+
+  const handleResidencia = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setResidenciaData((prev: ResidenciaProps) => ({ ...prev, [name]: value }));
   };
 
   async function submitForm(e: React.FormEvent) {
     e.preventDefault();
 
-    let info = {
-      primeiro_nome: formData.primeiro_nome,
-      segundo_nome: formData.segundo_nome,
-      password: formData.password,
-      email: formData.email,
-      email_antigo:session?.user?.email,
-      bilhete: formData.bilhete,
-      telemovel: formData.telemovel,
+    let infoConjugue = {};
+
+    let infoUser = {
+      id: userData.id,
+      primeiro_nome: userData.primeiro_nome,
+      segundo_nome: userData.segundo_nome,
+      password: userData.password,
+      email: userData.email,
+      bilhete: userData.bilhete,
+      telemovel: userData.telemovel,
       genero: genero,
-      estado_civil: estado,
-      provincia: formData.provincia,
-      municipio: formData.municipio,
-      data_nascimento: formData.data_nascimento,
     };
 
-    if (info.password) {
-      const hashPass = await hashPassword(formData.password);
-      info.password = hashPass;
-       await fetch(
-        `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify(info),
-        }
-      );
+    let infoPessoa = {
+      id: pessoaData.id,
+      profissao: pessoaData.profissao,
+      data_nascimento: pessoaData.data_nascimento,
+      estado_civil: estado_civil,
+      municipio: pessoaData.municipio,
+      nivel_instrucao: pessoaData.nivel_instrucao,
+      provincia: pessoaData.provincia,
+      emprego_id: pessoaData.emprego_id,
+      residencia_id: pessoaData.residencia_id,
+      user_id: userData.id,
+    };
 
-      return signOut({callbackUrl:"/"});
-    }
+    let infoResidencia = {
+      id: residenciaData.id,
+      tipo: propriedade,
+      data_inicio: residenciaData.data_inicio,
+    };
 
-    await fetch(
-      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario`,
+    let infoEmprego = {
+      id: empregoData.id,
+      area: area,
+      cargo: empregoData.cargo,
+      sector: sector,
+      data_inicio: empregoData.data_inicio,
+    };
+
+    const reqUser = {
+      pessoa: infoPessoa,
+      emprego: infoEmprego,
+      residencia: infoResidencia,
+    };
+
+    const updateUser = await fetch(
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario/${infoUser.id}`,
       {
         method: "PUT",
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify(info),
+        body: JSON.stringify(infoUser),
       }
     );
 
-    return signOut({callbackUrl:"/"});
+    if (!updateUser.ok) {
+      console.log("error ao atualizar", updateUser.statusText);
+      signOut({ callbackUrl: "/" });
+      return;
+    }
+
+    if (infoPessoa.id) {
+      const updatePessoa = await fetch(
+        `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa/${infoPessoa.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(reqUser),
+        }
+      );
+
+      if (!updatePessoa.ok) {
+        console.log("error ao atualizar", updatePessoa.statusText);
+        signOut({ callbackUrl: "/" });
+        return;
+      }
+
+      return signOut({callbackUrl:"/"})
+    }
+
+    const createPessoa = await fetch(
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa`,
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(reqUser),
+      }
+    );
+
+    if (!createPessoa.ok) {
+      console.log("error ao registrar", createPessoa.statusText);
+      signOut({ callbackUrl: "/" });
+      return;
+    }
+  
+      return signOut({callbackUrl:"/"})
   }
 
   useEffect(() => {
@@ -112,25 +234,8 @@ export default function EditarUsuario() {
         return res.json();
       })
       .then((users: UserInfo) => {
-        if (users.pessoa === null) {
-          const info = {
-            primeiro_nome: users.primeiro_nome,
-            segundo_nome: users.segundo_nome,
-            password: "",
-            email: users.email,
-            bilhete: users.bilhete,
-            telemovel: users.telemovel,
-            genero: users.genero,
-            estado_civil: "",
-            provincia: "",
-            municipio: "",
-            data_nascimento: "",
-          };
-          setFormData(info);
-
-          return;
-        }
-        const info = {
+        const resUser = {
+          id: users.id,
           primeiro_nome: users.primeiro_nome,
           segundo_nome: users.segundo_nome,
           password: "",
@@ -138,16 +243,44 @@ export default function EditarUsuario() {
           bilhete: users.bilhete,
           telemovel: users.telemovel,
           genero: users.genero,
-          estado_civil: users.pessoa.estado_civil,
-          provincia: users.pessoa.provincia,
-          municipio: users.pessoa.municipio,
-          data_nascimento: users.pessoa.data_nascimento,
         };
-        setFormData(info);
-        /*  setTimeout(() => {
-          setNome(dadosDaApi.nome);
-        }, 1500); // espera 1,5s
-        */
+        setUserData(resUser);
+
+        if (users.pessoa) {
+          const resPessoa: PessoaProps = {
+            id: users.pessoa.id,
+            municipio: users.pessoa.municipio,
+            data_nascimento: users.pessoa.data_nascimento.split('T')[0],
+            estado_civil: users.pessoa.estado_civil,
+            nivel_instrucao: users.pessoa.nivel_instrucao,
+            profissao: users.pessoa.profissao,
+            provincia: users.pessoa.provincia,
+            emprego_id: users.pessoa.emprego_id,
+            residencia_id: users.pessoa.residencia_id,
+            user_id: users.pessoa.user_id,
+          };
+          setPessoaData(resPessoa);
+
+          const resEmprego: EmpregoProps = {
+            id: users.pessoa.emprego.id,
+            area: users.pessoa.emprego.area,
+            cargo: users.pessoa.emprego.cargo,
+            sector: users.pessoa.emprego.sector,
+            data_inicio: users.pessoa.emprego.data_inicio.split('T')[0],
+            createdAt: users.pessoa.emprego.createdAt,
+            updatedAt: users.pessoa.emprego.updatedAt,
+          };
+          setEmpregoData(resEmprego);
+
+          const resResidencia: ResidenciaProps = {
+            id: users.pessoa.residencia.id,
+            tipo: users.pessoa.residencia.tipo,
+            data_inicio: users.pessoa.residencia.data_inicio.split('T')[0],
+            createdAt: users.pessoa.residencia.createdAt,
+            updatedAt: users.pessoa.residencia.updatedAt,
+          };
+          setResidenciaData(resResidencia);
+        }
         return;
       });
   }, []);
@@ -164,12 +297,16 @@ export default function EditarUsuario() {
             {/* Etapa 1: Dados Pessoais */}
             {step === 1 && (
               <div className="space-y-4">
+                <h2>
+                  {" "}
+                  <b>Informações da Conta</b>{" "}
+                </h2>
                 <input
                   type="text"
                   name="primeiro_nome"
                   placeholder="Primeiro Nome"
-                  value={formData.primeiro_nome}
-                  onChange={handleChange}
+                  value={userData.primeiro_nome}
+                  onChange={handleUser}
                   required
                   className={styles.input}
                 />
@@ -178,9 +315,9 @@ export default function EditarUsuario() {
                   type="text"
                   name="segundo_nome"
                   placeholder="Segundo Nome"
-                  value={formData.segundo_nome}
+                  value={userData.segundo_nome}
                   required
-                  onChange={handleChange}
+                  onChange={handleUser}
                   className={styles.input}
                 />
 
@@ -188,7 +325,7 @@ export default function EditarUsuario() {
                   type="password"
                   name="password"
                   placeholder="Inserir nova"
-                  onChange={handleChange}
+                  onChange={handleUser}
                   className={styles.input}
                 />
 
@@ -196,18 +333,18 @@ export default function EditarUsuario() {
                   type="tel"
                   name="telemovel"
                   placeholder="Telemovel"
-                  value={formData.telemovel}
+                  value={userData.telemovel}
                   required
-                  onChange={handleChange}
+                  onChange={handleUser}
                   className={styles.input}
                 />
                 <input
                   type="email"
                   name="email"
                   placeholder="Email"
-                  value={formData.email}
+                  value={userData.email}
                   required
-                  onChange={handleChange}
+                  onChange={handleUser}
                   className={styles.input}
                 />
               </div>
@@ -216,13 +353,16 @@ export default function EditarUsuario() {
             {/* Etapa 2: Informações Adicionais */}
             {step === 2 && (
               <div className="space-y-4">
+                <h2>
+                  <b>Informações Pessoais</b>
+                </h2>
                 <input
                   type="text"
                   name="bilhete"
                   placeholder="Bilhete nacional"
-                  value={formData.bilhete}
+                  value={userData.bilhete}
                   required
-                  onChange={handleChange}
+                  onChange={handleUser}
                   className={styles.input}
                 />
 
@@ -233,19 +373,19 @@ export default function EditarUsuario() {
                   required
                   onChange={mudarGenero}
                 >
-                  <option value="Nenhum">Gênero</option>
+                  <option value="">Gênero</option>
                   <option value="MASCULINO">Masculino</option>
                   <option value="FEMININO">Feminino</option>
                 </select>
 
                 <select
                   name="estado_civil"
-                  value={estado}
+                  value={estado_civil}
                   onChange={mudarEstado}
                   className={styles.input}
                   required
                 >
-                  <option value="Nenhum">Estado Civil</option>
+                  <option value="">Estado Civil</option>
                   <option value="SOLTEIRO">Solteiro</option>
                   <option value="CASADO">Casado</option>
                 </select>
@@ -253,10 +393,10 @@ export default function EditarUsuario() {
                 <input
                   type="text"
                   name="provincia"
-                  value={formData.provincia}
+                  value={pessoaData.provincia}
                   placeholder="Residente em (Província)"
                   required
-                  onChange={handleChange}
+                  onChange={handlePessoa}
                   className={styles.input}
                 />
 
@@ -264,22 +404,142 @@ export default function EditarUsuario() {
                   type="text"
                   name="municipio"
                   placeholder="Município de..."
-                  value={formData.municipio}
+                  value={pessoaData.municipio}
                   required
-                  onChange={handleChange}
-                  className={styles.input}
-                />
-
-                <input
-                  type="date"
-                  name="data_nascimento"
-                  required
-                  onChange={handleChange}
+                  onChange={handlePessoa}
                   className={styles.input}
                 />
               </div>
             )}
 
+            {/* Etapa 3 */}
+            {step === 3 && (
+              <div className="space-y-4">
+                <h2>
+                  <b>Informações Profissionais</b>
+                </h2>
+                <input
+                  type="text"
+                  name="profissao"
+                  placeholder="Profissão"
+                  value={pessoaData.profissao}
+                  required
+                  onChange={handlePessoa}
+                  className={styles.input}
+                />
+                <input
+                  type="text"
+                  name="nivel_instrucao"
+                  placeholder="Grau Acadêmico"
+                  value={pessoaData.nivel_instrucao}
+                  required
+                  onChange={handlePessoa}
+                  className={styles.input}
+                />
+                <label>
+                  Data de Nascimento
+                  <input
+                    type="date"
+                    name="data_nascimento"
+                    value={pessoaData.data_nascimento}
+                    required
+                    onChange={handlePessoa}
+                    className={styles.input}
+                  />
+                </label>
+
+                <select
+                  name="tipo"
+                  value={propriedade}
+                  onChange={mudarPropriedade}
+                  className={styles.input}
+                  required
+                >
+                  <option value="">Residência</option>
+                  <option value="PROPRIA">Própria</option>
+                  <option value="RENDA">Arrendado</option>
+                </select>
+                <label>
+                  Início da residência
+                  <input
+                    type="date"
+                    name="data_inicio"
+                    value={residenciaData.data_inicio}
+                    required
+                    onChange={handleResidencia}
+                    className={styles.input}
+                  />
+                </label>
+              </div>
+            )}
+
+            {/** Etapa: 4 */}
+            {step === 4 && (
+              <div className="space-y-4">
+                <h2>
+                  <b>Informações Adicionais</b>
+                </h2>
+
+                <input
+                  type="text"
+                  name="cargo"
+                  placeholder="Cargo no trabalho"
+                  value={empregoData.cargo}
+                  required
+                  onChange={handleEmprego}
+                  className={styles.input}
+                />
+
+                <select
+                  name="sector"
+                  value={sector}
+                  onChange={mudarSector}
+                  className={styles.input}
+                  required
+                >
+                  <option value="">Sector</option>
+                  <option value="PUBLICO">Público</option>
+                  <option value="PRIVADO">Privado</option>
+                </select>
+
+                <select
+                  name="area"
+                  value={area}
+                  onChange={mudarArea}
+                  className={styles.input}
+                  required
+                >
+                  <option value="">Área de trabalho</option>
+                  <option value="EDUCACAO">Educação</option>
+                  <option value="SAUDE">Saúde</option>
+                  <option value="ENERGIA">Energia</option>
+                  <option value="PETROLEO">Petróleo</option>
+                  <option value="MINERACAO">Mineração</option>
+                  <option value="FINANCAS">Finanças</option>
+                  <option value="CONSTRUCAO">Construção</option>
+                  <option value="TECNOLOGIA">Tecnologia</option>
+                  <option value="COMERCIO">Comércio</option>
+                  <option value="AGRICULTURA">Agricultura</option>
+                  <option value="TURISMO">Turismo</option>
+                  <option value="ADMINISTRACAO_PUBLICA">
+                    Administração Pública
+                  </option>
+                  <option value="DEFESA_SEGURANCA">Defesa e Segurança</option>
+                </select>
+
+                <label>
+                  Início de trabalho
+                  <input
+                    type="date"
+                    name="data_inicio"
+                    value={empregoData.data_inicio}
+                    required
+                    onChange={handleEmprego}
+                    className={styles.input}
+                  />
+                </label>
+              </div>
+            )}
             {/* Botões de Navegação */}
             <div className="flex justify-between mt-6">
               {step > 1 && (
@@ -292,7 +552,7 @@ export default function EditarUsuario() {
                 </button>
               )}
 
-              {step < 2 ? (
+              {step < 4 ? (
                 <button
                   type="button"
                   onClick={() => setStep(step + 1)}

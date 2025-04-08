@@ -2,47 +2,50 @@ export interface UserInfo {
   id: number;
   primeiro_nome: any;
   segundo_nome: any;
-  password: String;
+  password: any;
   genero: any;
   bilhete: any;
   telemovel: any;
   email: any;
   documento: {
     id: number;
-    tipo: String;
-    titilo: String;
+    tipo: any;
+    titilo: any;
   };
   pessoa: {
     id: number;
-    estado_civil: String;
-    provincia: String;
-    municipio: String;
-    profissao: String;
-    nivel_instrucao: String;
-    data_nascimento: String;
+    estado_civil: any;
+    provincia: any;
+    municipio: any;
+    profissao: any;
+    nivel_instrucao: any;
+    data_nascimento: any;
+    user_id:any,
+    emprego_id:any;
+    residencia_id:any;
     conjugue: {
       id: any;
-      nome_completo: String;
-      nivel_instrucao: String;
+      nome_completo: any;
+      nivel_instrucao: any;
       dependentes: any;
-      data_nascimento: String;
+      data_nascimento: any;
     };
 
     emprego: {
       id: number;
-      data_inicio: String;
-      sector: String;
-      cargo: String;
-      area: String;
-      createdAt: String;
-      upStringdAt: String;
+      data_inicio: any;
+      sector: any;
+      cargo: any;
+      area: any;
+      createdAt: any;
+      updatedAt: any;
     };
     residencia: {
       id: number;
-      tipo: String;
-      data_inicio: String;
-      createdAt: String;
-      upStringdAt: String;
+      tipo: any;
+      data_inicio: any;
+      createdAt: any;
+      updatedAt: any;
     };
   };
 }
@@ -60,36 +63,39 @@ export interface UserProps {
 
 export interface PessoaProps {
   id: any;
-  estado_civil: String;
-  provincia: String;
-  municipio: String;
-  profissao: String;
-  nivel_instrucao: String;
-  data_nascimento: String;
+  estado_civil: any;
+  provincia: any;
+  municipio: any;
+  profissao: any;
+  user_id:any;
+  emprego_id:any;
+  residencia_id:any;
+  nivel_instrucao: any;
+  data_nascimento: any;
 }
 
 export interface EmpregoProps {
-  id: number;
-  data_inicio: String;
-  sector: String;
-  cargo: String;
-  area: String;
-  createdAt: String;
-  upStringdAt: String;
+  id: any;
+  data_inicio: any;
+  sector: any;
+  cargo: any;
+  area: any;
+  createdAt: any;
+  updatedAt: any;
 }
 
 export interface ConjugueProps {
   id: any;
-  nome_completo: String;
-  nivel_instrucao: String;
+  nome_completo: any;
+  nivel_instrucao: any;
   dependentes: any;
-  data_nascimento: String;
+  data_nascimento: any;
 }
 
 export interface ResidenciaProps {
-  id: number;
-  tipo: String;
-  data_inicio: String;
-  createdAt: String;
-  upStringdAt: String;
+  id: any;
+  tipo: any;
+  data_inicio: any;
+  createdAt: any;
+  updatedAt: any;
 }

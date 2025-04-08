@@ -62,7 +62,7 @@ export default function Conteudo() {
          </span>
          <span className="py-1">
            Data nascimento:
-           <b>{userInfo?.pessoa.data_nascimento}</b>
+           <b>{userInfo?.pessoa.data_nascimento.split("T")[0]}</b>
          </span>
          <span className="py-1">
            Resindente em:

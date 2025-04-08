@@ -141,8 +141,11 @@ model Emprego{
     area Area
     pessoa Pessoa[]
     createdAt DateTime @default(now()) 
-    updatedAt DateTime @updatedAt 
+    updatedAt DateTime @updatedAt
+    conta Conta? 
 }
+
+
 
 model Residencia{
     id    Int    @id @default(autoincrement())
@@ -169,6 +172,21 @@ model Pessoa {
     residencia  Residencia   @relation(fields: [residencia_id], references:[id], onDelete: Cascade)
     conjugue Conjugue?
     solidario Solidario?
+    conta Conta?
+}
+
+model Conta{
+    id    Int    @id @default(autoincrement())
+    nome String
+    salario Int
+    iban String
+    emprego_id Int @unique
+    emprego   Emprego   @relation(fields: [emprego_id], references:[id], onDelete: Cascade)
+    pessoa_id Int @unique
+    pessoa Pessoa @relation(fields:[pessoa_id], references:[id], onDelete:Cascade)
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt 
+
 }
 
 

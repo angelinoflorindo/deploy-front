@@ -47,43 +47,6 @@ export async function POST(req: NextRequest) {
   return NextResponse.json(result);
 }
 
-// PUT - Atualizar usuário por ID
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const body = await req.json();
-  const pessoaInfo = {
-    estado_civil: body.estado,
-    provincia: body.provincia,
-    municipio: body.municipio,
-    data_nascimento: body.data_nascimento,
-  }
-  
-  try {
-    if (!body.password) {
-      const userInfo = {
-          primeiro_nome: body.primeiro_nome,
-          segundo_nome: body.segundo_nome,
-          password: body.password,
-          email: body.email,
-          bilhete: body.bilhete,
-          telemovel: body.telemovel,
-          genero: body.genero,
-        };
-
-      
-      return NextResponse.json({})   
-    }
-  
-  
-  
-    return NextResponse.json({})
-  } catch (error) {
-    return NextResponse.json(error);
-  }
-}
-
 // DELETE - Remover usuário por ID
 export async function DELETE(
   req: NextRequest,

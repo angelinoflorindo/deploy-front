@@ -1,16 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "@/modules/Login.module.css";
+import global from "@/modules/global.module.css";
 import { useSession } from "next-auth/react";
 import { clientAPI } from "@/app/lib/definitions";
 import { UserInfo } from "@/services/user.service";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 const userApi = clientAPI;
 const ConteudoInfo = () => {
   const { data: session, status } = useSession();
   const [user, setUser] = useState<UserInfo | null>(null);
-  if(!session?.user?.email) return redirect('/')
+  if (!session?.user?.email) return redirect("/");
   useEffect(() => {
     fetch(`${userApi}/api/usuario?email=${session?.user?.email}`)
       .then((res) => {
@@ -31,7 +33,7 @@ const ConteudoInfo = () => {
       <h1 className="font-bold text-center">Minha conta </h1>
 
       <section className="shadow-md p-5">
-        <div className="flex flex-row justify-between  py-2">
+        <div className="flex flex-col   py-2">
           <h2> Informações adicionais</h2>
           {user?.pessoa == null ? (
             <b className="text-red-500"> Sem Informação</b>
@@ -48,15 +50,19 @@ const ConteudoInfo = () => {
                 </span>
                 <span className="py-1">
                   Tempo de residência:
-                  <b>{user?.pessoa.residencia.data_inicio}</b>
+                  <b>{user?.pessoa.residencia.data_inicio.split("T")[0]}</b>
                 </span>
               </div>
 
               <hr className={styles.divider} />
               <h2> Informações do conjugue</h2>
 
-              {user?.pessoa.conjugue == null ? (
-                <b className="text-red-500">Sem informação</b>
+              {user?.pessoa.conjugue == null ||
+              user?.pessoa.estado_civil === "CASADO" ? (
+                <div className="flex flex-col" >
+                  <b className="text-red-500">Sem informação</b>
+                  <Link href={`/ferramenta/usuario/${user.pessoa.id}`} className={global.voltar}>+ registrar</Link>
+                </div>
               ) : (
                 <div className="flex flex-col">
                   <span className="py-1">
@@ -69,11 +75,11 @@ const ConteudoInfo = () => {
                   </span>
                   <span className="py-1">
                     Data nascimento :
-                    <b>{user?.pessoa.conjugue.data_nascimento}</b>
+                    <b>{user?.pessoa.conjugue.data_nascimento.split("T")[0]}</b>
                   </span>
                   <span className="py-1">
-                    <b>{user?.pessoa.conjugue.dependentes}</b>
                     Número de dependentes:
+                    <b>{user?.pessoa.conjugue.dependentes}</b>
                   </span>
                 </div>
               )}

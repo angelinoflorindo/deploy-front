@@ -17,6 +17,15 @@ export async function hashPassword(password: string) {
     return hashedPassword;
 }
 
+export async function converterString(value:any) {
+    if ( !isNaN(value)) {
+      return parseInt(value, 10);
+    } else if( typeof value === "string"){
+        return parseInt(value, 10);  
+    }
+    return value; // já é número ou não é conversível
+  }
+  
  
 export async function editarUsuario(formData: any) {
     //const picture: File[] = formData.profilePicture
@@ -33,6 +42,7 @@ export async function editarUsuario(formData: any) {
         bilhete: formData.bilhete,
         segundo_nome: formData.segundo_nome,
         telemovel: formData.telemovel,
+
     }
 
     const res = await fetch(`${process.env.CLIENT_URL}/api/usuario`, {
