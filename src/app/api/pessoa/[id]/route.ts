@@ -14,6 +14,7 @@ export async function GET(req: NextRequest, context:{params:{id:string}}) {
     try {
         const pessoa = await prisma.pessoa.findUnique({
             where: { id:uuid},
+            include:{conta:true, emprego:true,conjugue:true,residencia:true,solidario:true}
         });
         if (!pessoa) {
             return NextResponse.json({ message: "Dados não encontrados" }, { status: 404 });

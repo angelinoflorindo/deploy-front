@@ -5,10 +5,15 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import styles from "@/modules/Login.module.css"
 import Conteudo from "./conteudo";
+import { getServerSession } from "next-auth";
+import { UserInfo } from "@/services/user.service";
+import { buscarUser } from "@/app/actions/auth";
 
 
+const Investidor = async () => {
+  const session = await getServerSession()
+  const userData:UserInfo = await buscarUser(session?.user?.email)
 
-const Investidor = () => {
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg" >
@@ -18,7 +23,7 @@ const Investidor = () => {
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
        
-         <Conteudo />
+         <Conteudo userId={userData.id} investidor={userData.investidor}  />
         </main>
 
         {/* Rodapé Fixo */}

@@ -18,8 +18,10 @@ export async function GET(req: NextRequest) {
       where: { email: email },
       omit: { password: true },
       include: {
+        investidor:true,
+        devedor:true,
         pessoa: {
-          include: { emprego: true, residencia: true, conjugue: true },
+          include: { emprego: true, residencia: true, conjugue: true, conta:true},
         },
       },
     });

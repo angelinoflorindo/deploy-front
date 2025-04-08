@@ -4,7 +4,7 @@ CREATE TABLE `User` (
     `primeiro_nome` VARCHAR(191) NOT NULL,
     `segundo_nome` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
-    `genero` ENUM('Masculino', 'Feminino') NOT NULL,
+    `genero` ENUM('MASCULINO', 'FEMININO') NOT NULL,
     `bilhete` VARCHAR(191) NOT NULL,
     `telemovel` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE `Residencia` (
 -- CreateTable
 CREATE TABLE `Pessoa` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `estado_civil` VARCHAR(191) NOT NULL,
+    `estado_civil` ENUM('SOLTEIRO', 'CASADO') NOT NULL,
     `provincia` VARCHAR(191) NOT NULL,
     `municipio` VARCHAR(191) NOT NULL,
     `profissao` VARCHAR(191) NOT NULL,
@@ -60,9 +60,26 @@ CREATE TABLE `Pessoa` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `Conta` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `nome` VARCHAR(191) NOT NULL,
+    `salario` INTEGER NOT NULL,
+    `iban` VARCHAR(191) NOT NULL,
+    `emprego_id` INTEGER NOT NULL,
+    `pessoa_id` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `Conta_emprego_id_key`(`emprego_id`),
+    UNIQUE INDEX `Conta_pessoa_id_key`(`pessoa_id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Conjugue` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `nome_completo` VARCHAR(191) NOT NULL,
+    `dependentes` INTEGER NOT NULL,
     `nivel_instrucao` VARCHAR(191) NOT NULL,
     `data_nascimento` DATETIME(3) NOT NULL,
     `pessoa_id` INTEGER NOT NULL,
@@ -104,6 +121,8 @@ CREATE TABLE `Investidor` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `maior_risco` BOOLEAN NOT NULL,
     `maior_seguranca` BOOLEAN NOT NULL,
+    `saque_antecipado` BOOLEAN NOT NULL,
+    `fundo_protegido` BOOLEAN NOT NULL,
     `estado` BOOLEAN NOT NULL,
     `user_id` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -198,6 +217,7 @@ CREATE TABLE `Emprestimo` (
     `termino` DATETIME(3) NOT NULL,
     `estado` BOOLEAN NOT NULL,
     `progresso` ENUM('PENDENTE', 'CONCLUIDO', 'CANCELADO') NOT NULL,
+    `partilhar_emprestimo` BOOLEAN NOT NULL,
     `solidario_id` INTEGER NOT NULL,
     `proponente_id` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -296,6 +316,12 @@ ALTER TABLE `Pessoa` ADD CONSTRAINT `Pessoa_emprego_id_fkey` FOREIGN KEY (`empre
 
 -- AddForeignKey
 ALTER TABLE `Pessoa` ADD CONSTRAINT `Pessoa_residencia_id_fkey` FOREIGN KEY (`residencia_id`) REFERENCES `Residencia`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Conta` ADD CONSTRAINT `Conta_emprego_id_fkey` FOREIGN KEY (`emprego_id`) REFERENCES `Emprego`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Conta` ADD CONSTRAINT `Conta_pessoa_id_fkey` FOREIGN KEY (`pessoa_id`) REFERENCES `Pessoa`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Conjugue` ADD CONSTRAINT `Conjugue_pessoa_id_fkey` FOREIGN KEY (`pessoa_id`) REFERENCES `Pessoa`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -120,8 +120,6 @@ export default function EditarUsuario() {
   async function submitForm(e: React.FormEvent) {
     e.preventDefault();
 
-    let infoConjugue = {};
-
     let infoUser = {
       id: userData.id,
       primeiro_nome: userData.primeiro_nome,

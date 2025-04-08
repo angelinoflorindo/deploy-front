@@ -189,8 +189,6 @@ model Conta{
 
 }
 
-
-
 model Conjugue{
     id    Int    @id @default(autoincrement())
     nome_completo String
@@ -233,7 +231,10 @@ model Investidor{
     id    Int    @id @default(autoincrement())  
     maior_risco Boolean
     maior_seguranca Boolean
+    saque_antecipado Boolean
+    fundo_protegido Boolean
     estado Boolean
+    partilhar_emprestimo Boolean
     diversificacao Diversificacao[]
     user_id Int @unique
     user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
