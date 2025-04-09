@@ -1,6 +1,9 @@
+'use client';
+
 import Image from "next/image";
 import global from "@/modules/global.module.css"
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 const Conteudo = () => {
 
@@ -23,7 +26,7 @@ const Conteudo = () => {
                     <Image src="/img/minhaconta.png" className={global.imagens} alt="imagem" width={40} height={40} />
                     Perfil de investidor
                 </Link>
-                <Link href="/ferramenta/investidor" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md">
+                <Link href="/ferramenta/cartao" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md">
                     <Image src="/img/financeiro.png" className={global.imagens} alt="imagem" width={40} height={40} />
                     Cartão digital
                 </Link>
@@ -32,7 +35,7 @@ const Conteudo = () => {
                     Comunicar um problema
                 </Link>
 
-                <button type="submit" style={{cursor:"pointer"}} className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md"  >
+                <button type="submit" onClick={()=>{signOut({callbackUrl:'/'})}}  style={{cursor:"pointer"}} className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md"  >
                     <Image src="/img/reduzir.png" className={global.imagens} alt="imagem" width={40} height={40} />
                     Terminar Sessão
                 </button>

@@ -7,14 +7,15 @@ export interface UserInfo {
   bilhete: any;
   telemovel: any;
   email: any;
-  documento: {
-    id: number;
-    tipo: any;
-    titilo: any;
-  };
+  documento: DocumentoProps
   pessoa: PessoaDef;
   investidor:InvestidorProps,
   devedor:DevedorProps
+  deposito:DepositoProps,
+  reclamacao:ReclamacaoProps,
+  saque:SaqueProps,
+  carteira:CarteiraProps
+
 
 }
 
@@ -91,7 +92,52 @@ export interface InvestidorProps{
   user_id:any;
   createdAt: any;
   updatedAt: any;
+}
 
+export interface DepositoProps{
+  id:any,
+  valor:any,
+  user_id:any;
+  createdAt: any;
+  updatedAt: any;
+
+}
+
+export interface SaqueProps{
+  id:any,
+  taxa:any;
+  valor:any,
+  user_id:any;
+  createdAt: any;
+  updatedAt: any;
+}
+
+export interface CarteiraProps{
+  id:any,
+  codigo:any;
+  numero:any,
+  saldo:any;
+  user_id:any;
+  createdAt: any;
+  updatedAt: any;
+}
+
+export interface ReclamacaoProps{
+  id:any,
+  assunto:any,
+  conteudo:any;
+  user_id:any;
+  createdAt: any;
+  updatedAt: any;
+}
+
+export interface DocumentoProps{
+  id:any,
+  tipo:any,
+  titulo:any;
+  user_id:any;
+  createdAt: any;
+  updatedAt: any;
 }
 
 

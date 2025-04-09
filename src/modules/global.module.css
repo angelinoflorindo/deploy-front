@@ -128,3 +128,98 @@
 
 }
 
+/* Formatar a pagina do cartão digital */
+
+
+.cartao_header{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-radius: 10px;
+    background-color: #7030A0;
+    margin: 2px;
+}
+.cartao_header_depositar{
+    background-color: #F2F2F2;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-radius: 10px;
+    margin: 2px;
+}
+
+.cartao_esquerda{
+    border: 1px solid #7030A0;
+    width: 100%;
+    height: 28vh;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10pc;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    padding: 5px;
+}
+
+
+.cartao_direita{
+    width: 70%;
+    height: 28vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cartao_direita_depositar{
+    width: 70%;
+    height: 28vh;
+    display: flex;
+    justify-content: end;
+    align-items: start;
+    padding: 10px;
+}
+
+
+.cartao_esquerda_depositar{
+    border: 1px solid #F2F2F2;
+    width: 100%;
+    height: 28vh;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10pc;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    padding: 5px;
+}
+
+
+
+.cartao_saldo{
+    color: yellow;
+    width: 130px ;
+    height:130px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 60px;
+    background-color: #9148C8;
+}
+
+.cartao_btn{
+    width: 50px ;
+    height:50px;
+    border-radius: 30px;
+    background-color: #cfcece;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    size: 30px;
+    font-size: 30px;
+    cursor: pointer;
+    
+}

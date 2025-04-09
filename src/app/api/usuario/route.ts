@@ -20,6 +20,11 @@ export async function GET(req: NextRequest) {
       include: {
         investidor:true,
         devedor:true,
+        deposito:true,
+        saque:true,
+        carteira:true,
+        reclamacao:true,
+        documento:true,
         pessoa: {
           include: { emprego: true, residencia: true, conjugue: true, conta:true},
         },
