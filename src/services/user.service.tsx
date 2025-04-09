@@ -152,6 +152,19 @@ export interface DevedorProps{
   updatedAt: any;
 }
 
+export interface SolidarioProps{
+  id: any;
+  tipo: any;
+  parentesco: any;
+  taxa: any;
+  pessoa_id: any;
+  user_id:any;
+  createdAt: any;
+  updatedAt: any;
+  pessoa:{
+    user:UserProps
+  }
+}
 // More definitions
 export interface PessoaDef {
   id: any;
@@ -171,4 +184,12 @@ export interface PessoaDef {
 }
 
 
-
+export interface Guardiao {
+  id: any;
+  primeiro_nome: any;
+  segundo_nome: any;
+  telemovel: any;
+  email: any;
+  user_id:any;
+  pessoa: { id: any };
+}

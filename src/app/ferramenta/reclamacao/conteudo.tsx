@@ -37,9 +37,9 @@ const Conteudo = ({ userId }: { userId: number }) => {
       body: JSON.stringify(info),
     });
     if (!res.ok) {
-       signOut({ callbackUrl: "/" });
+     return   signOut({ callbackUrl: "/" });
     } else {
-       redirect("/ferramenta");
+      return redirect("/ferramenta");
     }
   }
 

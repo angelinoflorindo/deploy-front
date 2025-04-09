@@ -1,40 +1,55 @@
 import { converterString, hashPassword } from "@/app/actions/auth";
-import { UserProps } from "@/services/user.service";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const uuid = Number(searchParams.get("id"));
+export async function GET(req: NextRequest, context:{params:{id:string}}) {
+  
+  const {id} = await context.params
+  const query = id
+
+  // Verifica se é email ou telemóvel
+  const isEmail = query.includes('@')
+  let user = null
 
   try {
-    const userInfo = await prisma.user.findUnique({
-      where: { id: uuid },
-      omit: { password: true },
-      include: {
-        pessoa: {
-          include: { emprego: true, residencia: true, conjugue: true },
-        },
-      },
-    });
-
-    if (!userInfo) {
-      return NextResponse.json(
-        { message: "Usuário não existe" },
-        { status: 404 }
-      );
+    if (isEmail) {
+      user = await prisma.user.findUnique({
+        where: { email: query },
+        select: {
+          id: true,
+          primeiro_nome: true,
+          segundo_nome: true,
+          telemovel: true,
+          email:true,
+          pessoa:{select:{id:true}}
+        }
+      })
+    } else {
+      user = await prisma.user.findUnique({
+        where: { telemovel: query },
+        select: {
+          id: true,
+          primeiro_nome: true,
+          segundo_nome: true,
+          telemovel: true,
+          email:true,
+          pessoa:{select:{id:true}}
+        }
+      })
     }
 
-    return NextResponse.json(userInfo, { status: 200 });
+    if (!user) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, {status:404})
+    }
+    
+   return NextResponse.json(user)
   } catch (error) {
-    return NextResponse.json(
-      { message: "Erro ao buscar usuário", error },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Erro ao buscar usuário' }, {status:404})
   }
 }
+
 
 // PUT - Atualizar usuário por ID
 export async function PUT(req: NextRequest, context:{params:{id:string}}) { 

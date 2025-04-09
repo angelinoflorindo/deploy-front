@@ -107,6 +107,11 @@ enum Produto{
   MENSAL 
 }
 
+enum Perfil{
+    ADMIN
+    ANALISTA
+}
+
 enum Estado{
     SOLTEIRO
     CASADO
@@ -131,6 +136,8 @@ model User {
     saque Saque[]
     deposito Deposito[]
     carteira Carteira?
+    papel Papel?
+    solidario Solidario[]
 }
 
 model Emprego{
@@ -156,6 +163,16 @@ model Residencia{
     updatedAt DateTime @updatedAt 
 }
 
+model Papel{
+    id    Int    @id @default(autoincrement())
+    perfil Perfil
+    user_id Int @unique
+    user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt 
+
+}
+
 model Pessoa {
     id    Int    @id @default(autoincrement())
     estado_civil  Estado
@@ -166,9 +183,9 @@ model Pessoa {
     data_nascimento DateTime
     user_id Int @unique
     user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
-    emprego_id Int    @unique
+    emprego_id Int    
     emprego  Emprego   @relation(fields: [emprego_id], references:[id], onDelete: Cascade)
-    residencia_id Int    @unique
+    residencia_id Int    
     residencia  Residencia   @relation(fields: [residencia_id], references:[id], onDelete: Cascade)
     conjugue Conjugue?
     solidario Solidario?
@@ -205,7 +222,7 @@ model Documento{
     id    Int    @id @default(autoincrement())
     tipo Comprovativo
     titilo String
-    user_id Int @unique
+    user_id Int 
     user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
     createdAt DateTime @default(now()) 
     updatedAt DateTime @updatedAt 
@@ -245,7 +262,7 @@ model Investidor{
 
 model Reclamacao{
     id    Int    @id @default(autoincrement())  
-    user_id Int @unique
+    user_id Int 
     user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
     assunto String
     conteudo String
@@ -256,8 +273,6 @@ model Reclamacao{
 
 model Proponente{
     id    Int    @id @default(autoincrement())  
-    user_id Int @unique
-    user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
     solicitacao Int
     reembolsar Int
     satisfeitos Int
@@ -265,6 +280,8 @@ model Proponente{
     estado Boolean
     emprestimo Emprestimo[]
     reembolso Reembolso[]
+    user_id Int @unique
+    user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
     createdAt DateTime @default(now()) 
     updatedAt DateTime @updatedAt
 }
@@ -276,8 +293,10 @@ model Solidario{
     taxa Int
     pessoa_id Int    @unique
     pessoa   Pessoa   @relation(fields: [pessoa_id], references:[id], onDelete: Cascade)
-    emprestimo Emprestimo?
-    credito Credito?
+    emprestimo EmprestimoSolidario[]
+    user_id Int 
+    user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
+    credito CreditoSolidario[]
     createdAt DateTime @default(now()) 
     updatedAt DateTime @updatedAt
 }
@@ -303,10 +322,10 @@ model Credito{
     juro Int
     termino DateTime
     estado Boolean
+    pendencia Boolean
     progresso Progresso
-    solidario_id Int    @unique
-    solidario   Solidario   @relation(fields: [solidario_id], references:[id], onDelete: Cascade)
-    devedor_id Int  
+    devedor_id Int 
+    solidario CreditoSolidario[]
     devedor   Devedor   @relation(fields: [devedor_id], references:[id], onDelete: Cascade)
     createdAt DateTime @default(now()) 
     updatedAt DateTime @updatedAt 
@@ -321,14 +340,34 @@ model Emprestimo{
     prestacao Int
     termino DateTime 
     estado Boolean
+    pendencia Boolean
     progresso Progresso
     diversificacao Diversificacao[]
-    solidario_id Int    @unique
-    solidario   Solidario   @relation(fields: [solidario_id], references:[id], onDelete: Cascade)
+    solidario EmprestimoSolidario[]
     proponente_id Int
     proponente   Proponente   @relation(fields: [proponente_id], references:[id], onDelete: Cascade)
     createdAt DateTime @default(now()) 
     updatedAt DateTime @updatedAt 
+}
+
+model EmprestimoSolidario{
+    solidario_id Int @unique
+    emprestimo_id Int @unique
+    solidario   Solidario   @relation(fields: [solidario_id], references:[id], onDelete: Cascade)
+    emprestimo   Emprestimo   @relation(fields: [emprestimo_id], references:[id], onDelete: Cascade) 
+    @@id([solidario_id,emprestimo_id])
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt
+}
+
+model CreditoSolidario{
+    solidario_id Int @unique
+    credito_id Int @unique
+    solidario   Solidario   @relation(fields: [solidario_id], references:[id], onDelete: Cascade)
+    credito   Credito   @relation(fields: [credito_id], references:[id], onDelete: Cascade) 
+    @@id([solidario_id,credito_id])
+    createdAt DateTime @default(now()) 
+    updatedAt DateTime @updatedAt
 }
 
 model Diversificacao{
@@ -347,6 +386,8 @@ model Saque{
     id    Int    @id @default(autoincrement())  
     valor Float
     taxa Int
+    estado Boolean
+    pendencia Boolean
     user_id Int @unique
     user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
     createdAt DateTime @default(now()) 
@@ -356,6 +397,8 @@ model Saque{
 model Deposito {
     id    Int    @id @default(autoincrement())  
     valor Float
+    estado Boolean
+    pendencia Boolean
     user_id Int @unique
     user   User   @relation(fields: [user_id], references:[id], onDelete: Cascade)
     createdAt DateTime @default(now()) 
@@ -378,6 +421,8 @@ model Pagamento {
     valor Float
     detalhe String
     prestacao Int
+    estado Boolean
+    pendencia Boolean
     devedor_id Int  
     devedor   Devedor   @relation(fields: [devedor_id], references:[id], onDelete: Cascade)
     createdAt DateTime @default(now()) 
@@ -395,3 +440,6 @@ model Reembolso {
     createdAt DateTime @default(now()) 
     updatedAt DateTime @updatedAt
 }
+
+// Incluino as models do Analista ou Administrador
+

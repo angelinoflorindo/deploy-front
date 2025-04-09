@@ -1,33 +1,85 @@
-
-
 import React from "react";
-import styles from "@/modules/Login.module.css"
+import styles from "@/modules/Login.module.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import TipoCredito from "./tipo-credito";
-import Pagamento from "./pagamento";
+import global from "@/modules/global.module.css"
+import Image from "next/image";
 
 
+import Link from "next/link";
 
 const Credito = () => {
-    return (
+  return (
+    <div className={styles.container}>
+      <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
+        <Header />
 
-        <div className={styles.container}>
-            <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg" >
-                <Header />
+        {/* Conteúdo Principal */}
+        <main className="flex-1 overflow-y-auto p-4 bg-white">
+          <div className={global.grid}>
+            <h1 className="font-bold text-center">Escolher o tipo </h1>
 
-                {/* Conteúdo Principal */}
-                <main className="flex-1 overflow-y-auto p-4 bg-white">
-                    {/* <TipoCredito /> */}
-                    <TipoCredito />
-                    {/* <Pagamento /> */}
-                    
+            <section className={global.sectionLink}>
+              <Link
+                href="/dashboard/credito/consumo"
+                className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md"
+              >
+                <Image
+                  src="/img/dinheiro.png"
+                  className={global.imagens}
+                  alt="imagem"
+                  width={40}
+                  height={40}
+                />
+                Crédito consumo
+              </Link>
 
-                </main>
-                <Footer />
-            </div>
-        </div>
-    );
+              <Link
+                href="/dashboard/credito/decima"
+                className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md"
+              >
+                <Image
+                  src="/img/dinheiro.png"
+                  className={global.imagens}
+                  alt="imagem"
+                  width={40}
+                  height={40}
+                />
+                Crédito 10 dias
+              </Link>
+              <Link
+                href="/dashboard/credito/vigesima"
+                className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md"
+              >
+                <Image
+                  src="/img/dinheiro.png"
+                  className={global.imagens}
+                  alt="imagem"
+                  width={40}
+                  height={40}
+                />
+                Crédito 20 dias
+              </Link>
+              <Link
+                href="/dashboard/credito/mensal"
+                className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md"
+              >
+                <Image
+                  src="/img/dinheiro.png"
+                  className={global.imagens}
+                  alt="imagem"
+                  width={40}
+                  height={40}
+                />
+                Crédito 30 dias
+              </Link>
+            </section>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    </div>
+  );
 };
 
 export default Credito;

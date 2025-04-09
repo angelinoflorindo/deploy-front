@@ -15,10 +15,20 @@ export async function buscarUser(email: any) {
   return response.json();
 }
 
-export async function buscarPessoa(id: any) {
+export async function buscarUserQuery(query: any) {
+  if (!query || typeof query !== "string") {
+    return redirect("/dashboard");
+  }
+
   const response = await fetch(
-    `${process.env.CLIENT_URL}/api/pessoa/${id}`
+    `${process.env.CLIENT_URL}/api/usuario/${query}`
   );
+
+  return response.json();
+}
+
+export async function buscarPessoa(id: any) {
+  const response = await fetch(`${process.env.CLIENT_URL}/api/pessoa/${id}`);
   if (!response.ok) {
     console.log("Dados não encontrados");
     return redirect("/");
@@ -41,38 +51,29 @@ export async function converterString(value: any) {
   return value; // já é número ou não é conversível
 }
 
-export async function editarUsuario(formData: any) {
-  //const picture: File[] = formData.profilePicture
-  //const hashPass = await hashPassword(formData.password)
+export async function convidarSolidario(formData: any) {
 
-  console.log("userInfo", formData);
-
-  return;
-  const usuario = {
-    primeiro_nome: formData.primeiro_nome,
-    password: formData.password,
-    genero: formData.genero,
-    email: formData.email,
-    bilhete: formData.bilhete,
-    segundo_nome: formData.segundo_nome,
-    telemovel: formData.telemovel,
-  };
-
-  const res = await fetch(`${process.env.CLIENT_URL}/api/usuario`, {
+  const res = await fetch(`${process.env.CLIENT_URL}/api/pessoa/solidario`, {
     method: "POST",
     headers: {
       "Content-type": "application/json",
-      //  "X-CSRFToken": csrf
     },
-    body: JSON.stringify(usuario),
+    body: JSON.stringify(formData),
   });
 
   if (!res.ok) {
-    console.log("Erro ao registro");
-    //console.log(res)
-    return redirect("/auth/registrar");
+    console.log("Error ao convidar");
+    return redirect("/dashboard");
   }
-  createSession(usuario.email, "user_email");
+  return res.json();
+}
 
-  return redirect("/dashboard");
+
+export async function buscarGuardiao(id: any) {
+  const response = await fetch(`${process.env.CLIENT_URL}/api/pessoa/solidario/${id}`);
+  if (!response.ok) {
+    console.log("Dados não encontrados");
+    return redirect("/dashboard");
+  }
+  return response.json();
 }
