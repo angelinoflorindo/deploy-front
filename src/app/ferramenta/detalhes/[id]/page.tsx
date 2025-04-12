@@ -10,6 +10,9 @@ const PageInfo = async (context: { params: { id: string } }) => {
   const { id } = await context.params;
 
   //console.log("client uuid", id)
+
+
+
   const pessoaData: PessoaDef = await buscarPessoa(id);
   async function submitForm(formData: FormData) {
     "use server";
@@ -113,11 +116,11 @@ const PageInfo = async (context: { params: { id: string } }) => {
                 />
               </div>
             )}
+
             <input
               type="file"
               name="scanner"
-              accept="image/*"
-              className={styles.input}
+              multiple
             />
 
             <div className="w-[100%] flex flex-row justify-around">

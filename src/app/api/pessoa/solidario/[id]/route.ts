@@ -14,7 +14,7 @@ export async function GET(
   const uuid = await converterString(id);
   try {
     const resp = await prisma.solidario.findMany({
-      where: { user_id: uuid },
+      where: { user_id: uuid, estado:false},
       include: {
         pessoa: {
           include: {
@@ -50,6 +50,7 @@ export async function GET(
       data:resp,
       total:total
     }
+    console.log("Dados solicitados", result)
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {

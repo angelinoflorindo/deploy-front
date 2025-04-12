@@ -28,18 +28,16 @@ const Conteudo = () => {
       <div className="flex flex-row w-[100%] justify-between items-center  h-14">
         <Link
           href="/dashboard/credito/consumo"
-          type="submit"
           className="px-4 py-2 bg-gray-500 text-white rounded"
         >
           Voltar
         </Link>
-        <Link
-          href="/dashboard/credito/consumo/solicitar"
+        <button
           type="submit"
           className="px-4 py-2 bg-violet-500 text-white rounded"
         >
           Proximo
-        </Link>
+        </button>
       </div>
     </div>
   );

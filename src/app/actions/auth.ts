@@ -1,5 +1,4 @@
 "use server";
-
 import { createSession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
@@ -77,3 +76,38 @@ export async function buscarGuardiao(id: any) {
   }
   return response.json();
 }
+
+
+export async function uploadDocumento(data:FormData){
+
+    const formData = new FormData();
+    const files = data.getAll("scanner") as File[]
+    const titulo = data.get("titulo")
+    
+    files.forEach((file) => formData.append('file', file));
+
+    const res = await fetch(`${process.env.CLIENT_URL}/api/upload`, {
+      method: "POST",
+      body: formData,
+    });
+
+  return res
+
+}
+
+
+
+export async function registrarDocumento(data:any){
+
+  const res = await fetch(`${process.env.CLIENT_URL}/api/pessoa/documento`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+return res
+
+}
+
+

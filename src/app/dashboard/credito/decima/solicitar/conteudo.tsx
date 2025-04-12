@@ -16,47 +16,53 @@ const Conteudo = () => {
           </h1>
         </div>
         <div className={global.cartao_direita_solicitar}>
-        <h1>
-            <b>Juros:</b>  14%/mês
+          <h1>
+            <b>Juros:</b> 10%/mês
           </h1>
           <h1>
-            <b>Duração:</b> 30 dias
+            <b>Até:</b> 10 dias
           </h1>
         </div>
       </header>
-      <div className="flex py-4 flex-col justify-center itmes-center">
+
+      <div className="py-4">
+        <h1>
+          <b>Crédito permitidos:</b> max(50.000kz)
+        </h1>
         
-          <form
-            action=""
-            method="post"
-            className="flex flex-row  justify-around "
-          >
-            <label className="md-2">
-              Valor de crédito
-              <input
-                type="number"
-                name="valor"
-                placeholder="Ex:(Mil Kz) 1000"
-                className={styles.input}
-              />
-            </label>
-            <label className="md-2">
-              Número de prestações
-              <input
-                type="number" 
-                name="valor"
-                placeholder="Ex:6"
-                className={styles.input}
-              />
-            </label>
-          </form>
-          <button
-            type="button"
-            className="px-4 py-2 bg-violet-500  text-white rounded"
-          >
-            Confirmar
-          </button>
-        </div>
+      </div>
+      <div className="flex py-2 flex-col justify-center itmes-center">
+        <form
+          action=""
+          method="post"
+          className="flex flex-row  justify-around "
+        >
+          <label className="md-2">
+            Valor de crédito
+            <input
+              type="number"
+              name="valor"
+              placeholder="Ex:(Mil Kz) 1000"
+              className={styles.input}
+            />
+          </label>
+          <label className="md-2">
+            Número de prestações
+            <input
+              type="number"
+              name="valor"
+              placeholder="Ex:6"
+              className={styles.input}
+            />
+          </label>
+        </form>
+        <button
+          type="button"
+          className="px-4 py-2 bg-violet-500  text-white rounded"
+        >
+          Confirmar
+        </button>
+      </div>
     </div>
   );
 };

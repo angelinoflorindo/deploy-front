@@ -18,6 +18,7 @@ const rotasProtegidas = [
   "/dashboard/proponente/avaliacao",
   "/dashboard/proponente/protecao",
   "/ferramenta",
+  "/desenvolvimento",
   "/ferramenta/detalhes",
   "/ferramenta/detalhes?id",
   "/ferramenta/investidor",

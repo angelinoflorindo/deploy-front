@@ -23,7 +23,7 @@ const AvalSolidario = async () => {
 
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
-          <Conteudo user={user} guardInfo={data} total={total[0]._sum.taxa}/>
+          <Conteudo user={user} guardInfo={data} somaTaxa={total}/>
         </main>
 
         {/* Rodapé Fixo */}

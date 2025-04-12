@@ -20,8 +20,10 @@ const Credito = () => {
             <h1 className="font-bold text-center">Escolher o tipo </h1>
 
             <section className={global.sectionLink}>
+            
+            {/*href="/dashboard/credito/consumo*/}
               <Link
-                href="/dashboard/credito/consumo"
+                href="/desenvolvimento"
                 className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md"
               >
                 <Image
@@ -60,8 +62,10 @@ const Credito = () => {
                 />
                 Crédito 20 dias
               </Link>
+             
+              {/* href="/dashboard/credito/mensal"*/}
               <Link
-                href="/dashboard/credito/mensal"
+              href="/desenvolvimento"
                 className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md"
               >
                 <Image

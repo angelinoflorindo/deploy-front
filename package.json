@@ -3,16 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "prisma generate && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "prisma": "prisma generate"
   },
   "dependencies": {
-    "@prisma/client": "^6.5.0",
+    "@prisma/client": "^6.6.0",
     "bcryptjs": "^3.0.2",
     "date-fns": "^4.1.0",
+    "formidable": "^3.5.2",
     "jose": "^6.0.10",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.13.0",
@@ -29,7 +30,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "prisma": "^6.5.0",
+    "prisma": "^6.6.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

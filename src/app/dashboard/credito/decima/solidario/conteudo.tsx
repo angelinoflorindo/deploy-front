@@ -12,17 +12,18 @@ import { Guardiao, SolidarioProps } from "@/services/user.service";
 const Conteudo = ({
   user,
   guardInfo,
-  total,
+  somaTaxa,
 }: {
   user: Guardiao;
   guardInfo: any;
-  total: any;
+  somaTaxa: any;
 }) => {
   const [guard, setGuard] = useState("");
   const [familiar, setFamiliar] = useState("");
   const [proximo, setProximo] = useState(false);
   const [parentesco, setParentesco] = useState(false);
   const [taxa, setTaxa] = useState(0);
+  const [total, setTotal] = useState(0)
   const [guardData, setGuardData] = useState<Guardiao>({
     id: "",
     primeiro_nome: "",
@@ -74,6 +75,7 @@ const Conteudo = ({
       taxa: taxa,
       pessoa_id: guardData.pessoa.id,
       user_id: user.id,
+      estado:false
     };
 
     if (!familiar) {
@@ -81,6 +83,16 @@ const Conteudo = ({
       return redirect("/dashboard/credito/decima/solidario");
     }
 
+
+    if (taxa < 1) {
+      console.log("Aumente mais a taxa");
+      return redirect("/dashboard/credito/decima/solidario");
+    }
+
+    const resp: Guardiao = await convidarSolidario(solidario);
+    //console.log("convite enviado", resp);
+    //setProximo(true);
+    
     setGuard("");
     setGuardData({
       id: "",
@@ -93,14 +105,6 @@ const Conteudo = ({
     });
     setParentesco(false);
 
-    if (taxa < 1) {
-      console.log("Aumente mais a taxa");
-      return redirect("/dashboard/credito/decima/solidario");
-    }
-
-    const resp: Guardiao = await convidarSolidario(solidario);
-    console.log("convite enviado", resp);
-    setProximo(true);
   }
 
   async function getNextPage() {
@@ -111,9 +115,13 @@ const Conteudo = ({
   }
 
   useEffect(() => {
-    if (total > 50) {
+
+    // novas mudanças
+    if(somaTaxa.length === 1 && somaTaxa[0]._sum.taxa>50){
+      setTotal(somaTaxa[0]._sum.taxa)
       setProximo(true);
     }
+
     if (taxa < 0) {
       setTaxa(0);
     }
@@ -164,7 +172,7 @@ const Conteudo = ({
         {!guardData.id ? (
           <div>
             <span className="text-green-500 py-5">
-              Convide + pessoas que garantam o teu crédito
+              Convites enviados 
             </span>{" "}
             <br />
             {guardInfo.map((event: SolidarioProps) => (

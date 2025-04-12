@@ -2,13 +2,56 @@ import Image from "next/image";
 import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { registrarDocumento, uploadDocumento } from "@/app/actions/auth";
 
-const Conteudo = () => {
+import { UserInfo } from "@/services/user.service";
+
+const Conteudo =  ({user}:{user:UserInfo}) => {
+  
+  async function submitForm(data:FormData) {
+    "use server";
+    /*
+    PARA UPLOAD DE VÁRIOS
+
+    const formData = new FormData();
+    files.forEach(file => formData.append('file', file));
+
+    PARA O UPLOAD DE UM ARQUIVO
+    
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    */
+    data.append('tipo', 'BEM_MOVEL')
+    data.append('user_id', `${user.id}`)
+    //files.forEach((file) => data.append('file', file));
+    
+
+    const res = await fetch(`${process.env.CLIENT_URL}/api/upload`, {
+      method: "POST",
+      body: data,
+    });
+
+  return;
+  
+ // const res = await registrarDocumento(info)
+
+    if (!res.ok) {
+      console.log("Erro registrar documento!");
+      return redirect("/dashboard/credito/decima/debito");
+    }
+
+    return redirect("/dashboard/credito/decima/solicitar");
+  }
+
   return (
     <div>
       <h1 className="font-bold text-align">Ordem de débitos</h1>
 
-      <form action="" method="post" className="shadow-md p-5">
+      <form action={submitForm} className="shadow-md p-5">
         <h2>Titulo</h2>
         <input
           type="text"
@@ -20,27 +63,26 @@ const Conteudo = () => {
         <input
           type="file"
           name="scanner"
-          accept="image/*"
+          multiple={true}
           className="w-full  p-2 border rounded"
         />
-      </form>
+        <div className="flex flex-row w-[100%] justify-between items-center  h-14">
+          <Link
+            href="/dashboard/credito/decima"
+            type="submit"
+            className="px-4 py-2 bg-gray-500 text-white rounded"
+          >
+            Voltar
+          </Link>
 
-      <div className="flex flex-row w-[100%] justify-between items-center  h-14">
-        <Link
-          href="/dashboard/credito/decima"
-          type="submit"
-          className="px-4 py-2 bg-gray-500 text-white rounded"
-        >
-          Voltar
-        </Link>
-        <Link
-          href="/dashboard/credito/decima/solicitar"
-          type="submit"
-          className="px-4 py-2 bg-violet-500 text-white rounded"
-        >
-          Proximo
-        </Link>
-      </div>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-violet-500 text-white rounded"
+          >
+            Proximo
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
