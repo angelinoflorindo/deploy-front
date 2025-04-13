@@ -1,24 +1,33 @@
 import { UserProps } from "@/services/user.service";
-import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-
-const prisma = new PrismaClient();
+import User from "@/models/User";
+import Investidor from "@/models/Investidor";
+import Devedor from "@/models/Devedor";
+import Deposito from "@/models/Deposito";
+import Saque from "@/models/Saque";
+import Carteira from "@/models/Carteira";
+import Reclamacao from "@/models/Reclamacao";
+import Documento from "@/models/Documento";
+import Pessoa from "@/models/Pessoa";
+import Emprego from "@/models/Emprego";
+import Residencia from "@/models/Residencia";
+import Conjugue from "@/models/Conjugue";
+import Conta from "@/models/Conta";
+import {sequelize} from '@/lib/sequelize'
+import {setupAssociations} from '@/lib/associations'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get("email");
 
   if (!email) {
-    const users = await prisma.user.findMany();
+    const users = await User.findAll();
     return NextResponse.json(users);
   }
 
   try {
-    const userInfo = await prisma.user.findUnique({
-      where: { email: email },
-      omit: { password: true },
-      include: {
-        investidor:true,
+    /*
+     investidor:true,
         devedor:true,
         deposito:true,
         saque:true,
@@ -28,7 +37,31 @@ export async function GET(req: NextRequest) {
         pessoa: {
           include: { emprego: true, residencia: true, conjugue: true, conta:true},
         },
-      },
+
+    */
+    const userInfo = await User.findOne({
+      where: { email: email },
+      attributes: { exclude: ["password"] },
+      include: [
+        { model: Investidor },
+        { model: Devedor },
+        { model: Deposito },
+        { model: Saque },
+        { model: Carteira },
+        { model: Reclamacao },
+        { model: Documento },
+        {
+          model: Pessoa,
+          include: [
+            {
+              model: Emprego,
+            },
+            { model: Residencia },
+            { model: Conjugue },
+            { model: Conta },
+          ],
+        },
+      ],
     });
 
     if (!userInfo) {
@@ -48,24 +81,23 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const user = await req.json();
+  const data = await req.json();
 
-  const result = await prisma.user.create({ data: user });
-  return NextResponse.json(result);
-}
-
-// DELETE - Remover usuário por ID
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
   try {
-    await prisma.user.delete({
-      where: { id: Number(params.id) },
-    });
+    await sequelize.authenticate()
+    await sequelize.sync()
+    setupAssociations()
+    const user = await User.create(data);
 
-    return NextResponse.json("Dados eliminado");
+    return NextResponse.json(
+      { message: "Usuário registrado com sucesso", user },
+      { status: 201 }
+    );
   } catch (error) {
-    return NextResponse.json(error);
+    console.error(error); // Ajuda a depurar
+    return NextResponse.json(
+      { message: "Erro ao criar usuário", error },
+      { status: 500 }
+    );
   }
 }

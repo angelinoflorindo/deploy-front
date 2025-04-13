@@ -30147,18 +30147,18 @@ export namespace Prisma {
   }
 
   export type EmprestimoSolidarioWhereUniqueInput = Prisma.AtLeast<{
-    solidario_id?: number
     solidario_id_emprestimo_id?: EmprestimoSolidarioSolidario_idEmprestimo_idCompoundUniqueInput
     AND?: EmprestimoSolidarioWhereInput | EmprestimoSolidarioWhereInput[]
     OR?: EmprestimoSolidarioWhereInput[]
     NOT?: EmprestimoSolidarioWhereInput | EmprestimoSolidarioWhereInput[]
     estado?: BoolFilter<"EmprestimoSolidario"> | boolean
+    solidario_id?: IntFilter<"EmprestimoSolidario"> | number
     emprestimo_id?: IntFilter<"EmprestimoSolidario"> | number
     createdAt?: DateTimeFilter<"EmprestimoSolidario"> | Date | string
     updatedAt?: DateTimeFilter<"EmprestimoSolidario"> | Date | string
     solidario?: XOR<SolidarioScalarRelationFilter, SolidarioWhereInput>
     emprestimo?: XOR<EmprestimoScalarRelationFilter, EmprestimoWhereInput>
-  }, "solidario_id_emprestimo_id" | "solidario_id">
+  }, "solidario_id_emprestimo_id">
 
   export type EmprestimoSolidarioOrderByWithAggregationInput = {
     estado?: SortOrder
@@ -30208,18 +30208,18 @@ export namespace Prisma {
   }
 
   export type CreditoSolidarioWhereUniqueInput = Prisma.AtLeast<{
-    solidario_id?: number
     solidario_id_credito_id?: CreditoSolidarioSolidario_idCredito_idCompoundUniqueInput
     AND?: CreditoSolidarioWhereInput | CreditoSolidarioWhereInput[]
     OR?: CreditoSolidarioWhereInput[]
     NOT?: CreditoSolidarioWhereInput | CreditoSolidarioWhereInput[]
     estado?: BoolFilter<"CreditoSolidario"> | boolean
+    solidario_id?: IntFilter<"CreditoSolidario"> | number
     credito_id?: IntFilter<"CreditoSolidario"> | number
     createdAt?: DateTimeFilter<"CreditoSolidario"> | Date | string
     updatedAt?: DateTimeFilter<"CreditoSolidario"> | Date | string
     solidario?: XOR<SolidarioScalarRelationFilter, SolidarioWhereInput>
     credito?: XOR<CreditoScalarRelationFilter, CreditoWhereInput>
-  }, "solidario_id_credito_id" | "solidario_id">
+  }, "solidario_id_credito_id">
 
   export type CreditoSolidarioOrderByWithAggregationInput = {
     estado?: SortOrder
@@ -30273,20 +30273,20 @@ export namespace Prisma {
   }
 
   export type DiversificacaoWhereUniqueInput = Prisma.AtLeast<{
-    investidor_id?: number
-    emprestimo_id?: number
     investidor_id_emprestimo_id?: DiversificacaoInvestidor_idEmprestimo_idCompoundUniqueInput
     AND?: DiversificacaoWhereInput | DiversificacaoWhereInput[]
     OR?: DiversificacaoWhereInput[]
     NOT?: DiversificacaoWhereInput | DiversificacaoWhereInput[]
     estado?: BoolFilter<"Diversificacao"> | boolean
+    investidor_id?: IntFilter<"Diversificacao"> | number
+    emprestimo_id?: IntFilter<"Diversificacao"> | number
     taxa?: IntFilter<"Diversificacao"> | number
     protencao?: BoolFilter<"Diversificacao"> | boolean
     createdAt?: DateTimeFilter<"Diversificacao"> | Date | string
     updatedAt?: DateTimeFilter<"Diversificacao"> | Date | string
     investidor?: XOR<InvestidorScalarRelationFilter, InvestidorWhereInput>
     emprestimo?: XOR<EmprestimoScalarRelationFilter, EmprestimoWhereInput>
-  }, "investidor_id_emprestimo_id" | "investidor_id" | "emprestimo_id">
+  }, "investidor_id_emprestimo_id">
 
   export type DiversificacaoOrderByWithAggregationInput = {
     estado?: SortOrder

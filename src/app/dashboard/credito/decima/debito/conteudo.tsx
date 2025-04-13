@@ -11,23 +11,9 @@ const Conteudo =  ({user}:{user:UserInfo}) => {
   
   async function submitForm(data:FormData) {
     "use server";
-    /*
-    PARA UPLOAD DE VÁRIOS
-
-    const formData = new FormData();
-    files.forEach(file => formData.append('file', file));
-
-    PARA O UPLOAD DE UM ARQUIVO
     
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    */
     data.append('tipo', 'BEM_MOVEL')
     data.append('user_id', `${user.id}`)
-    //files.forEach((file) => data.append('file', file));
     
 
     const res = await fetch(`${process.env.CLIENT_URL}/api/upload`, {

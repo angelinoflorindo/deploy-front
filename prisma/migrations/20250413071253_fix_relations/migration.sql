@@ -255,7 +255,6 @@ CREATE TABLE `EmprestimoSolidario` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
-    UNIQUE INDEX `EmprestimoSolidario_solidario_id_key`(`solidario_id`),
     PRIMARY KEY (`solidario_id`, `emprestimo_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -267,7 +266,6 @@ CREATE TABLE `CreditoSolidario` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
-    UNIQUE INDEX `CreditoSolidario_solidario_id_key`(`solidario_id`),
     PRIMARY KEY (`solidario_id`, `credito_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -281,8 +279,6 @@ CREATE TABLE `Diversificacao` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
-    UNIQUE INDEX `Diversificacao_investidor_id_key`(`investidor_id`),
-    UNIQUE INDEX `Diversificacao_emprestimo_id_key`(`emprestimo_id`),
     PRIMARY KEY (`investidor_id`, `emprestimo_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

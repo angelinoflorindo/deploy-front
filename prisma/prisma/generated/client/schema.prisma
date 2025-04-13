@@ -353,7 +353,7 @@ model Emprestimo {
 
 model EmprestimoSolidario {
   estado        Boolean    @default(true)
-  solidario_id  Int        @unique
+  solidario_id  Int
   emprestimo_id Int
   solidario     Solidario  @relation(fields: [solidario_id], references: [id], onDelete: Cascade)
   emprestimo    Emprestimo @relation(fields: [emprestimo_id], references: [id], onDelete: Cascade)
@@ -365,7 +365,7 @@ model EmprestimoSolidario {
 
 model CreditoSolidario {
   estado       Boolean   @default(true)
-  solidario_id Int       @unique
+  solidario_id Int
   credito_id   Int
   solidario    Solidario @relation(fields: [solidario_id], references: [id], onDelete: Cascade)
   credito      Credito   @relation(fields: [credito_id], references: [id], onDelete: Cascade)
@@ -377,8 +377,8 @@ model CreditoSolidario {
 
 model Diversificacao {
   estado        Boolean    @default(true)
-  investidor_id Int        @unique
-  emprestimo_id Int        @unique
+  investidor_id Int
+  emprestimo_id Int
   taxa          Int
   protencao     Boolean
   investidor    Investidor @relation(fields: [investidor_id], references: [id], onDelete: Cascade)

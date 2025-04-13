@@ -3,11 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "prisma generate && next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma": "prisma generate"
+    "migration:create": "dotenv -- sequelize-cli migration:create",
+    "migrate": "dotenv -- sequelize-cli db:migrate",
+    "migrate:rollback": "dotenv -- sequelize-cli  db:migrate:undo",
+    "migrate:rollbaclAll": "dotenv -- sequelize-cli db:migrate:undo:all"
   },
   "dependencies": {
     "@prisma/client": "^6.6.0",
@@ -16,22 +19,28 @@
     "formidable": "^3.5.2",
     "jose": "^6.0.10",
     "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.13.0",
+    "mysql2": "^3.14.0",
     "next": "^15.2.4",
     "next-auth": "^4.24.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "sequelize": "^6.37.7",
+    "sequelize-typescript": "^2.1.6",
     "swr": "^2.3.3",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
-    "@types/node": "^20",
+    "@types/node": "^20.17.30",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sequelize": "^4.28.20",
+    "dotenv-cli": "^8.0.0",
     "prisma": "^6.6.0",
+    "sequelize-cli": "^6.6.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }

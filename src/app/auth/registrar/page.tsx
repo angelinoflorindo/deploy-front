@@ -7,6 +7,7 @@ import { useState } from "react";
 import { redirect } from "next/navigation";
 import { signIn } from "next-auth/react";
 
+
 const RegisterForm = () => {
   const [step, setStep] = useState(1);
   const [gender, setGender] = useState("");
@@ -33,8 +34,31 @@ const RegisterForm = () => {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    /*
+     "use server";
+        
+        data.append('tipo', 'BEM_MOVEL')
+        data.append('user_id', `${user.id}`)
+        
+    
+        const res = await fetch(`${process.env.CLIENT_URL}/api/upload`, {
+          method: "POST",
+          body: data,
+        });
+    
+      return;
+      
+     // const res = await registrarDocumento(info)
+    
+        if (!res.ok) {
+          console.log("Erro registrar documento!");
+          return redirect("/dashboard/credito/decima/debito");
+        }
+    
+        return redirect("/dashboard/credito/decima/solicitar");
+      }
 
-    //const picture: File[] = formData.;
+    */
     const hashPass = await hashPassword(formData.password);
     const usuario = {
       primeiro_nome: formData.primeiro_nome,
@@ -60,6 +84,11 @@ const RegisterForm = () => {
       return redirect("/auth/registrar");
     }
 
+    console.log("registrado", response.json())
+
+
+    return
+
     const res = await signIn("credentials", {
       redirect: false,
       email: usuario.email,
@@ -67,7 +96,7 @@ const RegisterForm = () => {
     });
 
     if (res?.error) {
-      console.log("Erro na autenticação:", res.error);
+    //  console.log("Erro na autenticação:", res.error);
       redirect("/");
     } else {
      return redirect("/dashboard");

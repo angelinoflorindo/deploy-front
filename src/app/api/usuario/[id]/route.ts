@@ -2,6 +2,17 @@ import { converterString, hashPassword } from "@/app/actions/auth";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
+//import  User from '@/models/User'
+
+/*
+export const dynamic = "force-dynamic"
+
+async function getData(){
+  return await User.findAll()
+}
+*/
+
+
 const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest, context:{params:{id:string}}) {

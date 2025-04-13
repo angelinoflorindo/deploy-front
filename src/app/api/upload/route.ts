@@ -3,9 +3,8 @@ import { writeFile } from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
 import { converterString } from "@/app/actions/auth";
-import { PrismaClient, Comprovativo, Documento } from "@prisma/client";
+import Documento from "@/models/Documento"
 
-const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
   const formData = await req.formData();
@@ -16,7 +15,7 @@ export async function POST(req: Request) {
   const rawTipo = formData.get("tipo");
 
   const titulo = typeof rawTitulo === "string" ? rawTitulo : "";
-  const tipo = rawTipo as Comprovativo; // typeof rawTipo === "string" ? rawTipo:"";
+  const tipo = typeof rawTipo === "string" ? rawTipo : "";
 
   if (files.length === 0) {
     return new Response(
@@ -47,16 +46,16 @@ export async function POST(req: Request) {
       tipo: tipo,
       user_id: await converterString(formData.get("user_id")),
     };
-    savedFiles.push(documento);
+   const res =  await Documento.create(documento)
+   savedFiles.push(res) 
   }
-
-  /*
-  const result = await prisma.documento.create({})
-  if(!result){
+  
+  if(savedFiles.length < 1){
     return new Response(
       JSON.stringify({ message: "Houve um erro ao registrar documentos!" })
     );
   }
-*/
-  return new Response(JSON.stringify({}));
+    
+
+  return new Response(JSON.stringify(savedFiles));
 }

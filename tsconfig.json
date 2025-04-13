@@ -20,7 +20,12 @@
     ],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+        "target": "ES2022",              
+        "experimentalDecorators": true,
+        "useDefineForClassFields": false,
+        "emitDecoratorMetadata": true
+
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
