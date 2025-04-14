@@ -1,14 +1,8 @@
 import { converterString } from "@/app/actions/auth";
-import { UserProps } from "@/services/user.service";
-import { PrismaClient } from "@prisma/client";
+import { setupAssociations } from "@/lib/associations";
+import { sequelize } from "@/lib/sequelize";
+import Conta from "@/models/Conta";
 import { NextRequest, NextResponse } from "next/server";
-
-const prisma = new PrismaClient();
-
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const email = searchParams.get("email");
-}
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -21,22 +15,14 @@ export async function POST(req: NextRequest) {
     pessoa_id: await converterString(body.pessoa_id),
   };
 
-  const result = await prisma.conta.create({ data: info });
-  return NextResponse.json(result);
-}
-
-// DELETE - Remover usuário por ID
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
   try {
-    await prisma.user.delete({
-      where: { id: Number(params.id) },
-    });
+    await sequelize.authenticate();
+    await sequelize.sync();
+    setupAssociations();
 
-    return NextResponse.json("Dados eliminado");
+    const result = await Conta.create(info);
+    return NextResponse.json(result);
   } catch (error) {
-    return NextResponse.json(error);
+    return NextResponse.json({message:error}, {status:404})
   }
 }

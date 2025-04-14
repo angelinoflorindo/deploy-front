@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "next-auth/react";
 import { getToken } from "next-auth/jwt";
+
 
 const rotasProtegidas = [
   "/dashboard",
@@ -30,15 +30,16 @@ const rotasProtegidas = [
 const rotasPublicas = ["/", "/auth"];
 
 // Função para verificar se a rota é protegida
-function isRotaProtegida(path:any) {
+function isRotaProtegida(path: any) {
   return rotasProtegidas.some((route) => path.startsWith(route));
 }
 
 // Função para verificar se a rota é pública
-function isRotaPublica(path:any) {
+function isRotaPublica(path: any) {
   return rotasPublicas.includes(path);
 }
-export default async function middleware(req:NextRequest) {
+
+export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
 
   // Verificar se a rota é pública ou protegida
@@ -49,11 +50,13 @@ export default async function middleware(req:NextRequest) {
   const token = await getToken({ req });
 
   // Se a rota for protegida e o usuário não estiver logado, redireciona para a página inicial
+  //
   if (isProtegida && !token) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
   // Se a rota for pública, mas o usuário já estiver logado, redireciona para o dashboard
+  //
   if (isPublica && token) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
@@ -62,5 +65,10 @@ export default async function middleware(req:NextRequest) {
 }
 
 export const config = {
-  matcher:["/dashboard/:path*", "/ferramenta/:path*"]
+  matcher: [
+    "/dashboard/:path*",
+    "/ferramenta/:path*",
+    "/api/documento/:path*",
+   // "/api/upload",
+  ],
 };

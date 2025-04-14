@@ -1,9 +1,10 @@
 import { converterString } from "@/app/actions/auth";
-import { PrismaClient } from "@prisma/client";
+import { setupAssociations } from "@/lib/associations";
+import { sequelize } from "@/lib/sequelize";
+import Pessoa from "@/models/Pessoa";
+import Solidario from "@/models/Solidario";
+import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
-import { verificarEstado } from "../route";
-
-const prisma = new PrismaClient();
 
 export async function GET(
   req: NextRequest,
@@ -13,30 +14,26 @@ export async function GET(
   const { id } = await context.params;
   const uuid = await converterString(id);
   try {
-    const resp = await prisma.solidario.findMany({
-      where: { user_id: uuid, estado:false},
-      include: {
-        pessoa: {
-          include: {
-            user: {
-              select: {
-                primeiro_nome: true,
-                segundo_nome: true,
-                id: true,
-                email: true,
-              },
-            },
-          },
-        },
-      },
-    })
+    await sequelize.authenticate();
+    await sequelize.sync();
+    setupAssociations();
 
-    const total = await prisma.solidario.groupBy({
-      by:['user_id'],
-      where:{user_id:uuid},
-      _sum:{taxa:true}
-      
-    })
+    const resp = await Solidario.findAll({
+      where: { user_id: uuid, estado: false },
+      include: [
+        {
+          model: Pessoa,
+          include: [
+            {
+              model: User,
+              attributes: ["primeiro_nome", "segundo_nome", "id", "email"],
+            },
+          ],
+        },
+      ],
+    });
+
+    const total = await Solidario.sum("taxa") 
 
     if (!resp) {
       return NextResponse.json(
@@ -45,12 +42,11 @@ export async function GET(
       );
     }
 
-    
     const result = {
-      data:resp,
-      total:total
-    }
-    console.log("Dados solicitados", result)
+      data: resp,
+      total: total,
+    };
+    console.log("Dados solicitados", result);
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
@@ -58,42 +54,5 @@ export async function GET(
       { message: "Erro ao buscar os dados", error },
       { status: 500 }
     );
-  }
-}
-
-// PUT - Atualizar usuário por ID
-export async function PUT(
-  req: NextRequest,
-  context: { params: { id: number } }
-) {
-  const { id } = await context.params;
-  const uuid = await converterString(id);
-  const body = await req.json();
-
-  try {
-    const result = await prisma.investidor.update({
-      where: { id: uuid },
-      data: body,
-    });
-
-    return NextResponse.json(result, { status: 200 });
-  } catch (error) {
-    return NextResponse.json(error);
-  }
-}
-
-// DELETE - Remover usuário por ID
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    await prisma.user.delete({
-      where: { id: Number(params.id) },
-    });
-
-    return NextResponse.json("Dados eliminado");
-  } catch (error) {
-    return NextResponse.json(error);
   }
 }

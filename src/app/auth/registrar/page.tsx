@@ -6,8 +6,9 @@ import { hashPassword } from "@/app/actions/auth";
 import { useState } from "react";
 import { redirect } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { clientAPI } from "@/app/lib/definitions";
 
-
+const url = clientAPI;
 const RegisterForm = () => {
   const [step, setStep] = useState(1);
   const [gender, setGender] = useState("");
@@ -19,6 +20,7 @@ const RegisterForm = () => {
     email: "",
     password: "",
     bilhete: "",
+    profilePicture: "",
   });
 
   const mudarGenero = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -34,31 +36,7 @@ const RegisterForm = () => {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    /*
-     "use server";
-        
-        data.append('tipo', 'BEM_MOVEL')
-        data.append('user_id', `${user.id}`)
-        
-    
-        const res = await fetch(`${process.env.CLIENT_URL}/api/upload`, {
-          method: "POST",
-          body: data,
-        });
-    
-      return;
-      
-     // const res = await registrarDocumento(info)
-    
-        if (!res.ok) {
-          console.log("Erro registrar documento!");
-          return redirect("/dashboard/credito/decima/debito");
-        }
-    
-        return redirect("/dashboard/credito/decima/solicitar");
-      }
 
-    */
     const hashPass = await hashPassword(formData.password);
     const usuario = {
       primeiro_nome: formData.primeiro_nome,
@@ -70,24 +48,47 @@ const RegisterForm = () => {
       telemovel: formData.telemovel,
     };
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario`, {
+    if (formData.profilePicture === null || !formData.profilePicture) {
+      console.log("Anexe os documentos!");
+      return redirect("/auth/registrar");
+    }
+
+    const response = await fetch(`${url}/api/usuario`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
       },
+      
       body: JSON.stringify(usuario),
-    });
+    })
+      .then((event) => {
+        return event.json();
+      })
+      .catch((res) => {
+        console.log("erro", res);
+        return redirect("/auth/registrar");
+      });
 
-    if (!response.ok) {
-      console.log("Erro ao registro");
-      //console.log(res)
-      return redirect("/auth/registrar");
+    //console.log("registrado response", response)
+    const data = new FormData();
+
+    data.append("tipo", "BILHETE");
+    data.append("titulo", "Bilhete de identidade");
+    data.append("user_id", `${response.id}`);
+    data.append("scanner", formData.profilePicture);
+
+    const result = await fetch(
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/upload`,
+      {
+        method: "POST",
+        body: data,
+      }
+    );
+
+    if (!result.ok) {
+      console.log("Erro ao anexar documentos", result.statusText);
+      redirect("/auth/registrar");
     }
-
-    console.log("registrado", response.json())
-
-
-    return
 
     const res = await signIn("credentials", {
       redirect: false,
@@ -96,10 +97,10 @@ const RegisterForm = () => {
     });
 
     if (res?.error) {
-    //  console.log("Erro na autenticação:", res.error);
+      console.log("Erro na autenticação:", res.error);
       redirect("/");
     } else {
-     return redirect("/dashboard");
+      return redirect("/dashboard");
     }
   }
 
@@ -190,6 +191,7 @@ const RegisterForm = () => {
                   type="file"
                   name="scanner"
                   accept="image/*"
+                  multiple={true}
                   onChange={(e) =>
                     setFormData((prev: any) => ({
                       ...prev,

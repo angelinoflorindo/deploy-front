@@ -26,19 +26,10 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    /*
-     investidor:true,
-        devedor:true,
-        deposito:true,
-        saque:true,
-        carteira:true,
-        reclamacao:true,
-        documento:true,
-        pessoa: {
-          include: { emprego: true, residencia: true, conjugue: true, conta:true},
-        },
-
-    */
+        
+    await sequelize.authenticate()
+    await sequelize.sync()
+    setupAssociations()
     const userInfo = await User.findOne({
       where: { email: email },
       attributes: { exclude: ["password"] },
@@ -88,11 +79,11 @@ export async function POST(req: NextRequest) {
     await sequelize.sync()
     setupAssociations()
     const user = await User.create(data);
-
-    return NextResponse.json(
-      { message: "Usuário registrado com sucesso", user },
-      { status: 201 }
-    );
+    const result = {
+      id:user.id,
+      email:user.email
+    }
+    return NextResponse.json(result);
   } catch (error) {
     console.error(error); // Ajuda a depurar
     return NextResponse.json(

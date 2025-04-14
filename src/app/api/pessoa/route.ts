@@ -1,11 +1,14 @@
 import { converterString } from "@/app/actions/auth";
-import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import {sequelize} from "@/lib/sequelize"
+import {setupAssociations} from "@/lib/associations"
+import Pessoa from "@/models/Pessoa"
+import Emprego from "@/models/Emprego"
+import Residencia from "@/models/Residencia"
 
-const prisma = new PrismaClient();
 
 export async function GET() {
-  const pessoas = await prisma.pessoa.findMany();
+  const pessoas = await Pessoa.findAll();
   return NextResponse.json(pessoas);
 }
 
@@ -24,55 +27,45 @@ export async function POST(req: NextRequest) {
     data_inicio: new Date(body.emprego.data_inicio),
   };
 
-  const residenciaResponse = await prisma.residencia.create({
-    data: infoResidencia,
-  });
+  try{
 
-  // console.log("residencia criado..", residenciaResponse);
+    await sequelize.authenticate();
+    await sequelize.sync();
+    setupAssociations();
 
-  const empregoResponse = await prisma.emprego.create({
-    data: infoEmprego,
-  });
-  //  console.log("emprego criado..", empregoResponse);
+    const residenciaResponse = await Residencia.create(infoResidencia);
+    
+    const empregoResponse = await Emprego.create(infoEmprego);
+  
+    const userId = await converterString(body.pessoa.user_id);
+    const pessoaInfo = {
+      profissao: body.pessoa.profissao,
+      data_nascimento: new Date(body.pessoa.data_nascimento),
+      estado_civil: body.pessoa.estado_civil,
+      municipio: body.pessoa.municipio,
+      nivel_instrucao: body.pessoa.nivel_instrucao,
+      provincia: body.pessoa.provincia,
+      user_id: userId,
+      emprego_id: empregoResponse.id,
+      residencia_id: residenciaResponse.id,
+    };
+  
+    const pessoaResponse = await Pessoa.create(pessoaInfo);
+    //console.log("pessoa criada", pessoaResponse);
+  
+    const result = {
+      pessoa: pessoaResponse,
+      emprego: empregoResponse,
+      resedencia: residenciaResponse,
+    };
+    return NextResponse.json(result);
 
-  const userId = await converterString(body.pessoa.user_id);
-  const pessoaInfo = {
-    profissao: body.pessoa.profissao,
-    data_nascimento: new Date(body.pessoa.data_nascimento),
-    estado_civil: body.pessoa.estado_civil,
-    municipio: body.pessoa.municipio,
-    nivel_instrucao: body.pessoa.nivel_instrucao,
-    provincia: body.pessoa.provincia,
-    user_id: userId,
-    emprego_id: empregoResponse.id,
-    residencia_id: residenciaResponse.id,
-  };
-
-  const pessoaResponse = await prisma.pessoa.create({
-    data: pessoaInfo,
-  });
-  //console.log("pessoa criada", pessoaResponse);
-
-  const result = {
-    pessoa: pessoaResponse,
-    emprego: empregoResponse,
-    resedencia: residenciaResponse,
-  };
-  return NextResponse.json(result);
-}
-
-// DELETE - Remover usuário por ID
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    await prisma.user.delete({
-      where: { id: Number(params.id) },
-    });
-
-    return NextResponse.json("Dados eliminado");
-  } catch (error) {
-    return NextResponse.json(error);
+  }catch(error){
+    return NextResponse.json(
+      { message: error },
+      { status: 404 }
+    );
   }
+
+  
 }

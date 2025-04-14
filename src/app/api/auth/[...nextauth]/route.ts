@@ -1,9 +1,10 @@
+
 import NextAuth, { Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs"; // Para criptografar senhas
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import {sequelize} from '@/lib/sequelize'
+import {setupAssociations} from "@/lib/associations"
+import User from "@/models/User"
 
 interface CustomSession extends Session {
   user: {
@@ -30,9 +31,13 @@ const handler = NextAuth({
         }
 
         // Verificar se o usuário existe no banco de dados
-        const user = await prisma.user.findUnique({
+        await sequelize.authenticate()
+        await sequelize.sync()
+        setupAssociations()
+        const user = await User.findOne({
           where: { email: credentials.email },
         });
+
 
         if (!user) {
           console.log("usuario inexistente");

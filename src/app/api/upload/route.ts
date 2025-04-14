@@ -1,18 +1,22 @@
 // app/api/upload/route.ts
 import { writeFile } from "fs/promises";
 import path from "path";
+import fs from "fs";
+import { mkdir } from "fs/promises";
 import { randomUUID } from "crypto";
 import { converterString } from "@/app/actions/auth";
-import Documento from "@/models/Documento"
-
+import Documento from "@/models/Documento";
+import { sequelize } from "@/lib/sequelize";
+import { setupAssociations } from "@/lib/associations";
 
 export async function POST(req: Request) {
   const formData = await req.formData();
 
   const files = formData.getAll("scanner") as File[];
-
   const rawTitulo = formData.get("titulo");
   const rawTipo = formData.get("tipo");
+  const userId = await converterString(formData.get("user_id"));
+
 
   const titulo = typeof rawTitulo === "string" ? rawTitulo : "";
   const tipo = typeof rawTipo === "string" ? rawTipo : "";
@@ -22,9 +26,22 @@ export async function POST(req: Request) {
       JSON.stringify({ message: "Nenhum ficheiro enviado." })
     );
   }
+  
+  //const uploadDir = path.join(process.cwd(), "public", "uploads");
+  const uploadDir = path.join(process.cwd(), "uploads");
+  if (!fs.existsSync(uploadDir)) {
+    await mkdir(uploadDir, { recursive: true });
+  }
 
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
+  // relacionar os documentos com o userId
+  const userDir = path.join(uploadDir, `user_${userId}`);
+  if (!fs.existsSync(userDir)) {
+    await mkdir(userDir, { recursive: true });
+  }
+
   const savedFiles = [];
+
+
 
   for (const file of files) {
     const bytes = await file.arrayBuffer();
@@ -33,7 +50,7 @@ export async function POST(req: Request) {
     const originalExtension = file.name.split(".").pop();
     const uniqueName = `${randomUUID()}.${originalExtension}`;
 
-    const filePath = path.join(uploadDir, uniqueName);
+    const filePath = path.join(userDir, uniqueName);
 
     await writeFile(filePath, buffer);
 
@@ -44,18 +61,20 @@ export async function POST(req: Request) {
       tamanho: file.size,
       titulo: titulo,
       tipo: tipo,
-      user_id: await converterString(formData.get("user_id")),
+      user_id: userId,
     };
-   const res =  await Documento.create(documento)
-   savedFiles.push(res) 
+    await sequelize.authenticate()
+    await sequelize.sync()
+    setupAssociations()
+    const res = await Documento.create(documento);
+    savedFiles.push(res);
   }
-  
-  if(savedFiles.length < 1){
+
+  if (savedFiles.length < 1) {
     return new Response(
       JSON.stringify({ message: "Houve um erro ao registrar documentos!" })
     );
   }
-    
 
   return new Response(JSON.stringify(savedFiles));
 }
