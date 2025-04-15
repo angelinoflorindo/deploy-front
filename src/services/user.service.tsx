@@ -7,14 +7,14 @@ export interface UserInfo {
   bilhete: any;
   telemovel: any;
   email: any;
-  documento: DocumentoProps
-  pessoa: PessoaDef;
-  investidor:InvestidorProps,
-  devedor:DevedorProps
-  deposito:DepositoProps,
-  reclamacao:ReclamacaoProps,
-  saque:SaqueProps,
-  carteira:CarteiraProps
+  Documentos: DocumentoProps
+  Pessoa: PessoaDef;
+  Investidor:InvestidorProps,
+  Devedor:DevedorProps
+  Depositos:DepositoProps,
+  Reclamacaos:ReclamacaoProps,
+  Saque:SaqueProps,
+  Carteira:CarteiraProps
 
 
 }
@@ -135,6 +135,9 @@ export interface DocumentoProps{
   id:any,
   tipo:any,
   titulo:any;
+  nome_salvado:any,
+  nome_original:any,
+  extensao:any,
   user_id:any;
   createdAt: any;
   updatedAt: any;
@@ -161,8 +164,8 @@ export interface SolidarioProps{
   user_id:any;
   createdAt: any;
   updatedAt: any;
-  pessoa:{
-    user:UserProps
+  Pessoa:{
+    User:UserProps
   }
 }
 // More definitions
@@ -177,10 +180,11 @@ export interface PessoaDef {
   residencia_id: any;
   nivel_instrucao: any;
   data_nascimento: any;
-  conjugue: ConjugueProps;
-  emprego: EmpregoProps;
-  residencia: ResidenciaProps;
-  conta: ContaProps;
+  Conjugue: ConjugueProps;
+  Emprego: EmpregoProps;
+  Residencium: ResidenciaProps;
+  Contum: ContaProps;
+  User:{id:any, email:any}
 }
 
 
@@ -191,5 +195,5 @@ export interface Guardiao {
   telemovel: any;
   email: any;
   user_id:any;
-  pessoa: { id: any };
+  Pessoa: { id: any };
 }

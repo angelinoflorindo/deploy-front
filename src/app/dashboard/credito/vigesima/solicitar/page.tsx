@@ -3,9 +3,6 @@ import styles from "@/modules/Login.module.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Conteudo from "./conteudo";
-import { getServerSession } from "next-auth";
-import { buscarUserQuery } from "@/app/actions/auth";
-import { Guardiao } from "@/services/user.service";
 
 const SolicitarCredito = async () => {
 /*

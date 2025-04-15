@@ -6,35 +6,34 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { buscarUserQuery, convidarSolidario } from "@/app/actions/auth";
 import { redirect } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { Guardiao, SolidarioProps } from "@/services/user.service";
+import { Guardiao, SolidarioProps, UserInfo } from "@/services/user.service";
+import { SubmitButton } from "@/components/submitButton";
 
 const Conteudo = ({
   user,
   guardInfo,
   somaTaxa,
 }: {
-  user: Guardiao;
+  user: UserInfo;
   guardInfo: any;
   somaTaxa: any;
 }) => {
   const [guard, setGuard] = useState("");
   const [familiar, setFamiliar] = useState("");
   const [proximo, setProximo] = useState(false);
+  const [isInvite, setInvite] = useState(true);
   const [parentesco, setParentesco] = useState(false);
   const [taxa, setTaxa] = useState(0);
-  const [total, setTotal] = useState(0)
+  const [total, setTotal] = useState(0);
   const [guardData, setGuardData] = useState<Guardiao>({
     id: "",
     primeiro_nome: "",
     segundo_nome: "",
     telemovel: "",
     email: "",
-    pessoa: { id: "" },
+    Pessoa: { id: "" },
     user_id: "",
   });
-
-  const { data: session, status } = useSession();
 
   const handler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGuard(e.target.value);
@@ -55,16 +54,17 @@ const Conteudo = ({
       return redirect("/dashboard/credito/decima/solidario");
     }
 
-    if (guardiao.email === session?.user?.email) {
+    if (guardiao.email === user.email) {
       console.log("Convide outro guardião");
       return redirect("/dashboard/credito/decima/solidario");
     }
 
-    if (!guardiao.pessoa) {
+    if (!guardiao.Pessoa) {
       console.log("Guardião sem personalidade");
       return redirect("/dashboard/credito/decima/solidario");
     }
 
+    setInvite(false);
     setGuardData(guardiao);
   }
 
@@ -73,9 +73,9 @@ const Conteudo = ({
       tipo: "CREDITO",
       parentesco: familiar,
       taxa: taxa,
-      pessoa_id: guardData.pessoa.id,
+      pessoa_id: guardData.Pessoa.id,
       user_id: user.id,
-      estado:false
+      estado: false,
     };
 
     if (!familiar) {
@@ -83,28 +83,20 @@ const Conteudo = ({
       return redirect("/dashboard/credito/decima/solidario");
     }
 
-
-    if (taxa < 1) {
+    if (taxa < 5) {
       console.log("Aumente mais a taxa");
       return redirect("/dashboard/credito/decima/solidario");
     }
 
-    const resp: Guardiao = await convidarSolidario(solidario);
-    //console.log("convite enviado", resp);
-    //setProximo(true);
-    
-    setGuard("");
-    setGuardData({
-      id: "",
-      email: "",
-      pessoa: { id: "" },
-      primeiro_nome: "",
-      segundo_nome: "",
-      telemovel: "",
-      user_id: "",
-    });
-    setParentesco(false);
+    const resp = await convidarSolidario(solidario);
 
+    //console.log("resp", resp)
+    if (resp) {
+      setGuard("");
+      setParentesco(false);
+      setInvite(true);
+      return redirect("/dashboard/credito/decima/solidario");
+    }
   }
 
   async function getNextPage() {
@@ -115,10 +107,9 @@ const Conteudo = ({
   }
 
   useEffect(() => {
-
-    // novas mudanças
-    if(somaTaxa.length === 1 && somaTaxa[0]._sum.taxa>50){
-      setTotal(somaTaxa[0]._sum.taxa)
+    console.log("Proximo", somaTaxa);
+    if (somaTaxa > 50) {
+      setTotal(somaTaxa);
       setProximo(true);
     }
 
@@ -127,7 +118,7 @@ const Conteudo = ({
     }
   }, [taxa]);
 
-  if (!user.pessoa)
+  if (user.Pessoa === null || user.Pessoa === undefined) {
     return (
       <div>
         <section className="shadow-md py-5 px-5 ">
@@ -145,6 +136,8 @@ const Conteudo = ({
         </button>
       </div>
     );
+  }
+
   return (
     <div>
       <h1 className="font-bold text-align">Aval solidário </h1>
@@ -160,25 +153,18 @@ const Conteudo = ({
           placeholder="Pesuisar por email ou telemovel"
           className={styles.input}
         />
-        <button
-          type="submit"
-          className="px-4 py-2 bg-violet-500 text-white rounded"
-        >
-          Pesquisar
-        </button>
+        <SubmitButton />
       </form>
       {/* Resultados */}
       <div className="flex flex-col  mx-auto justify-around items-center  ">
-        {!guardData.id ? (
+        {isInvite ? (
           <div>
-            <span className="text-green-500 py-5">
-              Convites enviados 
-            </span>{" "}
+            <span className="text-green-500 py-5">Convites enviados</span>{" "}
             <br />
             {guardInfo.map((event: SolidarioProps) => (
               <li key={event.id}>
-                {event.pessoa.user.primeiro_nome}{" "}
-                {event.pessoa.user.segundo_nome}
+                {event.Pessoa.User.primeiro_nome}{" "}
+                {event.Pessoa.User.segundo_nome}
               </li>
             ))}
           </div>

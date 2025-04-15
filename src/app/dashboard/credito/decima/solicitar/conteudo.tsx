@@ -1,15 +1,24 @@
-import Image from "next/image";
+"use client";
 import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
-import Link from "next/link";
+import { SubmitButton } from "@/components/submitButton";
+import { useActionState, useState } from "react";
+import { UserInfo } from "@/services/user.service";
+import { submitCredito } from "@/app/actions/auth";
 
-const Conteudo = () => {
+const Conteudo = ({ user }: { user: UserInfo }) => {
+  const [valor, setValor] = useState<any>(0);
+  const [state, formAction] = useActionState(submitCredito, null);
+
+  const handler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValor(e.target.value);
+  };
   return (
     <div className={global.grid}>
       <header className={global.cartao_header_depositar}>
         <div className={global.cartao_esquerda_solicitar}>
           <h1>
-            <b>Valor:</b> 15000Kz
+            <b>Valor:</b> {valor},00kz
           </h1>
           <h1>
             <b>Prestações:</b>4
@@ -17,7 +26,7 @@ const Conteudo = () => {
         </div>
         <div className={global.cartao_direita_solicitar}>
           <h1>
-            <b>Juros:</b> 10%/mês
+            <b>Juros:</b> 10%
           </h1>
           <h1>
             <b>Até:</b> 10 dias
@@ -27,41 +36,31 @@ const Conteudo = () => {
 
       <div className="py-4">
         <h1>
-          <b>Crédito permitidos:</b> max(50.000kz)
+          <b>Crédito permitido:</b> max(50.000kz)
         </h1>
-        
       </div>
       <div className="flex py-2 flex-col justify-center itmes-center">
         <form
-          action=""
-          method="post"
-          className="flex flex-row  justify-around "
+          action={formAction}
+          className="flex flex-col  justify-center itmes-center"
         >
-          <label className="md-2">
-            Valor de crédito
-            <input
-              type="number"
-              name="valor"
-              placeholder="Ex:(Mil Kz) 1000"
-              className={styles.input}
-            />
-          </label>
-          <label className="md-2">
-            Número de prestações
-            <input
-              type="number"
-              name="valor"
-              placeholder="Ex:6"
-              className={styles.input}
-            />
-          </label>
+          <input
+            type="text"
+            name="user_id"
+            value={user.id}
+            readOnly={true}
+            hidden={true}
+          />
+
+          <input
+            type="number"
+            name="valor"
+            onChange={handler}
+            placeholder="Ex:1000(mil Kz) "
+            className={styles.input}
+          />
+          <SubmitButton />
         </form>
-        <button
-          type="button"
-          className="px-4 py-2 bg-violet-500  text-white rounded"
-        >
-          Confirmar
-        </button>
       </div>
     </div>
   );

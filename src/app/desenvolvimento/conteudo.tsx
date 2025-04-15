@@ -12,7 +12,7 @@ const Desenvolvimento = () => {
       <p className="w-[80%] text-start"> Voltar para dashboard</p>
       <hr className={global.divider} />
       <div className="w-[80%] flex justify-start">
-        <button className="px-4 py-2 bg-blue-500 text-white rounded"  onClick={() => redirect('/dashboard')}>avançar </button>
+        <button className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"  onClick={() => redirect('/dashboard')}>avançar </button>
       </div>
     </div>
   );

@@ -14,6 +14,7 @@ import {
 import { signIn, signOut, useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { clientAPI } from "@/app/lib/definitions";
+import { SubmitButton } from "@/components/submitButton";
 
 const userApi = clientAPI;
 export default function EditarUsuario() {
@@ -34,7 +35,7 @@ export default function EditarUsuario() {
     telemovel: "",
     genero: "",
   });
-  const [pessoaData, setPessoaData] = useState<PessoaProps>({
+  const [PessoaData, setPessoaData] = useState<PessoaProps>({
     id: "",
     provincia: "",
     municipio: "",
@@ -47,7 +48,7 @@ export default function EditarUsuario() {
     user_id: "",
   });
 
-  const [empregoData, setEmpregoData] = useState<EmpregoProps>({
+  const [EmpregoData, setEmpregoData] = useState<EmpregoProps>({
     id: "",
     area: "",
     cargo: "",
@@ -58,7 +59,7 @@ export default function EditarUsuario() {
   });
 
 
-  const [residenciaData, setResidenciaData] = useState<ResidenciaProps>({
+  const [ResidenciaData, setResidenciaData] = useState<ResidenciaProps>({
     id: "",
     tipo: "",
     data_inicio: "",
@@ -132,30 +133,30 @@ export default function EditarUsuario() {
     };
 
     let infoPessoa = {
-      id: pessoaData.id,
-      profissao: pessoaData.profissao,
-      data_nascimento: pessoaData.data_nascimento,
+      id: PessoaData.id,
+      profissao: PessoaData.profissao,
+      data_nascimento: PessoaData.data_nascimento,
       estado_civil: estado_civil,
-      municipio: pessoaData.municipio,
-      nivel_instrucao: pessoaData.nivel_instrucao,
-      provincia: pessoaData.provincia,
-      emprego_id: pessoaData.emprego_id,
-      residencia_id: pessoaData.residencia_id,
+      municipio: PessoaData.municipio,
+      nivel_instrucao: PessoaData.nivel_instrucao,
+      provincia: PessoaData.provincia,
+      emprego_id: PessoaData.emprego_id,
+      residencia_id: PessoaData.residencia_id,
       user_id: userData.id,
     };
 
     let infoResidencia = {
-      id: residenciaData.id,
+      id: ResidenciaData.id,
       tipo: propriedade,
-      data_inicio: residenciaData.data_inicio,
+      data_inicio: ResidenciaData.data_inicio,
     };
 
     let infoEmprego = {
-      id: empregoData.id,
+      id: EmpregoData.id,
       area: area,
-      cargo: empregoData.cargo,
+      cargo: EmpregoData.cargo,
       sector: sector,
-      data_inicio: empregoData.data_inicio,
+      data_inicio: EmpregoData.data_inicio,
     };
 
     const reqUser = {
@@ -232,6 +233,7 @@ export default function EditarUsuario() {
         return res.json();
       })
       .then((users: UserInfo) => {
+        //console.log("users",users)
         const resUser = {
           id: users.id,
           primeiro_nome: users.primeiro_nome,
@@ -244,38 +246,38 @@ export default function EditarUsuario() {
         };
         setUserData(resUser);
 
-        if (users.pessoa) {
+        if (users.Pessoa) {
           const resPessoa: PessoaProps = {
-            id: users.pessoa.id,
-            municipio: users.pessoa.municipio,
-            data_nascimento: users.pessoa.data_nascimento.split('T')[0],
-            estado_civil: users.pessoa.estado_civil,
-            nivel_instrucao: users.pessoa.nivel_instrucao,
-            profissao: users.pessoa.profissao,
-            provincia: users.pessoa.provincia,
-            emprego_id: users.pessoa.emprego_id,
-            residencia_id: users.pessoa.residencia_id,
-            user_id: users.pessoa.user_id,
+            id: users.Pessoa.id,
+            municipio: users.Pessoa.municipio,
+            data_nascimento: users.Pessoa.data_nascimento.split('T')[0],
+            estado_civil: users.Pessoa.estado_civil,
+            nivel_instrucao: users.Pessoa.nivel_instrucao,
+            profissao: users.Pessoa.profissao,
+            provincia: users.Pessoa.provincia,
+            emprego_id: users.Pessoa.emprego_id,
+            residencia_id: users.Pessoa.residencia_id,
+            user_id: users.Pessoa.user_id,
           };
           setPessoaData(resPessoa);
 
           const resEmprego: EmpregoProps = {
-            id: users.pessoa.emprego.id,
-            area: users.pessoa.emprego.area,
-            cargo: users.pessoa.emprego.cargo,
-            sector: users.pessoa.emprego.sector,
-            data_inicio: users.pessoa.emprego.data_inicio.split('T')[0],
-            createdAt: users.pessoa.emprego.createdAt,
-            updatedAt: users.pessoa.emprego.updatedAt,
+            id: users.Pessoa.Emprego.id,
+            area: users.Pessoa.Emprego.area,
+            cargo: users.Pessoa.Emprego.cargo,
+            sector: users.Pessoa.Emprego.sector,
+            data_inicio: users.Pessoa.Emprego.data_inicio.split('T')[0],
+            createdAt: users.Pessoa.Emprego.createdAt,
+            updatedAt: users.Pessoa.Emprego.updatedAt,
           };
           setEmpregoData(resEmprego);
 
           const resResidencia: ResidenciaProps = {
-            id: users.pessoa.residencia.id,
-            tipo: users.pessoa.residencia.tipo,
-            data_inicio: users.pessoa.residencia.data_inicio.split('T')[0],
-            createdAt: users.pessoa.residencia.createdAt,
-            updatedAt: users.pessoa.residencia.updatedAt,
+            id: users.Pessoa.Residencium.id,
+            tipo: users.Pessoa.Residencium.tipo,
+            data_inicio: users.Pessoa.Residencium.data_inicio.split('T')[0],
+            createdAt: users.Pessoa.Residencium.createdAt,
+            updatedAt: users.Pessoa.Residencium.updatedAt,
           };
           setResidenciaData(resResidencia);
         }
@@ -391,7 +393,7 @@ export default function EditarUsuario() {
                 <input
                   type="text"
                   name="provincia"
-                  value={pessoaData.provincia}
+                  value={PessoaData.provincia}
                   placeholder="Residente em (Província)"
                   required
                   onChange={handlePessoa}
@@ -402,7 +404,7 @@ export default function EditarUsuario() {
                   type="text"
                   name="municipio"
                   placeholder="Município de..."
-                  value={pessoaData.municipio}
+                  value={PessoaData.municipio}
                   required
                   onChange={handlePessoa}
                   className={styles.input}
@@ -420,7 +422,7 @@ export default function EditarUsuario() {
                   type="text"
                   name="profissao"
                   placeholder="Profissão"
-                  value={pessoaData.profissao}
+                  value={PessoaData.profissao}
                   required
                   onChange={handlePessoa}
                   className={styles.input}
@@ -429,7 +431,7 @@ export default function EditarUsuario() {
                   type="text"
                   name="nivel_instrucao"
                   placeholder="Grau Acadêmico"
-                  value={pessoaData.nivel_instrucao}
+                  value={PessoaData.nivel_instrucao}
                   required
                   onChange={handlePessoa}
                   className={styles.input}
@@ -439,7 +441,7 @@ export default function EditarUsuario() {
                   <input
                     type="date"
                     name="data_nascimento"
-                    value={pessoaData.data_nascimento}
+                    value={PessoaData.data_nascimento}
                     required
                     onChange={handlePessoa}
                     className={styles.input}
@@ -462,7 +464,7 @@ export default function EditarUsuario() {
                   <input
                     type="date"
                     name="data_inicio"
-                    value={residenciaData.data_inicio}
+                    value={ResidenciaData.data_inicio}
                     required
                     onChange={handleResidencia}
                     className={styles.input}
@@ -482,7 +484,7 @@ export default function EditarUsuario() {
                   type="text"
                   name="cargo"
                   placeholder="Cargo no trabalho"
-                  value={empregoData.cargo}
+                  value={EmpregoData.cargo}
                   required
                   onChange={handleEmprego}
                   className={styles.input}
@@ -530,7 +532,7 @@ export default function EditarUsuario() {
                   <input
                     type="date"
                     name="data_inicio"
-                    value={empregoData.data_inicio}
+                    value={EmpregoData.data_inicio}
                     required
                     onChange={handleEmprego}
                     className={styles.input}
@@ -559,12 +561,7 @@ export default function EditarUsuario() {
                   Próximo
                 </button>
               ) : (
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-green-500 text-white rounded"
-                >
-                  Registrar
-                </button>
+                <SubmitButton/>
               )}
             </div>
           </form>

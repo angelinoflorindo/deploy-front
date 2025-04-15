@@ -47,6 +47,6 @@ export default class User extends Model {
   email!: string;
 
   @Default(true)
-  @Column(DataType.BOOLEAN)
+  @Column({ type: DataType.BOOLEAN, defaultValue: true })
   estado!: boolean;
 }

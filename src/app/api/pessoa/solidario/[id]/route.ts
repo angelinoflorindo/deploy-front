@@ -33,7 +33,9 @@ export async function GET(
       ],
     });
 
-    const total = await Solidario.sum("taxa") 
+    const total = await Solidario.sum("taxa",{
+      where:{estado:false,  user_id: uuid}
+    }) 
 
     if (!resp) {
       return NextResponse.json(
@@ -46,7 +48,7 @@ export async function GET(
       data: resp,
       total: total,
     };
-    console.log("Dados solicitados", result);
+   // console.log("Dados solicitados", result);
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {

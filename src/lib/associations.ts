@@ -23,6 +23,7 @@ import Reembolso from "../models/Reembolso";
 import Residencia from "../models/Residencia";
 import Emprego from "../models/Emprego";
 import CreditoSolidario from "../models/CreditoSolidario";
+import ContaVinculada from "../models/ContaVinculada";
 
 export function setupAssociations() {
   User.hasOne(Pessoa, { foreignKey: "user_id" });
@@ -45,6 +46,9 @@ export function setupAssociations() {
   // Relacionamento
   Conta.belongsTo(Pessoa, { foreignKey: "pessoa_id", onDelete: "CASCADE" });
 
+  
+  ContaVinculada.belongsTo(Proponente, { foreignKey: "proponente_id", onDelete: "CASCADE" });
+  ContaVinculada.belongsTo(Emprestimo, { foreignKey: "emprestimo_id", onDelete: "CASCADE" });
 
   // Associações
   Credito.belongsTo(Devedor, { foreignKey: "devedor_id", onDelete: "CASCADE" });

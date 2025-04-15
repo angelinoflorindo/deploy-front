@@ -11,10 +11,10 @@ export default class Deposito extends Model {
   @Column(DataType.FLOAT)
   valor!: number;
 
-  @Column(DataType.BOOLEAN)
+  @Column({ type: DataType.BOOLEAN, defaultValue: true})
   estado!: boolean;
 
-  @Column(DataType.BOOLEAN)
+  @Column({ type: DataType.BOOLEAN, defaultValue: true })
   pendencia!: boolean;
 
   @Column(DataType.INTEGER)

@@ -17,7 +17,7 @@ export default class Devedor extends Model {
   @Column(DataType.INTEGER)
   inadimplencia!: number;
 
-  @Column(DataType.BOOLEAN)
+  @Column({ type: DataType.BOOLEAN, defaultValue: true })
   estado!: boolean;
 
   @Column(DataType.INTEGER)

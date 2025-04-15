@@ -28,12 +28,12 @@ export default class Credito extends Model {
   juro!: number;
 
   @Column(DataType.DATE)
-  termino!: Date;
+  prazo!: Date;
 
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   estado!: boolean;
 
-  @Column(DataType.BOOLEAN)
+  @Column({ type: DataType.BOOLEAN, defaultValue: true })
   pendencia!: boolean;
 
   @Column(DataType.STRING)

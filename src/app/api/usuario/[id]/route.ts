@@ -5,6 +5,7 @@ import User from "@/models/User";
 import { sequelize } from "@/lib/sequelize";
 import { setupAssociations } from "@/lib/associations";
 import Pessoa from "@/models/Pessoa";
+import Conta from "@/models/Conta";
 
 export async function GET(
   req: NextRequest,
@@ -17,43 +18,34 @@ export async function GET(
   const isEmail = query.includes("@");
   let user = null;
 
-  try {
+ 
+  try{
     await sequelize.authenticate();
     await sequelize.sync();
     setupAssociations();
-
+  
     if (isEmail) {
       user = await User.findOne({
         where: { email: query },
-        attributes: [
-          "id",
-          "primeiro_nome",
-          "segundo_nome",
-          "telemovel",
-          "email",
+        attributes: ["id", "primeiro_nome", "segundo_nome", "telemovel", "email"],
+        include: [
+          {
+            model: Pessoa,
+            attributes: ["id"],
+          }
         ],
-        include: {
-          model: Pessoa,
-          attributes: ["id"],
-        },
       });
     } else {
       user = await User.findOne({
         where: { telemovel: query },
-        attributes: [
-          "id",
-          "primeiro_nome",
-          "segundo_nome",
-          "telemovel",
-          "email",
-        ],
+        attributes: ["id", "primeiro_nome", "segundo_nome", "telemovel", "email"],
         include: {
           model: Pessoa,
           attributes: ["id"],
         },
       });
     }
-
+  
     if (!user) {
       return NextResponse.json(
         { error: "Usuário não encontrado" },
@@ -61,11 +53,13 @@ export async function GET(
       );
     }
     return NextResponse.json(user);
-  } catch (error) {
+  
+
+  }catch(error){    
     return NextResponse.json(
-      { error: "Erro ao buscar usuário" },
-      { status: 404 }
-    );
+    { error: "Erro ao buscar dados" },
+    { status: 404 }
+  );
   }
 }
 
@@ -109,12 +103,7 @@ export async function PUT(
       const hashPass = await hashPassword(body.password);
       bodyInfo.password = hashPass;
 
-      const userResponse = await User.update(
-        {
-          bodyInfo,
-        },
-        { where: { id: uuid } }
-      );
+      const userResponse = await User.update(bodyInfo, { where: { id: uuid } });
 
       if (!userResponse) {
         return NextResponse.json(
@@ -126,12 +115,7 @@ export async function PUT(
       return NextResponse.json(userResponse, { status: 200 });
     }
 
-    const userResponse = await User.update(
-      {
-        userInfo,
-      },
-      { where: { id: uuid } }
-    );
+    const userResponse = await User.update(userInfo, { where: { id: uuid } });
 
     if (!userResponse) {
       return NextResponse.json(
@@ -151,16 +135,12 @@ export async function DELETE(
   req: NextRequest,
   context: { params: { id: string } }
 ) {
-
-  const {id} = context.params
+  const { id } = context.params;
   try {
-    await User.destroy({where:{where: { id: id }}});
+    await User.destroy({ where: { where: { id: id } } });
 
     return NextResponse.json("Dados eliminado");
-  } catch (error) {     
-    return NextResponse.json(
-    { message:error },
-    { status: 404 }
-  );
+  } catch (error) {
+    return NextResponse.json({ message: error }, { status: 404 });
   }
 }

@@ -21,6 +21,7 @@ export default function Conteudo() {
         return res.json()
       })
       .then((users:UserInfo) => {
+        //console.log("information", users)
         setUserInfo(users);
         return;
       });
@@ -51,26 +52,26 @@ export default function Conteudo() {
         </div>
         <hr className={styles.divider} />
        <h2>Informações complementares</h2>
-       { userInfo?.pessoa == null ? (
+       {userInfo?.Pessoa === null ? (
              <b className="text-red-500">Sem informação</b>
        ):(
          <div className="flex flex-col">
          <span className="py-1">
            Estado civil:             
-           <b>{userInfo?.pessoa.estado_civil}</b>
+           <b>{userInfo?.Pessoa.estado_civil}</b>
 
          </span>
          <span className="py-1">
            Data nascimento:
-           <b>{userInfo?.pessoa.data_nascimento.split("T")[0]}</b>
+           <b>{userInfo?.Pessoa.data_nascimento.split("T")[0]}</b>
          </span>
          <span className="py-1">
            Resindente em:
-           <b>{userInfo?.pessoa.provincia}</b>
+           <b>{userInfo?.Pessoa.provincia}</b>
          </span>
          <span className="py-1">
            Município:
-           <b>{userInfo?.pessoa.municipio}</b>
+           <b>{userInfo?.Pessoa.municipio}</b>
          </span>
        </div>
        )}

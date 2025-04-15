@@ -3,15 +3,13 @@ import Footer from "@/components/footer";
 import Header from "@/components/header";
 import styles from "@/modules/Login.module.css";
 import { PessoaDef } from "@/services/user.service";
+import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 const PageInfo = async (context: { params: { id: string } }) => {
   const { id } = await context.params;
-
-  //console.log("client uuid", id)
-
-
+  const session = await getServerSession();
 
   const pessoaData: PessoaDef = await buscarPessoa(id);
   async function submitForm(formData: FormData) {
@@ -24,10 +22,28 @@ const PageInfo = async (context: { params: { id: string } }) => {
       emprego_id: pessoaData.emprego_id,
       pessoa_id: pessoaData.id,
     };
-    if (pessoaData.conta) {
-      console.log("conta existe", pessoaData.conta);
+
+    formData.append("tipo", "DECLARACAO_TRABALHO");
+    formData.append("titulo", "Documentos financeiros");
+    formData.append("user_id", `${pessoaData.User.id}`);
+    const files = formData.getAll("scanner") as File[];
+
+    if (files[0].size === 0 || files.length === 0) {
+       return redirect("/ferramenta/detalhes");
+    }
+    const result = await fetch(`${process.env.CLIENT_URL}/api/upload`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!result.ok) {
+      console.log("Erro ao anexar documentos", result.statusText);
+      return redirect("/ferramenta/detalhes");
+    }
+
+    if (pessoaData.Contum) {
       await fetch(
-        `${process.env.CLIENT_URL}/api/pessoa/conta/${pessoaData.conta.id}`,
+        `${process.env.CLIENT_URL}/api/pessoa/conta/${pessoaData.Contum.id}`,
         {
           method: "PUT",
           headers: {
@@ -39,7 +55,6 @@ const PageInfo = async (context: { params: { id: string } }) => {
 
       return redirect("/ferramenta/detalhes");
     } else {
-      console.log("Conta inexistente!");
       await fetch(`${process.env.CLIENT_URL}/api/pessoa/conta`, {
         method: "POST",
         headers: {
@@ -53,7 +68,7 @@ const PageInfo = async (context: { params: { id: string } }) => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.Contuminer}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
         {/* Navbar Fixa */}
         <Header />
@@ -65,7 +80,7 @@ const PageInfo = async (context: { params: { id: string } }) => {
               <b>Informações financeiras</b>
             </h2>
 
-            {pessoaData.conta === null ? (
+            {pessoaData.Contum === null ? (
               <div>
                 <input
                   type="text"
@@ -95,7 +110,7 @@ const PageInfo = async (context: { params: { id: string } }) => {
                 <input
                   type="text"
                   name="nome"
-                  placeholder={pessoaData.conta.nome}
+                  placeholder={pessoaData.Contum.nome}
                   required
                   className={styles.input}
                 />
@@ -103,14 +118,14 @@ const PageInfo = async (context: { params: { id: string } }) => {
                 <input
                   type="text"
                   name="iban"
-                  placeholder={pessoaData.conta.iban}
+                  placeholder={pessoaData.Contum.iban}
                   required
                   className={styles.input}
                 />
                 <input
                   type="number"
                   name="salario"
-                  placeholder={pessoaData.conta.salario}
+                  placeholder={pessoaData.Contum.salario}
                   required
                   className={styles.input}
                 />
@@ -120,7 +135,8 @@ const PageInfo = async (context: { params: { id: string } }) => {
             <input
               type="file"
               name="scanner"
-              multiple
+              multiple={true}
+              className={styles.input}
             />
 
             <div className="w-[100%] flex flex-row justify-around">

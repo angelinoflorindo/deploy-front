@@ -27,26 +27,24 @@ export default class Emprestimo extends Model {
   valor!: number;
 
   @Column({ type: DataType.INTEGER, allowNull: false })
-  juro_proponente!: number;
-
-  @Column({ type: DataType.INTEGER, allowNull: false })
-  taxa_investidor!: number;
+  juro!: number;
 
   @Column({ type: DataType.INTEGER, allowNull: false })
   prestacao!: number;
 
   @Column({ type: DataType.DATE, allowNull: false })
-  termino!: Date;
+  prazo!: Date;
 
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   estado!: boolean;
 
-  @Column({ type: DataType.BOOLEAN, allowNull: false })
+  @Column({ type: DataType.BOOLEAN, defaultValue: true })
   pendencia!: boolean;
 
   @Column({
     type: DataType.ENUM(...Object.values(ProgressoEmprestimo)),
     allowNull: false,
+    defaultValue: 'PENDENTE'
   })
   progresso!: ProgressoEmprestimo;
 

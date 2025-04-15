@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   const titulo = typeof rawTitulo === "string" ? rawTitulo : "";
   const tipo = typeof rawTipo === "string" ? rawTipo : "";
 
-  if (files.length === 0) {
+  if (files[0].size === 0 || files.length === 0) {
     return new Response(
       JSON.stringify({ message: "Nenhum ficheiro enviado." })
     );
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
 
     const documento = {
       nome_salvado: uniqueName,
-      nome_orignal: file.name,
+      nome_original: file.name,
       extensao: file.type,
       tamanho: file.size,
       titulo: titulo,

@@ -65,10 +65,10 @@ const handler = NextAuth({
   ],
   session: {
     strategy: "jwt",
-    maxAge: 300, // Em segundos
+    maxAge: 3000, // Em segundos
   },
   jwt: {
-    maxAge:300, // Em segundos
+    maxAge:3000, // Em segundos
   },
   callbacks: {
     async jwt({ token, user }) {

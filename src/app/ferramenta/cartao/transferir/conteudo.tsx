@@ -1,16 +1,23 @@
+'use client';
 import Image from "next/image";
 import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
-import Link from "next/link";
+import { UserInfo } from "@/services/user.service";
+import { SubmitButton } from "@/components/submitButton";
 
-const Conteudo = () => {
+const Conteudo = ({user}:{user:UserInfo}) => {
   return (
     <div className={global.grid}>
       <header className={global.cartao_header_depositar}>
         <div className={global.cartao_esquerda_depositar}>
+          Transferir fundos à
           <h1>
             <b>Gestor:</b> Angelino Franisco
           </h1>
+          
+          <h3>
+            <b>Conta:</b>Banco Sol
+          </h3>
           <h3>
             <b>Iban:</b> 0040.0000.4234
           </h3>
@@ -24,17 +31,24 @@ const Conteudo = () => {
           />
         </div>
       </header>
-      <form action="">
-        <input
+      <form action="" className="flex flex-col justify-center items-center">
+        
+      <input
           type="text"
+          name="guardiao"
+          placeholder="Pesuisar por email ou telemovel"
+          className={styles.input}
+        />
+
+        <input
+          type="number"
           name="valor"
           placeholder="Especificar o valor"
           required
           className={styles.input}
         />
-        <button type="submit" className={styles.button}>
-          Transferir
-        </button>
+        
+        <SubmitButton/>
       </form>
     </div>
   );

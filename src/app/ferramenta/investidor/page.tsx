@@ -23,7 +23,7 @@ const Investidor = async () => {
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
        
-         <Conteudo userId={userData.id} investidor={userData.investidor}  />
+         <Conteudo userId={userData.id} investidor={userData.Investidor}  />
         </main>
 
         {/* Rodapé Fixo */}

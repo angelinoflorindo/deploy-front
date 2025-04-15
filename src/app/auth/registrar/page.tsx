@@ -7,6 +7,7 @@ import { useState } from "react";
 import { redirect } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { clientAPI } from "@/app/lib/definitions";
+import { SubmitButton } from "@/components/submitButton";
 
 const url = clientAPI;
 const RegisterForm = () => {
@@ -38,6 +39,8 @@ const RegisterForm = () => {
     e.preventDefault();
 
     const hashPass = await hashPassword(formData.password);
+    const password = formData.password;
+    const picture = formData.profilePicture;
     const usuario = {
       primeiro_nome: formData.primeiro_nome,
       password: hashPass,
@@ -48,34 +51,40 @@ const RegisterForm = () => {
       telemovel: formData.telemovel,
     };
 
-    if (formData.profilePicture === null || !formData.profilePicture) {
+    if (picture === null || !picture) {
       console.log("Anexe os documentos!");
       return redirect("/auth/registrar");
     }
 
-    const response = await fetch(`${url}/api/usuario`, {
+    setFormData({
+      primeiro_nome: "",
+      segundo_nome: "",
+      telemovel: "",
+      email: "",
+      password: "",
+      bilhete: "",
+      profilePicture: "",
+    });
+
+    const resp = await fetch(`${url}/api/usuario`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
       },
-      
+
       body: JSON.stringify(usuario),
-    })
-      .then((event) => {
-        return event.json();
-      })
-      .catch((res) => {
-        console.log("erro", res);
-        return redirect("/auth/registrar");
-      });
-
-    //console.log("registrado response", response)
+    });
+    const response = await resp.json();
+    console.log("user id", response.id);
+    if (!resp.ok) {
+      console.log("Error de sintaxe", resp.statusText);
+      return redirect("/auth/registrar");
+    }
     const data = new FormData();
-
     data.append("tipo", "BILHETE");
     data.append("titulo", "Bilhete de identidade");
     data.append("user_id", `${response.id}`);
-    data.append("scanner", formData.profilePicture);
+    data.append("scanner", picture);
 
     const result = await fetch(
       `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/upload`,
@@ -93,7 +102,7 @@ const RegisterForm = () => {
     const res = await signIn("credentials", {
       redirect: false,
       email: usuario.email,
-      password: formData.password,
+      password: password,
     });
 
     if (res?.error) {
@@ -190,7 +199,6 @@ const RegisterForm = () => {
                 <input
                   type="file"
                   name="scanner"
-                  accept="image/*"
                   multiple={true}
                   onChange={(e) =>
                     setFormData((prev: any) => ({
@@ -224,12 +232,7 @@ const RegisterForm = () => {
                   Próximo
                 </button>
               ) : (
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-green-500 text-white rounded"
-                >
-                  Registrar
-                </button>
+                <SubmitButton />
               )}
             </div>
           </form>

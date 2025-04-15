@@ -29,7 +29,7 @@ export default class Pagamento extends Model {
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   estado!: boolean;
 
-  @Column({ type: DataType.BOOLEAN, allowNull: false })
+  @Column({ type: DataType.BOOLEAN, defaultValue: true })
   pendencia!: boolean;
 
   @ForeignKey(() => Devedor)

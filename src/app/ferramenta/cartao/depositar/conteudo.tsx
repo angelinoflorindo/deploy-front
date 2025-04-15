@@ -1,9 +1,15 @@
+"use client"
 import Image from "next/image";
 import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
-import Link from "next/link";
+import { UserInfo } from "@/services/user.service";
+import { carregarConta } from "@/app/actions/auth";
+import { SubmitButton } from "@/components/submitButton";
+import { useActionState, useState } from "react";
 
-const Conteudo = () => {
+const Conteudo = ({ user }: { user: UserInfo }) => {
+ const [state, formAction] = useActionState(carregarConta, null)
+
   return (
     <div className={global.grid}>
       <header className={global.cartao_header_depositar}>
@@ -27,9 +33,17 @@ const Conteudo = () => {
           />
         </div>
       </header>
-      <form action="">
+      <form action={formAction} className="flex flex-col justify-center items-center">
+      <input
+          type="number"
+          name="user_id"
+          readOnly
+          value={user.id}
+          hidden={true}
+        />
+
         <input
-          type="text"
+          type="number"
           name="valor"
           placeholder="Especificar o valor"
           required
@@ -38,12 +52,10 @@ const Conteudo = () => {
         <input
           type="file"
           name="scanner"
-          accept="image/*"
+          multiple={true}
           className={styles.input}
         />
-        <button type="submit" className={styles.button}>
-          Confirmar
-        </button>
+        <SubmitButton />
       </form>
     </div>
   );

@@ -21,7 +21,7 @@ export async function PUT(
     await sequelize.sync();
     setupAssociations();
 
-    const result = await Investidor.update({body}, { where: { id: uuid }});
+    const result = await Investidor.update(body, { where: { id: uuid }});
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
     return NextResponse.json({message:error}, {status:404});

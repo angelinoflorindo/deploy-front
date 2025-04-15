@@ -16,22 +16,21 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
-  console.log("confirmar dados", body);
-  const info = {
-    assunto: body.assunto,
-    conteudo: body.conteudo,
-    user_id: body.user_id,
-  };
+  const info = {};
   try {
     await sequelize.authenticate();
     await sequelize.sync();
     setupAssociations();
 
-    const resp = await Reclamacao.create(info);
+    const resp = await Reclamacao.create({
+      assunto: body.assunto,
+      conteudo: body.conteudo,
+      user_id: body.user_id
+    });
 
     return NextResponse.json(resp);
   } catch (error) {
     console.error("Erro ao submeter reclamação ", error);
-    return NextResponse.json(error,{ status:404});
+    return NextResponse.json(error, { status: 404 });
   }
 }

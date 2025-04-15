@@ -21,7 +21,7 @@ const Retirar = async () => {
 
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
-          <Conteudo />
+          <Conteudo  user={userData} />
         </main>
 
         {/* Rodapé Fixo */}

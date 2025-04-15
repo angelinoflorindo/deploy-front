@@ -35,10 +35,7 @@ export default class Saque extends Model {
   })
   estado!: boolean;
 
-  @Column({
-    type: DataType.BOOLEAN,
-    allowNull: false,
-  })
+  @Column({ type: DataType.BOOLEAN, defaultValue: true })
   pendencia!: boolean;
 
   @ForeignKey(() => User)

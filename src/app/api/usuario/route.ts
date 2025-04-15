@@ -78,17 +78,48 @@ export async function POST(req: NextRequest) {
     await sequelize.authenticate()
     await sequelize.sync()
     setupAssociations()
-    const user = await User.create(data);
-    const result = {
-      id:user.id,
-      email:user.email
-    }
-    return NextResponse.json(result);
+
+ 
+    const user = await findOrCreateUser({ 
+      primeiro_nome: data.primeiro_nome,
+      password: data.password,
+      genero: data.genero,
+      email: data.email,
+      bilhete: data.bilhete,
+      segundo_nome: data.segundo_nome,
+      telemovel: data.telemovel,
+    });
+
+    return NextResponse.json({email:user.email, id:user.id});
   } catch (error) {
-    console.error(error); // Ajuda a depurar
+    //console.error(error); // Ajuda a depurar
     return NextResponse.json(
-      { message: "Erro ao criar usuário", error },
+      { isSqlError:true, message: "Erro ao criar usuário", error },
       { status: 500 }
     );
   }
+}
+
+async function findOrCreateUser(data: any) {
+  const [user] = await User.findOrCreate({
+    where: {   
+      primeiro_nome: data.primeiro_nome,
+      password: data.password,
+      genero: data.genero,
+      email: data.email,
+      bilhete: data.bilhete,
+      segundo_nome: data.segundo_nome,
+      telemovel: data.telemovel,
+    },
+    defaults:{
+      primeiro_nome: data.primeiro_nome,
+      password: data.password,
+      genero: data.genero,
+      email: data.email,
+      bilhete: data.bilhete,
+      segundo_nome: data.segundo_nome,
+      telemovel: data.telemovel,
+    }
+  });
+  return user;
 }
