@@ -5,27 +5,35 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('papel', {
+    await queryInterface.createTable('contas', {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+      },
+      nome: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
-      perfil: {
-        type: DataTypes.ENUM('ADMIN', 'ANALISTA'),
+      salario: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      iban: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       estado: {
         type: DataTypes.BOOLEAN,
-        defaultValue: true,
         allowNull: false,
+        defaultValue: true,
       },
-      user_id: {
-        type: DataTypes.INTEGER,
+      pessoa_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
-          model: 'users', // relacionamento com a tabela User
+          model: 'pessoas', // Nome da tabela referenciada
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -45,6 +53,6 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('papel');
+    await queryInterface.dropTable('contas');
   },
 };

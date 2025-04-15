@@ -5,38 +5,47 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('carteiras', {
+    await queryInterface.createTable('emprestimos', {
       id: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        autoIncrement: true,
+        type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
         allowNull: false,
       },
-      saldo: {
+      valor: {
         type: DataTypes.FLOAT,
+        allowNull: false,
+      },
+      juro: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      prestacao: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      prazo: {
+        type: DataTypes.DATE,
         allowNull: false,
       },
       estado: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
-        allowNull: false,
       },
-      numero: {
-        type: DataTypes.INTEGER,
-        unique: true,
-        allowNull: false,
+      pendencia: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
       },
-      codigo: {
-        type: DataTypes.INTEGER,
-        unique: true,
+      progresso: {
+        type: DataTypes.ENUM('PENDENTE', 'CONCLUIDO', 'CANCELADO'),
         allowNull: false,
+        defaultValue: 'PENDENTE',
       },
-      user_id: {
-        type: DataTypes.INTEGER,
-        unique: true,
+      proponente_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
-          model: 'users', // relacionamento com a tabela User
+          model: 'proponentes', // Nome da tabela referenciada
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -56,6 +65,6 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('carteiras');
+    await queryInterface.dropTable('emprestimos');
   },
 };

@@ -5,46 +5,49 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('solidarios', {
+    await queryInterface.createTable('investidores', {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-      },
-      tipo: {
-        type: DataTypes.ENUM('CREDITO', 'EMPRESTIMO'),
         allowNull: false,
       },
-      parentesco: {
-        type: DataTypes.STRING,
+      maior_risco: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
         allowNull: false,
       },
-      taxa: {
-        type: DataTypes.INTEGER,
+      maior_seguranca: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+      },
+      saque_antecipado: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+      },
+      fundo_protegido: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
         allowNull: false,
       },
       estado: {
         type: DataTypes.BOOLEAN,
+        defaultValue: true,
         allowNull: false,
-        defaultValue: false,
       },
-      pessoa_id: {
-        type: DataTypes.INTEGER,
+      partilhar_emprestimo: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
         allowNull: false,
-        unique: true,
-        references: {
-          model: 'pessoas', // nome da tabela
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
       },
       user_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER.UNSIGNED,
+        unique: true,
         allowNull: false,
         references: {
-          model: 'users',
+          model: 'users', // relacionamento com a tabela User
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -64,6 +67,6 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('solidarios');
+    await queryInterface.dropTable('investidores');
   },
 };

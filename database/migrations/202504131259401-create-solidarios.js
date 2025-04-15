@@ -5,35 +5,50 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('reclamacoes', {
+    await queryInterface.createTable('solidarios', {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+      },
+      tipo: {
+        type: DataTypes.ENUM('CREDITO', 'EMPRESTIMO'),
         allowNull: false,
       },
-      user_id: {
+      parentesco: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      taxa: {
         type: DataTypes.INTEGER,
         allowNull: false,
+      },
+      estado: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      pessoa_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+        unique: true,
         references: {
-          model: 'users', // relacionamento com a tabela User
+          model: 'pessoas', // nome da tabela
           key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      estado: {
-        type: DataTypes.BOOLEAN,
+      user_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
-        defaultValue: true,
-      },
-      assunto: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      conteudo: {
-        type: DataTypes.STRING,
-        allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       created_at: {
         allowNull: false,
@@ -49,6 +64,6 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('reclamacoes');
+    await queryInterface.dropTable('solidarios');
   },
 };

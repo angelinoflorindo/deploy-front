@@ -5,15 +5,16 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('depositos', {
+    // 1. Cria a tabela sem a foreign key
+    await queryInterface.createTable('papel', {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
       },
-      valor: {
-        type: DataTypes.FLOAT,
+      perfil: {
+        type: DataTypes.ENUM('ADMIN', 'ANALISTA'),
         allowNull: false,
       },
       estado: {
@@ -21,14 +22,15 @@ export default {
         defaultValue: true,
         allowNull: false,
       },
-      pendencia: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
-        allowNull: false,
-      },
       user_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       created_at: {
         allowNull: false,
@@ -41,9 +43,11 @@ export default {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
     });
+
+   
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('depositos');
+  await queryInterface.dropTable('papel');
   },
 };

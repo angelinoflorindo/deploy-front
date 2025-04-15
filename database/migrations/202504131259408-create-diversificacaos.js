@@ -5,47 +5,40 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('investidores', {
-      id: {
+    await queryInterface.createTable('diversificacaos', {
+      investidor_id: {
         type: DataTypes.INTEGER.UNSIGNED,
-        autoIncrement: true,
         primaryKey: true,
         allowNull: false,
+        references: {
+          model: 'investidores', // Nome da tabela referenciada
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
-      maior_risco: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+      emprestimo_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        references: {
+          model: 'emprestimos', // Nome da tabela referenciada
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      taxa: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
-      maior_seguranca: {
+      protencao: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        allowNull: false,
-      },
-      saque_antecipado: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        allowNull: false,
-      },
-      fundo_protegido: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
         allowNull: false,
       },
       estado: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
-        allowNull: false,
-      },
-      partilhar_emprestimo: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        allowNull: false,
-      },
-      user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true,
       },
       created_at: {
         allowNull: false,
@@ -61,6 +54,6 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('investidores');
+    await queryInterface.dropTable('diversificacaos');
   },
 };

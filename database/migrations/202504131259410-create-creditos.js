@@ -5,11 +5,15 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('reembolsos', {
+    await queryInterface.createTable('creditos', {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
+        allowNull: false,
+      },
+      tipo: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       valor: {
@@ -20,20 +24,33 @@ export default {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      juro: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      prazo: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
       estado: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
         allowNull: false,
       },
-      detalhe: {
-        type: DataTypes.STRING,
+      pendencia: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
         allowNull: false,
       },
-      proponente_id: {
-        type: DataTypes.INTEGER,
+      progresso: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      devedor_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
-          model: 'proponentes', // relacionamento com a tabela Proponente
+          model: 'pessoas', // presumindo que devedor seja uma Pessoa
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -53,6 +70,6 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('reembolsos');
+    await queryInterface.dropTable('creditos');
   },
 };

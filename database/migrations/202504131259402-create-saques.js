@@ -5,40 +5,37 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('proponentes', {
+    await queryInterface.createTable('saques', {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
       },
-      solicitacao: {
-        type: DataTypes.INTEGER,
+      valor: {
+        type: DataTypes.FLOAT,
         allowNull: false,
       },
-      reembolsar: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      satisfeitos: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      insatisfeitos: {
+      taxa: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
       estado: {
         type: DataTypes.BOOLEAN,
-        defaultValue: true,
         allowNull: false,
+        defaultValue: true,
+      },
+      pendencia: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
       },
       user_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
-        unique: true,
+        unique: true, // Cada usuário só pode ter um saque? Confirma isso.
         references: {
-          model: 'users', // relacionamento com a tabela User
+          model: 'users',
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -58,6 +55,6 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('proponentes');
+    await queryInterface.dropTable('saques');
   },
 };

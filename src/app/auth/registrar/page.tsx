@@ -56,16 +56,6 @@ const RegisterForm = () => {
       return redirect("/auth/registrar");
     }
 
-    setFormData({
-      primeiro_nome: "",
-      segundo_nome: "",
-      telemovel: "",
-      email: "",
-      password: "",
-      bilhete: "",
-      profilePicture: "",
-    });
-
     const resp = await fetch(`${url}/api/usuario`, {
       method: "POST",
       headers: {

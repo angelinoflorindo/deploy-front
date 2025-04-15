@@ -5,37 +5,47 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('saques', {
+    await queryInterface.createTable('documentos', {
       id: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        autoIncrement: true,
-        primaryKey: true,
-        allowNull: false,
-      },
-      valor: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-      },
-      taxa: {
         type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
+      tipo: {
+        type: DataTypes.ENUM('BILHETE', 'DECLARACAO_TRABALHO', 'DECLARACAO_SEGURO', 'BEM_MOVEL', 'ORDEM_DEBITO', 'DEPOSITO', 'LEVANTAMENTO', 'RECIBO'),
+        allowNull: false,
+      },
+      titulo: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      extensao: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      tamanho: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      nome_original: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      nome_salvado: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       estado: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true,
-      },
-      pendencia: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
         defaultValue: true,
       },
       user_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER.UNSIGNED,
+        unique: true,
         allowNull: false,
-        unique: true, // Cada usuário só pode ter um saque? Confirma isso.
         references: {
-          model: 'users',
+          model: 'users', // relacionamento com a tabela User
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -55,6 +65,6 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('saques');
+    await queryInterface.dropTable('documentos');
   },
 };

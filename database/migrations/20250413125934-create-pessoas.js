@@ -1,11 +1,12 @@
-'use strict';
+"use strict";
 
-import { DataTypes } from 'sequelize';
+import { DataTypes } from "sequelize";
 
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('pessoas', {
+    // 1. Criação da tabela sem foreign keys
+    await queryInterface.createTable("pessoas", {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
@@ -13,7 +14,7 @@ export default {
         allowNull: false,
       },
       estado_civil: {
-        type: DataTypes.ENUM('SOLTEIRO', 'CASADO'),
+        type: DataTypes.ENUM("SOLTEIRO", "CASADO"),
         allowNull: false,
       },
       provincia: {
@@ -42,49 +43,49 @@ export default {
         allowNull: false,
       },
       user_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
-          model: 'users', // relacionamento com a tabela User
-          key: 'id',
+          model: "users",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       emprego_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'empregos', // relacionamento com a tabela Emprego
-          key: 'id',
+          model: "empregos",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       residencia_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
-          model: 'residencias', // relacionamento com a tabela Residencia
-          key: 'id',
+          model: "residencias",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       created_at: {
         allowNull: false,
         type: DataTypes.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updated_at: {
         allowNull: false,
         type: DataTypes.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('pessoas');
+    await queryInterface.dropTable("pessoas");
   },
 };

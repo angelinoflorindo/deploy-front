@@ -5,33 +5,37 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('devedores', {
+    await queryInterface.createTable('depositos', {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
       },
-      solicitacao: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      adimplencia: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      inadimplencia: {
-        type: DataTypes.INTEGER,
+      valor: {
+        type: DataTypes.FLOAT,
         allowNull: false,
       },
       estado: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
         defaultValue: true,
-      },
-      user_id: {
-        type: DataTypes.INTEGER,
         allowNull: false,
+      },
+      pendencia: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
+      },
+      user_id:  {
+        type: DataTypes.INTEGER.UNSIGNED,
+        unique: true,
+        allowNull: false,
+        references: {
+          model: 'users', // relacionamento com a tabela User
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       created_at: {
         allowNull: false,
@@ -47,6 +51,6 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('devedores');
+    await queryInterface.dropTable('depositos');
   },
 };

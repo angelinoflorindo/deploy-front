@@ -5,35 +5,30 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('contas', {
+    await queryInterface.createTable('creditos_solidarios', {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-      },
-      nome: {
-        type: DataTypes.STRING,
         allowNull: false,
       },
-      salario: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      iban: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      estado: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true,
-      },
-      pessoa_id: {
-        type: DataTypes.INTEGER,
+      credito_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        unique: true,
         allowNull: false,
         references: {
-          model: 'pessoas', // Nome da tabela referenciada
+          model: 'creditos', // relacionamento com a tabela User
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      solidario_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        unique: true,
+        allowNull: false,
+        references: {
+          model: 'solidarios', // relacionamento com a tabela User
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -53,6 +48,6 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('contas');
+    await queryInterface.dropTable('creditos_solidarios');
   },
 };

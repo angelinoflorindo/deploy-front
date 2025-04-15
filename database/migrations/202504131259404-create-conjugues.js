@@ -5,40 +5,44 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('diversificacaos', {
-      investidor_id: {
-        type: DataTypes.INTEGER,
+    await queryInterface.createTable('conjugues', {
+      id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        autoIncrement: true,
         primaryKey: true,
         allowNull: false,
-        references: {
-          model: 'investidores', // Nome da tabela referenciada
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
       },
-      emprestimo_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
+      nome_completo: {
+        type: DataTypes.STRING,
         allowNull: false,
-        references: {
-          model: 'emprestimos', // Nome da tabela referenciada
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
       },
-      taxa: {
+      dependentes: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      protencao: {
-        type: DataTypes.BOOLEAN,
+      nivel_instrucao: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       estado: {
         type: DataTypes.BOOLEAN,
+        allowNull: false,
         defaultValue: true,
+      },
+      data_nascimento: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      pessoa_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+        unique: true,
+        references: {
+          model: 'pessoas', // presumindo que seja relação 1:1 com Pessoa
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       created_at: {
         allowNull: false,
@@ -54,6 +58,6 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('diversificacaos');
+    await queryInterface.dropTable('conjugues');
   },
 };

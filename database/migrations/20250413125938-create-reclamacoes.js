@@ -5,32 +5,34 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('conta_vinculadas', {
+    await queryInterface.createTable('reclamacoes', {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
       },
-      proponente_id: {
-        type: DataTypes.INTEGER,
+      user_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
-      },
-      emprestimo_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      valor_retido: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      data_desbloqueio: {
-        type: DataTypes.DATE,
-        allowNull: false,
+        references: {
+          model: 'users', // relacionamento com a tabela User
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       estado: {
         type: DataTypes.BOOLEAN,
+        allowNull: false,
         defaultValue: true,
+      },
+      assunto: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      conteudo: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       created_at: {
@@ -47,6 +49,6 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('conta_vinculadas');
+    await queryInterface.dropTable('reclamacoes');
   },
 };

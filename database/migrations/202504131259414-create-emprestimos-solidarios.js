@@ -5,40 +5,28 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('pagamentos', {
+    await queryInterface.createTable('emprestimos_solidarios', {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
       },
-      valor: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-      },
-      detalhe: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      prestacao: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      estado: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
-        allowNull: false,
-      },
-      pendencia: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
-        allowNull: false,
-      },
-      devedor_id: {
+      emprestimo_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'devedores', // relacionamento com a tabela Devedor
+          model: 'emprestimos', // Nome da tabela referenciada
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      solidario_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+        references: {
+          model: 'solidarios', // Nome da tabela referenciada
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -58,6 +46,6 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('pagamentos');
+    await queryInterface.dropTable('emprestimos_solidarios');
   },
 };

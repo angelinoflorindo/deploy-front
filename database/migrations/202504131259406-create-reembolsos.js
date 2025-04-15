@@ -5,40 +5,35 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('conjugues', {
+    await queryInterface.createTable('reembolsos', {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
       },
-      nome_completo: {
-        type: DataTypes.STRING,
+      valor: {
+        type: DataTypes.FLOAT,
         allowNull: false,
       },
-      dependentes: {
+      prestacao: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      nivel_instrucao: {
-        type: DataTypes.STRING,
         allowNull: false,
       },
       estado: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
         defaultValue: true,
-      },
-      data_nascimento: {
-        type: DataTypes.DATE,
         allowNull: false,
       },
-      pessoa_id: {
-        type: DataTypes.INTEGER,
+      detalhe: {
+        type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+      },
+      proponente_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
         references: {
-          model: 'pessoas', // presumindo que seja relação 1:1 com Pessoa
+          model: 'proponentes', // relacionamento com a tabela Proponente
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -58,6 +53,6 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('conjugues');
+    await queryInterface.dropTable('reembolsos');
   },
 };

@@ -5,44 +5,44 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('documentos', {
+    await queryInterface.createTable('pagamentos', {
       id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
+        type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
+        primaryKey: true,
         allowNull: false,
       },
-      tipo: {
-        type: DataTypes.ENUM('BILHETE', 'DECLARACAO_TRABALHO', 'DECLARACAO_SEGURO', 'BEM_MOVEL', 'ORDEM_DEBITO', 'DEPOSITO', 'LEVANTAMENTO', 'RECIBO'),
+      valor: {
+        type: DataTypes.FLOAT,
         allowNull: false,
       },
-      titulo: {
+      detalhe: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      extensao: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      tamanho: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      nome_original: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      nome_salvado: {
-        type: DataTypes.STRING,
+      prestacao: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       estado: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
-      },
-      user_id: {
-        type: DataTypes.INTEGER,
         allowNull: false,
+      },
+      pendencia: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
+      },
+      devedor_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+        references: {
+          model: 'devedores', // relacionamento com a tabela Devedor
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       created_at: {
         allowNull: false,
@@ -58,6 +58,6 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('documentos');
+    await queryInterface.dropTable('pagamentos');
   },
 };
