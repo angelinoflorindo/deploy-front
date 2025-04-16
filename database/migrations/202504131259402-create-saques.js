@@ -33,7 +33,6 @@ export default {
       user_id: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
-        unique: true, // Cada usuário só pode ter um saque? Confirma isso.
         references: {
           model: 'users',
           key: 'id',

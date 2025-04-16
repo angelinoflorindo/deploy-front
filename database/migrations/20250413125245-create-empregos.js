@@ -7,7 +7,7 @@ export default {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('empregos', {
       id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER.UNSIGNED,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,

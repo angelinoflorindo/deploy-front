@@ -8,10 +8,12 @@ import {
   AutoIncrement,
   ForeignKey,
   Unique,
-} from 'sequelize-typescript';
-import User from './User';
+  CreatedAt,
+  UpdatedAt,
+} from "sequelize-typescript";
+import User from "./User";
 
-@Table({ tableName: 'investidores' })
+@Table({ tableName: "investidores" })
 export default class Investidor extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -40,4 +42,12 @@ export default class Investidor extends Model {
   @ForeignKey(() => User)
   @Column({ type: DataType.INTEGER, allowNull: false })
   user_id!: number;
+
+  @CreatedAt
+  @Column({ field: "created_at", type: DataType.DATE })
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column({ field: "updated_at", type: DataType.DATE })
+  updatedAt!: Date;
 }

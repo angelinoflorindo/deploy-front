@@ -6,11 +6,12 @@ import Footer from "@/components/footer";
 import Conteudo from "./conteudo";
 import { buscarUser } from "@/app/actions/auth";
 import { getServerSession } from "next-auth";
+import { getToken } from "next-auth/jwt";
 
 
 const OrdemDebito = async () => {
   const session = await getServerSession()
-  const user = await buscarUser(session?.user?.email)  
+   const user = await buscarUser(session?.user?.email)  
   return (
         <div className={styles.container}>
         <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">

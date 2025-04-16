@@ -44,7 +44,6 @@ export async function buscarContaByUser(id: any) {
   return response.json();
 }
 
-
 export async function convidarSolidario(formData: any) {
   const res = await fetch(`${process.env.CLIENT_URL}/api/pessoa/solidario`, {
     method: "POST",
@@ -127,6 +126,46 @@ export async function carregarConta(_prevState: any, formData: FormData) {
   //  await new Promise((res) => setTimeout(res, 2000)); // simula delay
 }
 
+export async function vincluarConta(_prevState: any, formData: FormData) {
+  const userId = formData.get("user_id");
+
+  formData.append("tipo", "DEPOSITO");
+  formData.append("titulo", "Depósito de retenção");
+  formData.append("user_id", `${userId}`);
+
+  const files = formData.getAll("scanner") as File[];
+
+  if (files.length === 0 || files[0].size === 0) {
+    return redirect("/dashboard/emprestimo/vinculado");
+  }
+
+  const res = await fetch(`${process.env.CLIENT_URL}/api/upload`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    console.log("Erro ao anexar comprovativo!");
+    return redirect("/dashboard/emprestimo/vinculado");
+  }
+
+  const vincular = await fetch(`${process.env.CLIENT_URL}/api/operacao/vincular`, {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ user_id: userId, valor: formData.get("valor") }),
+  });
+
+  if (!vincular.ok) {
+    return redirect("/dashboard/emprestimo/vinculado");
+  }
+
+  return redirect("/dashboard/emprestimo/solicitar");
+}
+
+
+
 export async function sacarFundos(_prevState: any, formData: FormData) {
   const fundos = await fetch(`${process.env.CLIENT_URL}/api/operacao/sacar`, {
     method: "POST",
@@ -145,7 +184,6 @@ export async function sacarFundos(_prevState: any, formData: FormData) {
   }
   return redirect("/ferramenta");
 }
-
 
 export async function submitCredito(_prevState: any, formData: FormData) {
   const fundos = await fetch(`${process.env.CLIENT_URL}/api/operacao/sacar`, {
@@ -166,9 +204,11 @@ export async function submitCredito(_prevState: any, formData: FormData) {
   return redirect("/ferramenta");
 }
 
-
 export async function submitEmprestimo(_prevState: any, formData: FormData) {
-  const fundos = await fetch(`${process.env.CLIENT_URL}/api/operacao/sacar`, {
+  
+  
+  
+  const fundos = await fetch(`${process.env.CLIENT_URL}/api/proponente/emprestimo`, {
     method: "POST",
     headers: {
       "Content-type": "application/json",
@@ -176,14 +216,19 @@ export async function submitEmprestimo(_prevState: any, formData: FormData) {
     body: JSON.stringify({
       user_id: formData.get("user_id"),
       valor: formData.get("valor"),
-      taxa: formData.get("taxa"),
+      juro: formData.get("juro"),
+      prazo:formData.get("prazo"),
+      prestacao:formData.get("prestacao"),
+      progresso:'PENDENTE',
+      guardiao:formData.get("guardiao")
+
     }),
   });
 
   if (!fundos.ok) {
-    return redirect("/ferramenta/cartao/sacar");
+    return redirect("/dashboard/emprestimo/solicitar");
   }
-  return redirect("/ferramenta");
+  return redirect("/dashboard");
 }
 
 export async function efectuarReclamacao(_prevState: any, formData: FormData) {
@@ -227,3 +272,7 @@ export async function converterString(value: any) {
   }
   return value; // já é número ou não é conversível
 }
+
+// Tentendo criar funções automáticas
+
+export async function onTransation(userId: any, data: any, operation: any) {}

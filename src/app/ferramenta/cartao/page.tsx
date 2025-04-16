@@ -15,6 +15,7 @@ const Cartao = async () => {
   const session = await getServerSession()
   const user:UserInfo = await buscarUser(session?.user?.email)
   
+  
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg" >

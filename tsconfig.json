@@ -21,12 +21,18 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-        "target": "ES2022",              
-        "experimentalDecorators": true,
-        "useDefineForClassFields": false,
-        "emitDecoratorMetadata": true
-
+    "target": "ES2022",
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "emitDecoratorMetadata": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "types",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules"],
+  "types": ["next-auth"]
 }

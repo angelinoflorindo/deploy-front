@@ -42,7 +42,6 @@ export default {
       },
       user_id: {
         type: DataTypes.INTEGER.UNSIGNED,
-        unique: true,
         allowNull: false,
         references: {
           model: 'users', // relacionamento com a tabela User

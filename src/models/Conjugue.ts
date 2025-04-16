@@ -6,9 +6,11 @@ import {
   DataType,
   PrimaryKey,
   AutoIncrement,
-} from 'sequelize-typescript';
+  CreatedAt,
+  UpdatedAt,
+} from "sequelize-typescript";
 
-@Table({ tableName: 'conjugues' })
+@Table({ tableName: "conjugues" })
 export default class Conjugue extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -32,4 +34,12 @@ export default class Conjugue extends Model {
 
   @Column({ type: DataType.INTEGER, unique: true })
   pessoa_id!: number;
+
+  @CreatedAt
+  @Column({ field: "created_at", type: DataType.DATE })
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column({ field: "updated_at", type: DataType.DATE })
+  updatedAt!: Date;
 }

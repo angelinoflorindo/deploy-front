@@ -1,7 +1,16 @@
 // models/CreditoSolidario.ts
-import { Table, Model, Column, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
+import {
+  Table,
+  Model,
+  Column,
+  DataType,
+  PrimaryKey,
+  AutoIncrement,
+  CreatedAt,
+  UpdatedAt,
+} from "sequelize-typescript";
 
-@Table({ tableName: 'creditos_solidarios' })
+@Table({ tableName: "creditos_solidarios" })
 export default class CreditoSolidario extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -13,4 +22,12 @@ export default class CreditoSolidario extends Model {
 
   @Column(DataType.INTEGER)
   solidario_id!: number;
+
+  @CreatedAt
+  @Column({ field: "created_at", type: DataType.DATE })
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column({ field: "updated_at", type: DataType.DATE })
+  updatedAt!: Date;
 }

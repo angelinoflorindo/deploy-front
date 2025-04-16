@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Image from "next/image";
 import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
@@ -6,9 +6,14 @@ import { UserInfo } from "@/services/user.service";
 import { carregarConta } from "@/app/actions/auth";
 import { SubmitButton } from "@/components/submitButton";
 import { useActionState, useState } from "react";
+import { redirect } from "next/navigation";
 
 const Conteudo = ({ user }: { user: UserInfo }) => {
- const [state, formAction] = useActionState(carregarConta, null)
+  const [state, formAction] = useActionState(carregarConta, null);
+
+  if (user.Carteira === null || user.Carteira === undefined) {
+    return redirect("/ferramenta/cartao");
+  }
 
   return (
     <div className={global.grid}>
@@ -33,8 +38,11 @@ const Conteudo = ({ user }: { user: UserInfo }) => {
           />
         </div>
       </header>
-      <form action={formAction} className="flex flex-col justify-center items-center">
-      <input
+      <form
+        action={formAction}
+        className="flex flex-col justify-center items-center"
+      >
+        <input
           type="number"
           name="user_id"
           readOnly

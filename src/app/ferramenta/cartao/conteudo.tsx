@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CarteiraProps, UserProps } from "@/services/user.service";
 import { clientAPI } from "@/app/lib/definitions";
 import { redirect } from "next/navigation";
+import { useEffect } from "react";
 
 const url = clientAPI;
 const Conteudo = ({
@@ -21,7 +22,7 @@ const Conteudo = ({
       headers: {
         "Content-type": "application/json",
       },
-      body: JSON.stringify({ user_id:userData.id }),
+      body: JSON.stringify({ user_id: userData.id }),
     });
 
     if (!cartaoDigital.ok) {
@@ -29,6 +30,18 @@ const Conteudo = ({
     }
     return redirect("/ferramenta/cartao");
   }
+
+ /* const updateTransations = async () => {
+    const res = await fetch(
+      `${url}/api/operacao/depositar?page=1&pendencia=false&limit=1&order=updated_at`
+    );
+
+    console.log(await res.json())
+  };
+
+  useEffect(() => {
+    updateTransations();
+  }, []);*/
   return (
     <div className={global.grid}>
       <header className={global.cartao_header}>
@@ -38,12 +51,12 @@ const Conteudo = ({
           </h1>
           {!carteira || carteira === null ? (
             <>
-            <h3>Sem cartão</h3>
+              <h3>Sem cartão</h3>
               <button
                 className="px-3 py-2 bg-violet-500 text-white rounded cursor-pointer"
                 onClick={gerarCartao}
               >
-                activar 
+                activar
               </button>
             </>
           ) : (

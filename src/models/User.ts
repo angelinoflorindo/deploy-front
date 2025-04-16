@@ -8,12 +8,14 @@ import {
   AutoIncrement,
   Unique,
   Default,
-} from 'sequelize-typescript';
+  CreatedAt,
+  UpdatedAt,
+} from "sequelize-typescript";
 
 @Table({
-  tableName: 'users',
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  tableName: "users",
+  createdAt: "created_at",
+  updatedAt: "updated_at",
 })
 export default class User extends Model {
   @PrimaryKey
@@ -31,8 +33,8 @@ export default class User extends Model {
   @Column(DataType.STRING)
   password!: string;
 
-  @Column(DataType.ENUM('MASCULINO', 'FEMININO'))
-  genero!: 'MASCULINO' | 'FEMININO';
+  @Column(DataType.ENUM("MASCULINO", "FEMININO"))
+  genero!: "MASCULINO" | "FEMININO";
 
   @Unique
   @Column(DataType.STRING)
@@ -49,4 +51,12 @@ export default class User extends Model {
   @Default(true)
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   estado!: boolean;
+
+  @CreatedAt
+  @Column({ field: "created_at", type: DataType.DATE })
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column({ field: "updated_at", type: DataType.DATE })
+  updatedAt!: Date;
 }

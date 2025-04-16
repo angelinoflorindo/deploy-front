@@ -282,7 +282,7 @@ const Conteudo = ({
 
       <div className="flex flex-row w-[100%] justify-between items-center  h-14">
         <Link
-          href="/dashboard/credito/decima"
+          href="/dashboard/emprestimo"
           type="submit"
           className="px-4 py-2 bg-gray-500 text-white rounded"
         >

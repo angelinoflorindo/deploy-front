@@ -14,7 +14,6 @@ export default {
       },
       credito_id: {
         type: DataTypes.INTEGER.UNSIGNED,
-        unique: true,
         allowNull: false,
         references: {
           model: 'creditos', // relacionamento com a tabela User
@@ -25,7 +24,6 @@ export default {
       },
       solidario_id: {
         type: DataTypes.INTEGER.UNSIGNED,
-        unique: true,
         allowNull: false,
         references: {
           model: 'solidarios', // relacionamento com a tabela User

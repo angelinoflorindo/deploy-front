@@ -6,11 +6,13 @@ import {
   DataType,
   ForeignKey,
   PrimaryKey,
-} from 'sequelize-typescript';
-import Investidor from './Investidor';
-import Emprestimo from './Emprestimo';
+  CreatedAt,
+  UpdatedAt,
+} from "sequelize-typescript";
+import Investidor from "./Investidor";
+import Emprestimo from "./Emprestimo";
 
-@Table({ tableName: 'diversificacaos' })
+@Table({ tableName: "diversificacaos" })
 export default class Diversificacao extends Model {
   @PrimaryKey
   @ForeignKey(() => Investidor)
@@ -33,4 +35,12 @@ export default class Diversificacao extends Model {
     defaultValue: true,
   })
   estado!: boolean;
+
+  @CreatedAt
+  @Column({ field: "created_at", type: DataType.DATE })
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column({ field: "updated_at", type: DataType.DATE })
+  updatedAt!: Date;
 }

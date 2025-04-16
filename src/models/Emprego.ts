@@ -6,9 +6,11 @@ import {
   DataType,
   PrimaryKey,
   AutoIncrement,
-} from 'sequelize-typescript';
+  CreatedAt,
+  UpdatedAt,
+} from "sequelize-typescript";
 
-@Table({ tableName: 'empregos' })
+@Table({ tableName: "empregos" })
 export default class Emprego extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -18,8 +20,8 @@ export default class Emprego extends Model {
   @Column(DataType.DATE)
   data_inicio!: Date;
 
-  @Column(DataType.ENUM('PUBLICO', 'PRIVADO'))
-  sector!: 'PUBLICO' | 'PRIVADO';
+  @Column(DataType.ENUM("PUBLICO", "PRIVADO"))
+  sector!: "PUBLICO" | "PRIVADO";
 
   @Column(DataType.STRING)
   cargo!: string;
@@ -29,4 +31,12 @@ export default class Emprego extends Model {
 
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   estado!: boolean;
+
+  @CreatedAt
+  @Column({ field: "created_at", type: DataType.DATE })
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column({ field: "updated_at", type: DataType.DATE })
+  updatedAt!: Date;
 }

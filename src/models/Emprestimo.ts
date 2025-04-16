@@ -7,6 +7,8 @@ import {
   PrimaryKey,
   AutoIncrement,
   ForeignKey,
+  CreatedAt,
+  UpdatedAt,
 } from 'sequelize-typescript';
 import Proponente from './Proponente';
 
@@ -51,4 +53,13 @@ export default class Emprestimo extends Model {
   @ForeignKey(() => Proponente)
   @Column({ type: DataType.INTEGER, allowNull: false })
   proponente_id!: number;
+
+   
+    @CreatedAt
+    @Column({ field: 'created_at', type: DataType.DATE })
+    createdAt!: Date;
+  
+    @UpdatedAt
+    @Column({ field: 'updated_at', type: DataType.DATE })
+    updatedAt!: Date;
 }

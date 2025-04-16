@@ -7,11 +7,13 @@ import {
   PrimaryKey,
   AutoIncrement,
   ForeignKey,
-} from 'sequelize-typescript';
-import User from './User';
-import Pessoa from './Pessoa';
+  CreatedAt,
+  UpdatedAt,
+} from "sequelize-typescript";
+import User from "./User";
+import Pessoa from "./Pessoa";
 
-@Table({ tableName: 'solidarios' })
+@Table({ tableName: "solidarios" })
 export default class Solidario extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -19,10 +21,10 @@ export default class Solidario extends Model {
   id!: number;
 
   @Column({
-    type: DataType.ENUM('CREDITO', 'EMPRESTIMO'),
+    type: DataType.ENUM("CREDITO", "EMPRESTIMO"),
     allowNull: false,
   })
-  tipo!: 'CREDITO' | 'EMPRESTIMO';
+  tipo!: "CREDITO" | "EMPRESTIMO";
 
   @Column({
     type: DataType.STRING,
@@ -56,4 +58,12 @@ export default class Solidario extends Model {
     allowNull: false,
   })
   user_id!: number;
+
+  @CreatedAt
+  @Column({ field: "created_at", type: DataType.DATE })
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column({ field: "updated_at", type: DataType.DATE })
+  updatedAt!: Date;
 }

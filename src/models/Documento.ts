@@ -7,6 +7,8 @@ import {
   ForeignKey,
   PrimaryKey,
   AutoIncrement,
+  CreatedAt,
+  UpdatedAt,
 } from 'sequelize-typescript';
 import User from './User';
 
@@ -55,4 +57,13 @@ export default class Documento extends Model {
   @ForeignKey(() => User)
   @Column(DataType.INTEGER)
   user_id!: number;
+
+  
+  @CreatedAt
+  @Column({ field: 'created_at', type: DataType.DATE })
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column({ field: 'updated_at', type: DataType.DATE })
+  updatedAt!: Date;
 }

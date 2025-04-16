@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import Image from "next/image";
 import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
@@ -6,9 +6,19 @@ import { UserInfo } from "@/services/user.service";
 import { sacarFundos } from "@/app/actions/auth";
 import { SubmitButton } from "@/components/submitButton";
 import { useActionState } from "react";
+import { redirect } from "next/navigation";
 
-const Conteudo = ({user}:{user:UserInfo}) => {
-  const [state, formAction] = useActionState(sacarFundos, null)
+const Conteudo = ({ user }: { user: UserInfo }) => {
+  const [state, formAction] = useActionState(sacarFundos, null);
+
+  if (user.Pessoa === null || user.Pessoa === undefined) {
+    return redirect("/ferramenta/usuario");
+  }
+
+  if(user.Pessoa.Contum === null || user.Pessoa.Contum === undefined){
+    return redirect('/ferramenta/detalhes')
+  }
+
   return (
     <div className={global.grid}>
       <header className={global.cartao_header_depositar}>
@@ -17,7 +27,7 @@ const Conteudo = ({user}:{user:UserInfo}) => {
           <h1>
             <b>Gestor:</b> {user.primeiro_nome} {user.segundo_nome}
           </h1>
-          
+
           <h3>
             <b>Conta:</b> {user.Pessoa.Contum.nome}
           </h3>
@@ -34,8 +44,11 @@ const Conteudo = ({user}:{user:UserInfo}) => {
           />
         </div>
       </header>
-      <form action={formAction} className="flex flex-col justify-center items-center">
-      <input
+      <form
+        action={formAction}
+        className="flex flex-col justify-center items-center"
+      >
+        <input
           type="text"
           name="taxa"
           value={0}
@@ -57,7 +70,7 @@ const Conteudo = ({user}:{user:UserInfo}) => {
           required
           className={styles.input}
         />
-        <SubmitButton/>
+        <SubmitButton />
       </form>
     </div>
   );

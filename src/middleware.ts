@@ -25,6 +25,12 @@ const rotasProtegidas = [
   "/ferramenta/reclamacao",
   "/ferramenta/usuario",
   "/ferramenta/usuario?id",
+  "gestao/depositos",
+  "gestao/creditos",
+  "gestao/emprestimos",
+  "gestao/pagamentos",
+  "gestao/reclamacoes",
+  "gestao/saques"
 ];
 
 const rotasPublicas = ["/", "/auth"];
@@ -47,7 +53,7 @@ export default async function middleware(req: NextRequest) {
   const isPublica = isRotaPublica(path);
 
   // Recuperar o token do usuário (Verifica se está logado)
-  const token = await getToken({ req });
+  const token = await getToken({ req, secret:process.env.NEXTAUTH_SECRET});
 
   // Se a rota for protegida e o usuário não estiver logado, redireciona para a página inicial
   //
@@ -68,6 +74,7 @@ export const config = {
   matcher: [
     "/dashboard/:path*",
     "/ferramenta/:path*",
+    "/gestao/:path*",
     "/api/documento/:path*",
    // "/api/upload",
   ],

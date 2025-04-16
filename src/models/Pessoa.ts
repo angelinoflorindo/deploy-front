@@ -7,20 +7,22 @@ import {
   PrimaryKey,
   AutoIncrement,
   ForeignKey,
-} from 'sequelize-typescript';
-import User from './User';
-import Emprego from './Emprego';
-import Residencia from './Residencia';
+  CreatedAt,
+  UpdatedAt,
+} from "sequelize-typescript";
+import User from "./User";
+import Emprego from "./Emprego";
+import Residencia from "./Residencia";
 
-@Table({ tableName: 'pessoas' })
+@Table({ tableName: "pessoas" })
 export default class Pessoa extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
   id!: number;
 
-  @Column(DataType.ENUM('SOLTEIRO', 'CASADO'))
-  estado_civil!: 'SOLTEIRO' | 'CASADO';
+  @Column(DataType.ENUM("SOLTEIRO", "CASADO"))
+  estado_civil!: "SOLTEIRO" | "CASADO";
 
   @Column(DataType.STRING)
   provincia!: string;
@@ -51,4 +53,12 @@ export default class Pessoa extends Model {
   @ForeignKey(() => Residencia)
   @Column(DataType.INTEGER)
   residencia_id!: number;
+
+  @CreatedAt
+  @Column({ field: "created_at", type: DataType.DATE })
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column({ field: "updated_at", type: DataType.DATE })
+  updatedAt!: Date;
 }

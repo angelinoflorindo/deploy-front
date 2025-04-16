@@ -6,9 +6,11 @@ import {
   DataType,
   PrimaryKey,
   AutoIncrement,
-} from 'sequelize-typescript';
+  CreatedAt,
+  UpdatedAt,
+} from "sequelize-typescript";
 
-@Table({ tableName: 'contas' })
+@Table({ tableName: "contas" })
 export default class Conta extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -29,4 +31,12 @@ export default class Conta extends Model {
 
   @Column(DataType.INTEGER)
   pessoa_id!: number;
+
+  @CreatedAt
+  @Column({ field: "created_at", type: DataType.DATE })
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column({ field: "updated_at", type: DataType.DATE })
+  updatedAt!: Date;
 }

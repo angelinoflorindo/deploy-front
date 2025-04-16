@@ -14,21 +14,9 @@ export default {
       },
       proponente_id:  {
         type: DataTypes.INTEGER.UNSIGNED,
-        unique: true,
         allowNull: false,
         references: {
           model: 'proponentes', // relacionamento com a tabela User
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
-      emprestimo_id: {
-        type: DataTypes.INTEGER,
-        unique: true,
-        allowNull: false,
-        references: {
-          model: 'emprestimos', // relacionamento com a tabela User
           key: 'id',
         },
         onUpdate: 'CASCADE',

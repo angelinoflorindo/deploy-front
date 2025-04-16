@@ -7,10 +7,12 @@ import {
   PrimaryKey,
   AutoIncrement,
   ForeignKey,
-} from 'sequelize-typescript';
-import Proponente from './Proponente';
+  CreatedAt,
+  UpdatedAt,
+} from "sequelize-typescript";
+import Proponente from "./Proponente";
 
-@Table({ tableName: 'moveis' })
+@Table({ tableName: "moveis" })
 export default class Movel extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -29,4 +31,12 @@ export default class Movel extends Model {
   @ForeignKey(() => Proponente)
   @Column({ type: DataType.INTEGER, allowNull: false })
   proponente_id!: number;
+
+  @CreatedAt
+  @Column({ field: "created_at", type: DataType.DATE })
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column({ field: "updated_at", type: DataType.DATE })
+  updatedAt!: Date;
 }

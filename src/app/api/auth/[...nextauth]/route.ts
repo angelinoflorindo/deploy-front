@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs"; // Para criptografar senhas
 import {sequelize} from '@/lib/sequelize'
 import {setupAssociations} from "@/lib/associations"
 import User from "@/models/User"
+import Papel from "@/models/Papel";
 
 interface CustomSession extends Session {
   user: {
@@ -12,6 +13,7 @@ interface CustomSession extends Session {
     name: any;
     email: any;
     image: any;
+    role:any,
   };
   expires: any;
 }
@@ -38,6 +40,10 @@ const handler = NextAuth({
           where: { email: credentials.email },
         });
 
+        const papel = await Papel.findOne({
+          where:{user_id:user?.id}
+        })
+
 
         if (!user) {
           console.log("usuario inexistente");
@@ -58,7 +64,10 @@ const handler = NextAuth({
           id: user.id,
           name: `${user.primeiro_nome} ${user.segundo_nome}`,
           email: credentials.email,
+          role:papel?.perfil
         };
+
+       // console.log('users', users)
         return users;
       },
     }),
@@ -76,15 +85,17 @@ const handler = NextAuth({
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
+        token.role = user.role 
       }
       return token;
     },
     async session({ session, token }) {
       let cus = session as CustomSession;
-      if (token) {
+      if (token.role && session.user) {
         cus.user.id = token.id;
         cus.user.name = token.name;
         cus.user.email = token.email;
+        cus.user.role = token.role as string
       }
       return cus;
     },

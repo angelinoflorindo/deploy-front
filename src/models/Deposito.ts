@@ -1,7 +1,16 @@
 // models/Deposito.ts
-import { Table, Model, Column, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
+import {
+  Table,
+  Model,
+  Column,
+  DataType,
+  PrimaryKey,
+  AutoIncrement,
+  CreatedAt,
+  UpdatedAt,
+} from "sequelize-typescript";
 
-@Table({ tableName: 'depositos' })
+@Table({ tableName: "depositos" })
 export default class Deposito extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -11,12 +20,20 @@ export default class Deposito extends Model {
   @Column(DataType.FLOAT)
   valor!: number;
 
-  @Column({ type: DataType.BOOLEAN, defaultValue: true})
+  @Column({ type: DataType.BOOLEAN, defaultValue: true })
   estado!: boolean;
 
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   pendencia!: boolean;
 
   @Column(DataType.INTEGER)
-  user_id!: number;
+  user_id!: number; 
+
+  @CreatedAt
+  @Column({ field: "created_at", type: DataType.DATE })
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column({ field: "updated_at", type: DataType.DATE })
+  updatedAt!: Date;
 }

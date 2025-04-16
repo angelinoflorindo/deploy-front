@@ -26,6 +26,7 @@ import Reembolso from "../models/Reembolso";
 import Residencia from "../models/Residencia";
 import Emprego from "../models/Emprego";
 import CreditoSolidario from "../models/CreditoSolidario";
+import ContaVinculada from "../models/ContaVinculada";
 import {config} from 'dotenv'
 
 
@@ -66,7 +67,8 @@ config();
     Papel,
     Solidario,
     Diversificacao,
-    Pagamento
+    Pagamento,
+    ContaVinculada
   ],
   logging:false,
 

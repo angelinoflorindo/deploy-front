@@ -98,6 +98,8 @@ export interface DepositoProps{
   id:any,
   valor:any,
   user_id:any;
+  pendencia:any,
+  estado:any,
   createdAt: any;
   updatedAt: any;
 
@@ -107,6 +109,8 @@ export interface SaqueProps{
   id:any,
   taxa:any;
   valor:any,
+  estado:any,
+  pendencia:any,
   user_id:any;
   createdAt: any;
   updatedAt: any;

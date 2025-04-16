@@ -7,10 +7,12 @@ import {
   PrimaryKey,
   AutoIncrement,
   ForeignKey,
-} from 'sequelize-typescript';
-import User from './User';
+  CreatedAt,
+  UpdatedAt,
+} from "sequelize-typescript";
+import User from "./User";
 
-@Table({ tableName: 'reclamacoes' })
+@Table({ tableName: "reclamacoes" })
 export default class Reclamacao extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -41,4 +43,12 @@ export default class Reclamacao extends Model {
     allowNull: false,
   })
   conteudo!: string;
+
+  @CreatedAt
+  @Column({ field: "created_at", type: DataType.DATE })
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column({ field: "updated_at", type: DataType.DATE })
+  updatedAt!: Date;
 }

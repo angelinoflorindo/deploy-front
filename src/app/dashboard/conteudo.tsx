@@ -9,7 +9,7 @@ const Conteudo = () => {
       <div className={global.section}>
         {/* href="/dashboard/credito" */}
         <Link
-          href="/desenvolvimento"
+          href="/dashboard/credito"
           className="flex flex-col justify-center font-bold justify-center items-center w-[100%] h-40 shadow-md"
         >
           <Image src="/img/dinheiro.png" width={50} height={60} alt="" />

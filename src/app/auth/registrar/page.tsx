@@ -65,7 +65,7 @@ const RegisterForm = () => {
       body: JSON.stringify(usuario),
     });
     const response = await resp.json();
-    console.log("user id", response.id);
+   // console.log("user id", response.id);
     if (!resp.ok) {
       console.log("Error de sintaxe", resp.statusText);
       return redirect("/auth/registrar");

@@ -9,6 +9,7 @@ import { submitEmprestimo } from "@/app/actions/auth";
 const Conteudo = ({ user }: { user: UserInfo }) => {
   const [valor, setValor] = useState<any>(0);
   const [prazo, setPrazo] = useState("");
+  const [guardiao, setGuardiao] = useState(false);
   const [juro, setJuro] = useState<any>(0);
   const [prestacao, setPrestacao] = useState<any>(0);
   const [state, formAction] = useActionState(submitEmprestimo, null);
@@ -52,10 +53,20 @@ const Conteudo = ({ user }: { user: UserInfo }) => {
       </header>
 
       <div className="flex py-2 flex-col justify-center itmes-center">
+        <h3 className="text-blue-500" >{guardiao? 'Guardiãos convidados':'Sem guardiãos | clicar duas vezes!'}</h3>
         <form
           action={formAction}
           className="flex flex-col  justify-center itmes-center"
         >
+          
+          <input
+            type="checkbox"
+            checked={guardiao}
+            name="guardiao"
+            readOnly={true}
+            hidden={true}
+          />
+
           <input
             type="text"
             name="user_id"
@@ -91,13 +102,23 @@ const Conteudo = ({ user }: { user: UserInfo }) => {
 
             <input
               type="date"
-              name="termino"
+              name="prazo"
               onChange={prazoHandler}
               className={styles.input}
             />
           </div>
+          <div className="flex flex-row justify-around">
+            <button
+              type="button"
+              className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
+            onDoubleClick={()=>{setGuardiao(false)}}
+            onClick={()=>{setGuardiao(true)}}
+            >
+              Guardião
+            </button>
 
-          <SubmitButton />
+            <SubmitButton />
+          </div>
         </form>
       </div>
     </div>
