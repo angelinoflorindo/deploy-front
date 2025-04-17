@@ -3,7 +3,6 @@ import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { registrarDocumento, uploadDocumento } from "@/app/actions/auth";
 
 import { UserInfo } from "@/services/user.service";
 

@@ -273,6 +273,13 @@ export async function converterString(value: any) {
   return value; // já é número ou não é conversível
 }
 
+
+export async function validarEstado(value: any) {
+  if (value === 'true' || value ===true) {
+    return true
+  } 
+  return false; // já é número ou não é conversível
+}
+
 // Tentendo criar funções automáticas
 
-export async function onTransation(userId: any, data: any, operation: any) {}

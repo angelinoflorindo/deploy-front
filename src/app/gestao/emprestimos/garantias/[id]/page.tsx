@@ -4,7 +4,9 @@ import Footer from "@/components/footer";
 import Conteudo from "./conteudo";
 import styles from "@/modules/Login.module.css";
 
-const Emprestimo = () => {
+const Garantia = async (context: { params: { id: string } }) => {
+  const {id} = await context.params
+
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
@@ -12,7 +14,7 @@ const Emprestimo = () => {
         <Header />
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
-          <Conteudo />
+          <Conteudo emprestimoId={id} />
         </main>
         {/* Rodapé Fixo */} <Footer />
       </div>
@@ -20,4 +22,4 @@ const Emprestimo = () => {
   );
 };
 
-export default Emprestimo;
+export default Garantia;

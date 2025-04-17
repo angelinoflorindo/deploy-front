@@ -18,7 +18,7 @@ export async function PUT(
     await sequelize.sync();
     setupAssociations();
 
-    const deposito = await Deposito.findOne({ where: { id: id } });
+    const deposito = await Deposito.findOne({ where: { id: uuid } });
     const carteira = await Carteira.findOne({
       where: { user_id: deposito?.user_id },
     });

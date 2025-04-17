@@ -5,6 +5,8 @@ import Deposito from "@/models/Deposito";
 import Proponente from "@/models/Proponente";
 import ContaVinculada from "@/models/ContaVinculada";
 import { NextRequest, NextResponse } from "next/server";
+import User from "@/models/User";
+import Documento from "@/models/Documento";
 
 export async function GET(req: NextRequest) {
   try {
@@ -19,18 +21,17 @@ export async function GET(req: NextRequest) {
     //    const estado = searchParams.get('status')
 
     const offset = (Number(page) - 1) * Number(limit);
-    const where: any = { estado: true };
+    // const where: any = { estado: true };
     // para definir as condições de listagem apartir do client
     // if (estado) where.estado = estado;
 
-    const { rows: data, count: total } = await Deposito.findAndCountAll({
-      where,
+    const { rows: data, count: total } = await ContaVinculada.findAndCountAll({
       offset,
       limit: Number(limit),
       order: [["created_at", "DESC"]],
     });
 
-    //console.log("dados de depositos", data)
+    console.log(" depositos", data);
     const result = {
       data,
       total,
@@ -92,7 +93,7 @@ export async function DELETE(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const userId = await converterString(body.user_id)
+  const userId = await converterString(body.user_id);
 
   try {
     await sequelize.authenticate();
@@ -104,24 +105,27 @@ export async function POST(req: NextRequest) {
       reembolsar: 0,
       satisfeitos: 0,
       insatisfeitos: 0,
-      user_id:userId,
+      user_id: userId,
     };
     const proponente = await Proponente.findOrCreate({
-      where: { user_id:userId },
-      defaults:info,
+      where: { user_id: userId },
+      defaults: info,
     });
 
-    console.log("proponente", proponente)
-    console.log("proponente guardado ", proponente[0].id)
+    // console.log("proponente", proponente)
+    //console.log("proponente guardado ", proponente[0].id)
     const result = await ContaVinculada.create({
       valor_retido: await converterString(body.valor),
       proponente_id: proponente[0].id,
       data_desbloqueio: new Date(),
     });
-    
-    console.log("vinculada", result)
 
-    return NextResponse.json({message:"registrado com sucesso"}, {status:200});
+    // console.log("vinculada", result)
+
+    return NextResponse.json(
+      { message: "registrado com sucesso" },
+      { status: 200 }
+    );
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }

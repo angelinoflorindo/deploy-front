@@ -46,37 +46,14 @@ export function setupAssociations() {
   // Relacionamento
   Conta.belongsTo(Pessoa, { foreignKey: "pessoa_id", onDelete: "CASCADE" });
 
-  
-  ContaVinculada.belongsTo(Proponente, { foreignKey: "proponente_id", onDelete: "CASCADE" });
-  ContaVinculada.belongsTo(Emprestimo, { foreignKey: "emprestimo_id", onDelete: "CASCADE" });
-
   // Associações
   Credito.belongsTo(Devedor, { foreignKey: "devedor_id", onDelete: "CASCADE" });
-  Credito.belongsToMany(Solidario, {
-    through: CreditoSolidario,
-    foreignKey: "credito_id",
-  });
-  Solidario.belongsToMany(Credito, {
-    through: CreditoSolidario,
-    foreignKey: "solidario_id",
-  });
-
 
   // Relacionamento
   Deposito.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
-  Devedor.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
   Devedor.hasMany(Credito, { foreignKey: "devedor_id", onDelete: "CASCADE" });
   Devedor.hasMany(Movel, { foreignKey: "devedor_id", onDelete: "CASCADE" });
   Devedor.hasMany(Pagamento, { foreignKey: "devedor_id", onDelete: "CASCADE" });
-
-  Diversificacao.belongsTo(Investidor, {
-    foreignKey: "investidor_id",
-    onDelete: "CASCADE",
-  });
-  Diversificacao.belongsTo(Emprestimo, {
-    foreignKey: "emprestimo_id",
-    onDelete: "CASCADE",
-  });
 
   // Relacionamento
   Documento.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
@@ -85,31 +62,13 @@ export function setupAssociations() {
   Emprego.hasMany(Pessoa, { foreignKey: "emprego_id" });
 
   Proponente.hasMany(Emprestimo, { foreignKey: "proponente_id" });
+  Emprestimo.belongsTo(Proponente, { foreignKey: "proponente_id" });
+
   Proponente.hasMany(Movel, { foreignKey: "proponente_id" });
   Proponente.hasMany(Reembolso, { foreignKey: "proponente_id" });
 
-  // Associações
-  Emprestimo.belongsToMany(Solidario, {
-    through: EmprestimoSolidario,
-    foreignKey: "emprestimo_id",
-  });
-  
-  Emprestimo.belongsTo(Proponente, {
-    foreignKey: "proponente_id",
-    onDelete: "CASCADE",
-  });
-
-  Solidario.belongsToMany(Emprestimo, {
-    through: EmprestimoSolidario,
-    foreignKey: "solidario_id",
-  });
-
   // Relacionamento
   Investidor.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
-  Investidor.hasMany(Diversificacao, {
-    foreignKey: "investidor_id",
-    onDelete: "CASCADE",
-  });
 
   Movel.belongsTo(Proponente, {
     foreignKey: "proponente_id",
@@ -142,13 +101,53 @@ export function setupAssociations() {
     onDelete: "CASCADE",
   });
 
-  // Define o relacionamento
   Residencia.hasMany(Pessoa, { foreignKey: "residencia_id" });
 
-  // Relacionamento
   Saque.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
 
-  // Relacionamentos
   Solidario.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
   Solidario.belongsTo(Pessoa, { foreignKey: "pessoa_id", onDelete: "CASCADE" });
+
+  // Associações complexas
+  Emprestimo.hasMany(EmprestimoSolidario, { foreignKey: "emprestimo_id" });
+  EmprestimoSolidario.belongsTo(Emprestimo, { foreignKey: "emprestimo_id" });
+
+  Solidario.hasMany(EmprestimoSolidario, { foreignKey: "solidario_id" });
+  EmprestimoSolidario.belongsTo(Solidario, { foreignKey: "solidario_id" });
+
+  Investidor.hasMany(Diversificacao, {
+    foreignKey: "investidor_id",
+    onDelete: "CASCADE",
+  });
+
+  Diversificacao.belongsTo(Investidor, {
+    foreignKey: "investidor_id",
+    onDelete: "CASCADE",
+  });
+
+  Emprestimo.hasMany(Diversificacao, {
+    foreignKey: "emprestimo_id",
+    onDelete: "CASCADE",
+  });
+
+  
+  Diversificacao.belongsTo(Emprestimo, {
+    foreignKey: "emprestimo_id",
+    onDelete: "CASCADE",
+  });
+
+  ContaVinculada.belongsTo(Proponente, {
+    foreignKey: "proponente_id",
+    onDelete: "CASCADE",
+  });
+
+  Proponente.hasMany(ContaVinculada, {
+    foreignKey: "proponente_id",
+    onDelete: "CASCADE",
+  });
+  
+  
+  Credito.hasMany(CreditoSolidario, { foreignKey: "credito_id" });
+  CreditoSolidario.belongsTo(Credito, { foreignKey: "credito_id" });
+
 }

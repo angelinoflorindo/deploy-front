@@ -1,36 +1,45 @@
-import { converterString } from "@/app/actions/auth";
+import { converterString, validarEstado } from "@/app/actions/auth";
 import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
 import Emprestimo from "@/models/Emprestimo";
 import EmprestimoSolidario from "@/models/EmprestimoSolidario";
 import Proponente from "@/models/Proponente";
-import Saque from "@/models/Saque";
+import ContaVinculada from "@/models/ContaVinculada";
 import Solidario from "@/models/Solidario";
 import { NextRequest, NextResponse } from "next/server";
+import User from "@/models/User";
 
 export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+
+  const page = (await converterString(searchParams.get("page"))) | 1;
+  const limit = (await converterString(searchParams.get("limit"))) | 5;
+  const status = await validarEstado(searchParams.get("status"));
+  const orderBy = searchParams.get("order") || "created_at";
+
+  const offset = (Number(page) - 1) * Number(limit);
+  const where: any = {};
+  // para definir as condições de listagem apartir do client
+  if (status) {
+    where.estado = status;
+  }
+
   try {
     await sequelize.authenticate();
     await sequelize.sync();
     setupAssociations();
 
-    const { searchParams } = new URL(req.url);
-
-    const page = (await converterString(searchParams.get("page"))) | 1;
-    const limit = (await converterString(searchParams.get("limit"))) | 5;
-    const status = searchParams.get("status");
-    const orderBy = searchParams.get("order") || "created_at";
-
-    const offset = (Number(page) - 1) * Number(limit);
-    const where: any = {};
-    // para definir as condições de listagem apartir do client
-    if (status) where.estado = status;
-
-    const { rows: data, count: total } = await Saque.findAndCountAll({
+    const { rows: data, count: total } = await Emprestimo.findAndCountAll({
       where,
       offset,
       limit: Number(limit),
       order: [[`${orderBy}`, "DESC"]],
+      include: [
+        { model: Proponente, 
+          include:[{model:User, attributes:['id','primeiro_nome', 'segundo_nome']}]
+        },
+       
+      ],
     });
 
     const result = {
@@ -39,6 +48,8 @@ export async function GET(req: NextRequest) {
       totalPages: Math.ceil(total / Number(limit)),
       currentPage: Number(page),
     };
+
+
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
     console.error(error);
@@ -55,45 +66,43 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const userId = await converterString(body.user_id);
 
-  console.log(body)
-  await sequelize.authenticate();
-  await sequelize.sync();
-  setupAssociations();
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync();
+    setupAssociations();
 
-  const proponente = await Proponente.findOne({ where: { user_id: userId } });
-  const result = await Emprestimo.create({
-    valor: await converterString(body.valor),
-    prazo: body.prazo,
-    prestacao: await converterString(body.prestacao),
-    proponente_id: proponente?.id,
-    juro: await converterString(body.juro),
-    progresso: body.progresso,
-  });
-
-  if (body.guardiao === "on" || body.guardiao === true) {
-    const solidarios = await Solidario.findAll({
-      where: { user_id: userId, estado: false },
+    const proponente = await Proponente.findOne({ where: { user_id: userId } });
+    const result = await Emprestimo.create({
+      valor: await converterString(body.valor),
+      prazo: body.prazo,
+      prestacao: await converterString(body.prestacao),
+      proponente_id: proponente?.id,
+      juro: await converterString(body.juro),
+      progresso: body.progresso,
     });
-    if (solidarios.length > 0) {
-      solidarios.forEach(async (aval) => {
-        await EmprestimoSolidario.create({
-          emprestimo_id: result.id,
-          solidario_id: aval.id,
-        });
-        aval.estado = true;
-        aval.save();
+
+    if (body.guardiao === "on" || body.guardiao === true) {
+      const solidarios = await Solidario.findAll({
+        where: { user_id: userId, estado: false },
       });
+      if (solidarios.length > 0) {
+        solidarios.forEach(async (aval) => {
+          await EmprestimoSolidario.create({
+            emprestimo_id: result.id,
+            solidario_id: aval.id,
+          });
+          aval.estado = true;
+          aval.save();
+        });
+      }
     }
-  }
 
-  return NextResponse.json(
-    { message: "empresimo registrado" },
-    { status: 200 }
-  );
-
-  /*try {
+    return NextResponse.json(
+      { message: "emprestimo registrado" },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error("error", error)
+    console.error("error", error);
     return NextResponse.json({ message: error }, { status: 404 });
-  }*/
+  }
 }

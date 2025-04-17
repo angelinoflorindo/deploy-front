@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { converterString } from "@/app/actions/auth";
-import { getServerSession } from "next-auth";
 import { getToken } from "next-auth/jwt";
 import { sequelize } from "@/lib/sequelize";
 import { setupAssociations } from "@/lib/associations";
-import Deposito from "@/models/Deposito";
 import Documento from "@/models/Documento";
+import ContaVinculada from "@/models/ContaVinculada";
+import Proponente from "@/models/Proponente";
+import User from "@/models/User";
 
 export async function GET(
   req: NextRequest,
@@ -17,39 +18,43 @@ export async function GET(
   const uuid = await converterString(id);
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-
-  
-  if ( !token || (token.role !== 'ADMIN' && token.role != 'ANALISTA')) {
-    return  NextResponse.json('Não autorizado', { status: 403 });
-  } 
-
+  if (!token || (token.role !== "ADMIN" && token.role != "ANALISTA")) {
+    return NextResponse.json("Não autorizado", { status: 403 });
+  }
 
   
   try {
    
-    
   await sequelize.authenticate();
   await sequelize.sync();
   setupAssociations();
 
-  const deposito = await Deposito.findOne({ where: { id: uuid } });
-  const infoDeposito = {
-    data: deposito?.createdAt.getDate(),
-    horas: deposito?.createdAt.getHours(),
+  const vinculo = await ContaVinculada.findOne({
+    where: { id: uuid },
+  });
+
+  const proponente = await Proponente.findOne({where:{id:vinculo?.proponente_id}})
+  const usuario = await User.findOne({where:{id:proponente?.user_id}})
+
+  //console.log('vinculos', vinculo)
+
+  const infovinculo = {
+    data: vinculo?.createdAt.getDate(),
+    horas: vinculo?.createdAt.getHours(),
   };
 
   const documentos = await Documento.findAll({
     where: {
-      user_id: deposito?.user_id,
-      tipo: "DEPOSITO",
+      user_id: usuario?.id,
+      tipo: "DEPOSITO"
     },
   });
 
   const comprovativo: any = {};
   documentos.forEach((doc) => {
     if (
-      doc.createdAt.getDate() === infoDeposito.data &&
-      doc.createdAt.getHours() === infoDeposito.horas
+      doc.createdAt.getDate() === infovinculo.data &&
+      doc.createdAt.getHours() === infovinculo.horas
     ) {
       comprovativo.nome_original = doc.nome_original;
       comprovativo.nome_salvado = doc.nome_salvado;
@@ -68,6 +73,7 @@ export async function GET(
     `${comprovativo.nome_salvado}`
   );
 
+  //console.log("caminho", filePath);
 
   if (!fs.existsSync(filePath)) {
     return NextResponse.json(
@@ -78,7 +84,7 @@ export async function GET(
 
   const fileBuffer = fs.readFileSync(filePath);
 
-  return new  NextResponse(fileBuffer, {
+  return new NextResponse(fileBuffer, {
     status: 200,
     headers: {
       "Content-Type": "application/pdf",

@@ -11,7 +11,7 @@ import {
 } from "sequelize-typescript";
 
 @Table({ tableName: "conta_vinculadas" })
-export default class CreditoSolidario extends Model {
+export default class ContaVinculada extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -19,9 +19,6 @@ export default class CreditoSolidario extends Model {
 
   @Column(DataType.INTEGER)
   proponente_id!: number;
-
-  @Column(DataType.INTEGER)
-  emprestimo_id!: number;
 
   @Column(DataType.INTEGER)
   valor_retido!: number;

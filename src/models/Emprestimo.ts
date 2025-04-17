@@ -9,16 +9,16 @@ import {
   ForeignKey,
   CreatedAt,
   UpdatedAt,
-} from 'sequelize-typescript';
-import Proponente from './Proponente';
+} from "sequelize-typescript";
+import Proponente from "./Proponente";
 
 export enum ProgressoEmprestimo {
-  PENDENTE = 'PENDENTE',
-  CONCLUIDO = 'CONCLUIDO',
-  CANCELADO = 'CANCELADO',
+  PENDENTE = "PENDENTE",
+  CONCLUIDO = "CONCLUIDO",
+  CANCELADO = "CANCELADO",
 }
 
-@Table({ tableName: 'emprestimos' })
+@Table({ tableName: "emprestimos" })
 export default class Emprestimo extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -46,20 +46,20 @@ export default class Emprestimo extends Model {
   @Column({
     type: DataType.ENUM(...Object.values(ProgressoEmprestimo)),
     allowNull: false,
-    defaultValue: 'PENDENTE'
+    defaultValue: "PENDENTE",
   })
   progresso!: ProgressoEmprestimo;
 
   @ForeignKey(() => Proponente)
   @Column({ type: DataType.INTEGER, allowNull: false })
   proponente_id!: number;
-
-   
-    @CreatedAt
-    @Column({ field: 'created_at', type: DataType.DATE })
-    createdAt!: Date;
   
-    @UpdatedAt
-    @Column({ field: 'updated_at', type: DataType.DATE })
-    updatedAt!: Date;
+
+  @CreatedAt
+  @Column({ field: "created_at", type: DataType.DATE })
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column({ field: "updated_at", type: DataType.DATE })
+  updatedAt!: Date;
 }

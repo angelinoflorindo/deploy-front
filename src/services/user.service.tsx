@@ -94,6 +94,22 @@ export interface InvestidorProps{
   updatedAt: any;
 }
 
+
+
+export interface ProponenteProps{
+  id:any;
+  solicitacao:any;
+  reembolsar:any;
+  satisfeitos:any,
+  insatisfeitos:any,
+  estado:boolean;
+  user_id:any;
+  createdAt: any;
+  updatedAt: any;
+  User:UserProps
+}
+
+
 export interface DepositoProps{
   id:any,
   valor:any,
@@ -114,6 +130,24 @@ export interface SaqueProps{
   user_id:any;
   createdAt: any;
   updatedAt: any;
+}
+
+
+
+export interface EmprestimoProps{
+  id:any,
+  valor:any,
+  estado:any,
+  juro:any,
+  prestacao:any,
+  prazo:any,
+  progresso:any,
+  proponente_id:any,
+  pendencia:any,
+  user_id:any;
+  createdAt: any;
+  updatedAt: any;
+  Proponente:ProponenteProps
 }
 
 export interface CarteiraProps{
@@ -145,6 +179,16 @@ export interface DocumentoProps{
   user_id:any;
   createdAt: any;
   updatedAt: any;
+}
+
+
+export interface ContaVinculadaProps{
+  id:any,
+  valor_retido:any,
+  estado:any,
+  proponente_id:any;
+  createdAt: any;
+  updatedAt: any
 }
 
 
