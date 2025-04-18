@@ -1,19 +1,18 @@
 import { converterString } from "@/app/actions/auth";
 import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
-import Carteira from "@/models/Carteira";
 import ContaVinculada from "@/models/ContaVinculada";
 import Diversificacao from "@/models/Diversificacao";
 import Emprestimo from "@/models/Emprestimo";
 import EmprestimoSolidario from "@/models/EmprestimoSolidario";
-import Investidor from "@/models/Investidor";
-import Proponente from "@/models/Proponente";
-import Saque from "@/models/Saque";
+import Proponente from "@/models/Proponente"; 
 import Solidario from "@/models/Solidario";
 import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 import { fn, col, literal } from "sequelize";
 
+
+// Buscar os dados do emprestimo como proposta
 export async function GET(
   req: NextRequest,
   context: { params: { id: number } }
@@ -36,7 +35,7 @@ export async function GET(
         "created_at", "updated_at",
         [fn("COUNT", literal("DISTINCT EmprestimoSolidarios.id")), "totalGuardiaos"],
         [fn("COALESCE", fn("SUM", col("EmprestimoSolidarios.Solidario.taxa")), 0), "totalTaxa"],
-        [fn("COALESCE", fn("SUM", col("Diversificacao.taxa")), 0), "taxaDiversificada"],
+        [fn("COALESCE", fn("SUM", col("Diversificacaos.taxa")), 0), "taxaDiversificada"],
       ],
       include: [
         {
@@ -64,15 +63,17 @@ export async function GET(
       raw: false,
     });
   
-    console.log("validar", emprestimo)
+    //console.log("validar", emprestimo)
     return NextResponse.json(emprestimo, {status:200});
+  
+  
   
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }
 }
 
-// PUT - Atualizar usuário por ID
+// PUT - Atualizar a taxa de participação do investidor
 export async function PUT(
   req: NextRequest,
   context: { params: { id: number } }
@@ -87,27 +88,6 @@ export async function PUT(
 
     await Emprestimo.update({ pendencia: false }, { where: { id: uuid } });
     return NextResponse.json({ message: "Pedido efectuado" }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ message: error }, { status: 404 });
-  }
-}
-
-//Delete documente
-
-export async function DELETE(
-  req: NextRequest,
-  context: { params: { id: number } }
-) {
-  const { id } = await context.params;
-  const uuid = await converterString(id);
-
-  try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    setupAssociations();
-
-    await Emprestimo.update({ estado: false }, { where: { id: uuid } });
-    return NextResponse.json({ message: "Pedido Elimindado" }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }

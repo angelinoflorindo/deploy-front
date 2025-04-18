@@ -1,22 +1,18 @@
+'use server'
 import React from "react";
+import styles from "@/modules/Login.module.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import styles from "@/modules/Login.module.css";
 import Conteudo from "./conteudo";
-import { buscarEmprestimoById, buscarUser } from "@/app/actions/auth";
 import { getServerSession } from "next-auth";
+import { buscarEmprestimoById, buscarUser } from "@/app/actions/auth";
 
-const Protecao = async (context: { params: { id: string } }) => {
-  const { id } = await context.params;
+const NegocearEmprestimo = async (context:{params:{id:string}}) => {
+  const {id}  =  await context.params
   const session = await getServerSession()
-  const data = await buscarEmprestimoById(id);
-  const user = await buscarUser(session?.user.email)
-  const diversificado:any ={}
+  const user = await buscarUser(session?.user?.email)
+  const data =  await buscarEmprestimoById(id)
 
-  if(data.taxaDiversificada){
-    let income = data.valor*(1-(data.taxaDiversificada/100))
-    diversificado.saldo = income
-  }
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
@@ -25,7 +21,7 @@ const Protecao = async (context: { params: { id: string } }) => {
 
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
-          <Conteudo saldo={diversificado.saldo}  formData={data} userData={user}/>
+          <Conteudo user={user}  formData={data}  />
         </main>
 
         {/* Rodapé Fixo */}
@@ -35,4 +31,4 @@ const Protecao = async (context: { params: { id: string } }) => {
   );
 };
 
-export default Protecao;
+export default NegocearEmprestimo;

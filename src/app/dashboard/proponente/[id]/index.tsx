@@ -51,7 +51,7 @@ const Detalhes = ({data}:{data:EmprestimoDef}) => {
                 </div>
             </section>
             <div className="flex justify-between p-2 w-[80%]" >
-                <Link href="/dashboard/proponente/" className="px-4 py-2 bg-gray-500  text-white rounded" >
+                <Link href={`/dashboard/proponente/${data.id}/negocear`} className="px-4 py-2 bg-gray-500  text-white rounded" >
                     Negocear
                 </Link>
                 <Link href={`/dashboard/proponente/${data.id}/teste`} className="px-4 py-2 bg-violet-500  text-white rounded" >

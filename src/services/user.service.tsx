@@ -167,7 +167,9 @@ export interface EmprestimoDef{
   updatedAt: any;
   totalGuardiaos:number
   totalTaxa:string
+  taxaDiversificada:any
   EmprestimoSolidarios:any[],
+  Diversificacaos:any[],
   Proponente:{
     User:UserProps,
     ContaVinculadas:ContaVinculadaProps[]

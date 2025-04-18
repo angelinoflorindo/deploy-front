@@ -24,6 +24,7 @@ import Residencia from "../models/Residencia";
 import Emprego from "../models/Emprego";
 import CreditoSolidario from "../models/CreditoSolidario";
 import ContaVinculada from "../models/ContaVinculada";
+import NegocearEmprestimo from "../models/NegocearEmprestimo";
 
 export function setupAssociations() {
   User.hasOne(Pessoa, { foreignKey: "user_id" });
@@ -125,6 +126,17 @@ export function setupAssociations() {
     onDelete: "CASCADE",
   });
 
+  
+  Investidor.hasMany(NegocearEmprestimo, {
+    foreignKey: "investidor_id",
+    onDelete: "CASCADE",
+  });
+
+  NegocearEmprestimo.belongsTo(Investidor, {
+    foreignKey: "investidor_id",
+    onDelete: "CASCADE",
+  });
+
   Emprestimo.hasMany(Diversificacao, {
     foreignKey: "emprestimo_id",
     onDelete: "CASCADE",
@@ -132,6 +144,18 @@ export function setupAssociations() {
 
   
   Diversificacao.belongsTo(Emprestimo, {
+    foreignKey: "emprestimo_id",
+    onDelete: "CASCADE",
+  });
+
+
+  Emprestimo.hasMany(NegocearEmprestimo, {
+    foreignKey: "emprestimo_id",
+    onDelete: "CASCADE",
+  });
+
+  
+  NegocearEmprestimo.belongsTo(Emprestimo, {
     foreignKey: "emprestimo_id",
     onDelete: "CASCADE",
   });

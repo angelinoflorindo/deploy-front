@@ -9,6 +9,14 @@ import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/User";
 import {Op} from 'sequelize'
 
+/**
+ * 
+ * @param req 
+ * Permite buscar todos 
+ * os pedidos de emprestimos 
+ * aplicando determinadas condições 
+ * @returns 
+ */
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
@@ -69,8 +77,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// solicitar emprestimo
-
+// Proponente - Permite iniciar um pedido de emprestimo
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const userId = await converterString(body.user_id);

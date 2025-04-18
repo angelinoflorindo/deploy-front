@@ -198,8 +198,24 @@ export async function buscarEmprestimoById(id:any){
 }
 
 export async function diversificarEmprestimo(_prevState: any, formData: FormData){
-  
-  return
+ const taxa = await converterString(formData.get('taxa'))
+  if ( taxa === 0) {
+    return redirect(`/dashboard/proponente/${formData.get("emprestimo_id")}/protecao`);
+  }
+
+  const res = await fetch(`${process.env.CLIENT_URL}/api/proponente/emprestimo/proposta`, {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ emprestimo_id: formData.get("emprestimo_id"), taxa: formData.get("taxa"), investidor_id: formData.get("investidor_id") }),
+  });
+
+  if (!res.ok) {
+    return redirect(`/dashboard/proponente/${formData.get("emprestimo_id")}/protecao`);
+  }
+
+  return redirect(`/dashboard/proponente/${formData.get("emprestimo_id")}`);
 }
 
 export async function sacarFundos(_prevState: any, formData: FormData) {
@@ -265,6 +281,32 @@ export async function submitEmprestimo(_prevState: any, formData: FormData) {
     return redirect("/dashboard/emprestimo/solicitar");
   }
   return redirect("/dashboard");
+}
+
+
+export async function negocearEmprestimo(_prevState: any, formData: FormData) {
+  const emprestimoId = await converterString(formData.get("emprestimo_id"))
+  
+  
+  const fundos = await fetch(`${process.env.CLIENT_URL}/api/proponente/emprestimo/proposta/negocear`, {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({
+      emprestimo_id: emprestimoId,
+      user_id: formData.get("user_id"),
+      valor: formData.get("valor"),
+      juro: formData.get("juro"),
+      prazo:formData.get("prazo"),
+      prestacao:formData.get("prestacao"),
+    }),
+  });
+
+  if (!fundos.ok) {
+    return redirect(`/dashboard/proponente/${emprestimoId}/negocear`);
+  }
+  return redirect(`/dashboard/proponente/${emprestimoId}`);
 }
 
 export async function efectuarReclamacao(_prevState: any, formData: FormData) {

@@ -43,6 +43,11 @@ export default function Conteudo({ user }: { user: UserInfo }) {
     return redirect('/ferramenta/investidor')
   }
 
+  
+  if(user.Carteira === null || user.Carteira == undefined){
+    return redirect('/ferramenta/cartao')
+  }
+  
   return (
     <div>
       <h1 className="text-xl font-bold mb-4">Solicitações!</h1>
