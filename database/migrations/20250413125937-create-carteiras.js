@@ -13,7 +13,7 @@ export default {
         allowNull: false,
       },
       saldo: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.BIGINT,
         allowNull: false,
       },
       estado: {
@@ -22,7 +22,7 @@ export default {
         allowNull: false,
       },
       numero: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         unique: true,
         allowNull: false,
       },

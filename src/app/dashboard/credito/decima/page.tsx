@@ -25,7 +25,7 @@ const CreditoDecima = () => {
                         </Link>
                         <Link href="/dashboard/credito/decima/debito" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md" >
                             <Image src="/img/movel.png" className={global.imagens} alt="imagem" width={40} height={40} />
-                            Ordem de Débitos
+                             Conta Vinculada
                         </Link>
                      
                         <div>

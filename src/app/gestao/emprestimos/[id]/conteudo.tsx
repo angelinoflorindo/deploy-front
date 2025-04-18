@@ -17,14 +17,14 @@ export default function Conteudo({ emprestimoId }: { emprestimoId: string }) {
   const handleAcao = async (acao: string, id: number) => {
     switch (acao) {
       case "reembolsar":
-        await fetch(`${url}/api/proponente/emprestimo/garantias/${id}`, {
+        await fetch(`${url}/api/proponente/garantias/${id}`, {
           method: "PUT",
         });
         alert("Valores reembolsados");
         window.location.reload();
         break;
       case "reter":
-        await fetch(`${url}/api/proponente/emprestimo/garantias/${id}`, {
+        await fetch(`${url}/api/proponente/garantias/${id}`, {
           method: "GET",
         });
         alert("Valores Retidos");
@@ -46,7 +46,7 @@ export default function Conteudo({ emprestimoId }: { emprestimoId: string }) {
 
   const fetchData = async () => {
     const res = await fetch(
-      `${url}/api/proponente/emprestimo/${emprestimoId}/garantias?page=${page}&limit=5`
+      `${url}/api/proponente/garantias?page=${page}&limit=5&id=${emprestimoId}`
     );
 
     if (!res.ok) {

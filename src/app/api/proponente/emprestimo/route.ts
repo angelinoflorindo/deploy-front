@@ -4,10 +4,10 @@ import { sequelize } from "@/lib/sequelize";
 import Emprestimo from "@/models/Emprestimo";
 import EmprestimoSolidario from "@/models/EmprestimoSolidario";
 import Proponente from "@/models/Proponente";
-import ContaVinculada from "@/models/ContaVinculada";
 import Solidario from "@/models/Solidario";
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/User";
+import {Op} from 'sequelize'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -15,13 +15,22 @@ export async function GET(req: NextRequest) {
   const page = (await converterString(searchParams.get("page"))) | 1;
   const limit = (await converterString(searchParams.get("limit"))) | 5;
   const status = await validarEstado(searchParams.get("status"));
+  const pendencia = await validarEstado(searchParams.get("pendencia"));
+  const proponenteId = await converterString(searchParams.get('proponente'))
   const orderBy = searchParams.get("order") || "created_at";
-
   const offset = (Number(page) - 1) * Number(limit);
   const where: any = {};
   // para definir as condições de listagem apartir do client
   if (status) {
     where.estado = status;
+  }
+
+  if (pendencia) {
+    where.pendencia = pendencia;
+  }
+
+  if(proponenteId){
+    where.proponente_id = {[Op.ne]:proponenteId}
   }
 
   try {
@@ -65,18 +74,26 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const userId = await converterString(body.user_id);
+  //console.log('body', body)
 
   try {
     await sequelize.authenticate();
     await sequelize.sync();
     setupAssociations();
 
+    const usuario:any = {}
     const proponente = await Proponente.findOne({ where: { user_id: userId } });
+    if(proponente){
+      usuario.proponente_id = proponente.id
+    }
+
+    //console.log( 'proponente', proponente)
+    
     const result = await Emprestimo.create({
       valor: await converterString(body.valor),
       prazo: body.prazo,
       prestacao: await converterString(body.prestacao),
-      proponente_id: proponente?.id,
+      proponente_id: usuario.proponente_id,
       juro: await converterString(body.juro),
       progresso: body.progresso,
     });

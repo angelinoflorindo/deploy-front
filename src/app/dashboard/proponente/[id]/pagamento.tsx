@@ -3,9 +3,6 @@
 
 
 import React from "react";
-import styles from "@/modules/Login.module.css"
-import global from "@/modules/global.module.css"
-import Image from "next/image";
 
 
 const Pagamento = () => {

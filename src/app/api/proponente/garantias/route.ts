@@ -10,13 +10,11 @@ import Solidario from "@/models/Solidario";
 import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(
-  req: NextRequest,
-  context: { params: { id: number } }
-) {
-  const { id } = await context.params;
-  const emprestimoId = await converterString(id);
+export async function GET(req: NextRequest) {
+
   const { searchParams } = new URL(req.url);
+
+  const emprestimoId = await converterString(searchParams.get("id"));
   const page = (await converterString(searchParams.get("page"))) | 1;
   const limit = (await converterString(searchParams.get("limit"))) | 5;
   const status = await validarEstado(searchParams.get("status"));
@@ -25,7 +23,7 @@ export async function GET(
   const offset = (Number(page) - 1) * Number(limit);
   const where: any = {};
   // para definir as condições de listagem apartir do client
-  where.emprestimo_id = emprestimoId
+  where.emprestimo_id = emprestimoId;
   if (status) {
     where.estado = status;
   }
@@ -35,41 +33,41 @@ export async function GET(
     await sequelize.sync();
     setupAssociations();
 
-    const emprestimo = await Emprestimo.findOne({where:{id:emprestimoId}})
-
-    const { rows: vinculadaData, count: vinculos } = await ContaVinculada.findAndCountAll({
-      where:{proponente_id:emprestimo?.proponente_id},
-      offset,
-      limit: Number(limit),
-      order: [[`${orderBy}`, "DESC"]],
-    
+    const emprestimo = await Emprestimo.findOne({
+      where: { id: emprestimoId },
     });
 
-    
-    const { rows: solidariosData, count: aval } = await EmprestimoSolidario.findAndCountAll({
-      where,
-      offset,
-      limit: Number(limit),
-      order: [[`${orderBy}`, "DESC"]],
-      include:[{model:Solidario}]
-    });
+    const { rows: vinculadaData, count: vinculos } =
+      await ContaVinculada.findAndCountAll({
+        where: { proponente_id: emprestimo?.proponente_id },
+        offset,
+        limit: Number(limit),
+        order: [[`${orderBy}`, "DESC"]],
+      });
 
+    const { rows: solidariosData, count: aval } =
+      await EmprestimoSolidario.findAndCountAll({
+        where,
+        offset,
+        limit: Number(limit),
+        order: [[`${orderBy}`, "DESC"]],
+        include: [{ model: Solidario }],
+      });
 
     const result = {
-      data:{
+      data: {
         solidariosData,
-        vinculadaData
+        vinculadaData,
       },
-  
+
       totalPages: {
-        aval:Math.ceil(aval / Number(limit)),
-        vinculos:Math.ceil(vinculos / Number(limit))
+        aval: Math.ceil(aval / Number(limit)),
+        vinculos: Math.ceil(vinculos / Number(limit)),
       },
       currentPage: Number(page),
     };
 
     return NextResponse.json(result, { status: 200 });
-
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }

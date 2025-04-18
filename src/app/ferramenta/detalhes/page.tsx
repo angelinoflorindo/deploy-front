@@ -8,11 +8,14 @@ import Conteudo from "./conteudo";
 import { getServerSession, Session } from "next-auth";
 import { UserInfo } from "@/services/user.service";
 import { buscarUser } from "@/app/actions/auth";
+
 interface CustomSession extends Session {
   user: {
+    id:string,
     name: string;
     email: string;
     image: any;
+    role:string
   };
   expires: any;
 }

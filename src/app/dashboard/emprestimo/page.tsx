@@ -19,6 +19,7 @@ const Emprestimo = () => {
             <h1 className="font-bold text-center">Escolher garatias </h1>
 
             <section className="flex flex-col justify-around align-items-center h-60">
+            {/*
               <Link
                 href="/desenvolvimento"
                 className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md"
@@ -32,6 +33,7 @@ const Emprestimo = () => {
                 />
                 Dédito direito
               </Link>
+            */}
               <Link
                 href="/dashboard/emprestimo/solidario"
                 className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md"

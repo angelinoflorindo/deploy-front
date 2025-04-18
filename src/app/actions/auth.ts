@@ -165,6 +165,42 @@ export async function vincluarConta(_prevState: any, formData: FormData) {
 }
 
 
+export async function buscarPropostasOpProponente(proponenteId:any, rules:any){
+  
+  const conditions:any = {}
+  if(rules.pageE) conditions.page = rules.pageE | 1
+  const res = await fetch(
+    `${process.env.CLIENT_URL}/api/proponente/emprestimo?page=${conditions.page}&proponente=${proponenteId}&limit=5&pendencia=false`
+  );
+
+  if (!res.ok) {
+    const text = await res.text(); // debug da resposta
+    console.error("Erro na API:", res.status, text);
+    return;
+  }
+  
+  return res.json()
+}
+
+export async function buscarEmprestimoById(id:any){
+  
+  const res = await fetch(
+    `${process.env.CLIENT_URL}/api/proponente/emprestimo/proposta/${id}`
+  );
+
+  if (!res.ok) {
+    const text = await res.text(); // debug da resposta
+    console.error("Erro na API:", res.status, text);
+    return;
+  }
+  
+  return res.json()
+}
+
+export async function diversificarEmprestimo(_prevState: any, formData: FormData){
+  
+  return
+}
 
 export async function sacarFundos(_prevState: any, formData: FormData) {
   const fundos = await fetch(`${process.env.CLIENT_URL}/api/operacao/sacar`, {

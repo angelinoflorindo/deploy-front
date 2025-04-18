@@ -13,26 +13,31 @@ export async function POST(req: NextRequest) {
   const codigoGerado = await gerarCodigoCartao();
   const numeroGerado = await gerarNumeroCartao();
 
-  try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    setupAssociations();
+  await sequelize.authenticate();
+  await sequelize.sync();
+  setupAssociations();
 
-    const [result] = await Carteira.findOrCreate({
-      where: {
-        user_id: await converterString(body.user_id),
-        codigo: await converterString(codigoGerado),
-        numero: await converterString(numeroGerado),
-      },
-      defaults:{
-        saldo: 0,
-        user_id: await converterString(body.user_id),
-        codigo: await converterString(codigoGerado),
-        numero: await converterString(numeroGerado),
-      }
-    });
-    return NextResponse.json(result);
+  const [result] = await Carteira.findOrCreate({
+    where: {
+      user_id: await converterString(body.user_id),
+      codigo: await converterString(codigoGerado),
+      //numero: await converterString(numeroGerado),
+    },
+    defaults: {
+      saldo: 0,
+      user_id: await converterString(body.user_id),
+      codigo: await converterString(codigoGerado),
+      numero: await converterString(numeroGerado),
+    },
+  });
+  return NextResponse.json(result);
+
+  /*
+  try {
+    
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }
+
+  */
 }

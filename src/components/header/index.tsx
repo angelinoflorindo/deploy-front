@@ -1,12 +1,15 @@
-'use client';
+
+
 import Image from "next/image";
 import Link from "next/link";
 import DashDropDown from "../dashdropDown";
-import { useSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
 
 
-const Header = () => {
-    const {data:session, status} = useSession()
+export default async function Header(){
+    //const {data:session, status} = useSession()
+    const session = await getServerSession()
+    //console.log("session", session)
     const perfil = session?.user.role
     const nome = session?.user.name
 
@@ -32,4 +35,4 @@ const Header = () => {
     );
 };
 
-export default Header;
+

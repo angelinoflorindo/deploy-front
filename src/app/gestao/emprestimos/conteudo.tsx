@@ -35,7 +35,7 @@ export default function Conteudo() {
         window.location.reload();
         break;
       case "garantias":
-        redirect(`/gestao/emprestimos/garantias/${id}`)
+        redirect(`/gestao/emprestimos/${id}`)
       default:
         break;
     }

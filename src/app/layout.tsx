@@ -1,7 +1,8 @@
+// src/app/layout.tsx
+import { getServerSession } from "next-auth";
+import SessionWrapper from "@/components/SessionWrapper";
 import type { Metadata } from "next";
 import "./globals.css";
-import { getServerSession } from "next-auth";
-import SessionProvider from "@/components/SessionProvider";
 
 export const metadata: Metadata = {
   title: "Onix corporation",
@@ -10,14 +11,15 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   const session = await getServerSession();
+
   return (
     <html lang="en">
       <body>
-        <SessionProvider session={session}>{children}</SessionProvider>
+        <SessionWrapper session={session}>{children}</SessionWrapper>
       </body>
     </html>
   );

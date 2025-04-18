@@ -11,6 +11,11 @@ import { redirect } from "next/navigation";
 const Conteudo = ({ user }: { user: UserInfo }) => {
   const [state, formAction] = useActionState(sacarFundos, null);
 
+  //console.log(user)
+  if(user.Carteira === null || user.Carteira === undefined){
+    return redirect('/ferramenta/cartao')
+  }
+
   if (user.Pessoa === null || user.Pessoa === undefined) {
     return redirect("/ferramenta/usuario");
   }

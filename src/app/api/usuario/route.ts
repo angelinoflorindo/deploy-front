@@ -1,4 +1,3 @@
-import { UserProps } from "@/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/User";
 import Investidor from "@/models/Investidor";
@@ -15,6 +14,7 @@ import Conjugue from "@/models/Conjugue";
 import Conta from "@/models/Conta";
 import {sequelize} from '@/lib/sequelize'
 import {setupAssociations} from '@/lib/associations'
+import Proponente from "@/models/Proponente";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -34,6 +34,7 @@ export async function GET(req: NextRequest) {
       where: { email: email },
       attributes: { exclude: ["password"] },
       include: [
+        {model:Proponente},
         { model: Investidor },
         { model: Devedor },
         { model: Deposito },

@@ -47,7 +47,7 @@ const Credito = () => {
                   width={40}
                   height={40}
                 />
-                Crédito 10 dias
+                Crédito 30 dias
               </Link>
               <Link
                 href="/dashboard/credito/vigesima"
@@ -60,7 +60,7 @@ const Credito = () => {
                   width={40}
                   height={40}
                 />
-                Crédito 20 dias
+                Crédito 60 dias
               </Link>
              
               {/* href="/dashboard/credito/mensal"*/}
@@ -75,7 +75,7 @@ const Credito = () => {
                   width={40}
                   height={40}
                 />
-                Crédito 30 dias
+                Crédito 90 dias
               </Link>
             </section>
           </div>

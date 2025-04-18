@@ -6,10 +6,12 @@ import Footer from "@/components/footer";
 import styles from "@/modules/Login.module.css"
 import Detalhes from ".";
 import Pagamento from "./pagamento";
+import { buscarEmprestimoById } from "@/app/actions/auth";
 
-
-
-const Proponente = () => {
+const Proponente =  async (context: { params: { id: string } }) => {
+  const {id} = await context.params
+  const data = await buscarEmprestimoById(id)
+  //console.log('dados encontrados', data)
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg" >
@@ -19,7 +21,7 @@ const Proponente = () => {
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
           {/*  <Pagamento /> */}
-          <Detalhes  />
+          <Detalhes data={data} />
         </main>
 
         {/* Rodapé Fixo */}

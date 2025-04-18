@@ -8,7 +8,10 @@ import { buscarUserQuery, convidarSolidario } from "@/app/actions/auth";
 import { redirect } from "next/navigation";
 import { Guardiao, SolidarioProps, UserInfo } from "@/services/user.service";
 import { SubmitButton } from "@/components/submitButton";
+import { clientAPI } from "@/app/lib/definitions";
 
+
+const url = clientAPI
 const Conteudo = ({
   user,
   guardInfo,
@@ -103,6 +106,19 @@ const Conteudo = ({
     if (total < 50) {
       return redirect("/dashboard/emprestimo/solidario");
     }
+
+  const proposta = await fetch(`${url}/api/proponente/solidario`, {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ user_id: user.id}),
+  });
+
+  if (!proposta.ok) {
+    return redirect("/dashboard/emprestimo/solidario");
+  }
+
     return redirect("/dashboard/emprestimo/solicitar");
   }
 

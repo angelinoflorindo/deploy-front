@@ -17,13 +17,13 @@ export default class Carteira extends Model {
   @Column(DataType.INTEGER)
   id!: number;
 
-  @Column(DataType.FLOAT)
+  @Column(DataType.BIGINT)
   saldo!: number;
 
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   estado!: boolean;
 
-  @Column({ type: DataType.INTEGER, unique: true })
+  @Column({ type: DataType.BIGINT, unique: true })
   numero!: number;
 
   @Column({ type: DataType.INTEGER, unique: true })

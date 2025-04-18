@@ -14,7 +14,8 @@ export interface UserInfo {
   Depositos:DepositoProps,
   Reclamacaos:ReclamacaoProps,
   Saque:SaqueProps,
-  Carteira:CarteiraProps
+  Carteira:CarteiraProps,
+  Proponente:ProponenteProps
 
 
 }
@@ -150,6 +151,28 @@ export interface EmprestimoProps{
   Proponente:ProponenteProps
 }
 
+
+export interface EmprestimoDef{
+  id:any,
+  valor:any,
+  estado:any,
+  juro:any,
+  prestacao:any,
+  prazo:any,
+  progresso:any,
+  proponente_id:any,
+  pendencia:any,
+  user_id:any;
+  createdAt: any;
+  updatedAt: any;
+  totalGuardiaos:number
+  totalTaxa:string
+  EmprestimoSolidarios:any[],
+  Proponente:{
+    User:UserProps,
+    ContaVinculadas:ContaVinculadaProps[]
+  }
+}
 export interface CarteiraProps{
   id:any,
   codigo:any;
