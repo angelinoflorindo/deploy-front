@@ -27,8 +27,11 @@ export default class Diversificacao extends Model {
   @Column(DataType.INTEGER)
   taxa!: number;
 
-  @Column(DataType.BOOLEAN)
-  protencao!: boolean;
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+  })
+  protencao!: boolean; // Trocar para protecao
 
   @Column({
     type: DataType.BOOLEAN,

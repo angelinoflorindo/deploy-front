@@ -15,8 +15,11 @@ const Protecao = async (context: { params: { id: string } }) => {
 
   if(data.taxaDiversificada){
     let income = data.valor*(1-(data.taxaDiversificada/100))
-    diversificado.saldo = income
+    let inteiro = Math.round(income)
+    diversificado.saldo = inteiro
   }
+
+  //console.log("emprestimo", data)
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">

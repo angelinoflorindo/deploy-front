@@ -13,8 +13,8 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
 
-    const page = (await converterString(searchParams.get("page"))) | 1;
-    const limit = (await converterString(searchParams.get("limit"))) | 5;
+    const page = (await converterString(searchParams.get("page"))) || 1;
+    const limit = (await converterString(searchParams.get("limit"))) || 5;
 
     const offset = (Number(page) - 1) * Number(limit);
     const where: any = { estado: true };

@@ -15,8 +15,8 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
   const emprestimoId = await converterString(searchParams.get("id"));
-  const page = (await converterString(searchParams.get("page"))) | 1;
-  const limit = (await converterString(searchParams.get("limit"))) | 5;
+  const page = (await converterString(searchParams.get("page"))) || 1;
+  const limit = (await converterString(searchParams.get("limit"))) || 5;
   const status = await validarEstado(searchParams.get("status"));
   const orderBy = searchParams.get("order") || "created_at";
 

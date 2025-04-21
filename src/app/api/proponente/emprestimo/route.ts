@@ -20,8 +20,8 @@ import {Op} from 'sequelize'
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
-  const page = (await converterString(searchParams.get("page"))) | 1;
-  const limit = (await converterString(searchParams.get("limit"))) | 5;
+  const page = (await converterString(searchParams.get("page"))) || 1;
+  const limit = (await converterString(searchParams.get("limit"))) || 5;
   const status = await validarEstado(searchParams.get("status"));
   const pendencia = await validarEstado(searchParams.get("pendencia"));
   const proponenteId = await converterString(searchParams.get('proponente'))

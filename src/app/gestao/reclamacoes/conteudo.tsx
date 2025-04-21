@@ -31,7 +31,7 @@ export default function Conteudo() {
 
   const fetchData = async () => {
     const res = await fetch(
-      `${url}/api/usuario/reclamacao?page=${page}&limit=5&status=${true}`
+      `${url}/api/usuario/reclamacao?page=${page}&limit=5`
     );
 
     if (!res.ok) {

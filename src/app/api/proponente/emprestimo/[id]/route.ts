@@ -6,7 +6,7 @@ import Emprestimo from "@/models/Emprestimo";
 import Saque from "@/models/Saque";
 import { NextRequest, NextResponse } from "next/server";
 
-// PUT - Atualizar usuário por ID
+/** ÁREA RESERVADA PARA GESTÃO DE EMPRSTIMOS PELO ADMIN | ANALISTA */
 export async function PUT(
   req: NextRequest,
   context: { params: { id: number } }

@@ -15,7 +15,11 @@ export interface UserInfo {
   Reclamacaos:ReclamacaoProps,
   Saque:SaqueProps,
   Carteira:CarteiraProps,
-  Proponente:ProponenteProps
+  Proponente:ProponenteProps,
+  Papel:{
+    id:number,
+    perfil:any
+  }
 
 
 }
@@ -107,7 +111,8 @@ export interface ProponenteProps{
   user_id:any;
   createdAt: any;
   updatedAt: any;
-  User:UserProps
+  User:UserProps,
+  Emprestimos:[{id:any}]
 }
 
 
@@ -206,6 +211,30 @@ export interface DocumentoProps{
   updatedAt: any;
 }
 
+
+export interface NegociarEmprestimoProps{
+  emprestimo_id:any,
+  investidor_id:any,
+  valor:any,
+  juro:any,
+  prestacao:any,
+  prazo:any,
+  pendencia:any,
+  estado:any,
+  Investidor:{
+    id:any,
+    user_id:any,
+    User:{
+      id:any
+      primeiro_nome:any
+      segundo_nome:any
+    }
+  }
+  extensao:any,
+  user_id:any;
+  createdAt: any;
+  updatedAt: any;
+}
 
 export interface ContaVinculadaProps{
   id:any,

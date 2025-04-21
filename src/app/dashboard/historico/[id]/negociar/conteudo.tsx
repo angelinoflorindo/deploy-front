@@ -1,0 +1,54 @@
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { NegociarEmprestimoProps } from "@/services/user.service";
+
+const Conteudo = ({negoData}:{negoData:NegociarEmprestimoProps}) => {
+   // console.log(negoData)
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-4">Mais detalhes</h1>
+      <div className="flex flex-col justify-center items-start p-4 mb-6 shadow-md w-[100%]">
+        <span className="flex flex-row justify-start">
+          <p className="font-bold">Investidor: </p>{" "} {negoData.Investidor.User.primeiro_nome} {" "} {negoData.Investidor.User.segundo_nome}
+        </span>
+        <div className="flex flex-row justify-between items-center w-[100%]">
+          <span className="flex flex-row justify-start">
+            <p className="font-bold">Juros:</p> {negoData.juro}%
+          </span>
+          <span className="flex flex-row justify-start">
+            <p className="font-bold">valor:</p> {negoData.valor},00kz
+          </span>
+        </div>
+        <div className="flex flex-row justify-between items-center w-[100%] mb-4">
+          <span className="flex flex-row justify-start">
+            <p className="font-bold">Prazo:</p> {negoData.prazo.split("T")[0]}
+          </span>
+          <span className="flex flex-row justify-start">
+            <p className="font-bold">Prestação:</p>{negoData.prestacao}
+          </span>
+        </div>
+        <div>
+          <p className="font-bold mb-2">Decidir sobre a negociação</p>
+
+          <div className="flex flex-row justify-between items-center w-[100%]">
+            <span>
+              <button className=" px-2 py-2 bg-red-500  text-white rounded cursor-pointer">Rejeitar</button>
+            </span>
+            <span>
+              <button className="px-2 py-2 bg-violet-500  text-white rounded cursor-pointer">Aceitar</button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <Link
+        href="/dashboard/historico"
+        className="px-5 py-3 my-4 bg-gray-500 text-white rounded"
+      >
+        Voltar
+      </Link>
+    </div>
+  );
+};
+
+export default Conteudo;

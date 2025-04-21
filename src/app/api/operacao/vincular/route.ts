@@ -5,8 +5,6 @@ import Deposito from "@/models/Deposito";
 import Proponente from "@/models/Proponente";
 import ContaVinculada from "@/models/ContaVinculada";
 import { NextRequest, NextResponse } from "next/server";
-import User from "@/models/User";
-import Documento from "@/models/Documento";
 
 export async function GET(req: NextRequest) {
   try {
@@ -16,8 +14,8 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
 
-    const page = (await converterString(searchParams.get("page"))) | 1;
-    const limit = (await converterString(searchParams.get("limit"))) | 5;
+    const page = (await converterString(searchParams.get("page"))) || 1;
+    const limit = (await converterString(searchParams.get("limit"))) || 5;
     //    const estado = searchParams.get('status')
 
     const offset = (Number(page) - 1) * Number(limit);

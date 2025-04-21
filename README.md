@@ -34,3 +34,21 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+## Congiguration of environment variables 
+# Banco de Dados
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=
+DB_NAME=dbsequelize
+
+# Outras configs (se necessário)
+NODE_ENV=development
+NEXT_CLIENT=http://localhost:3000
+CLIENT_URL=http://localhost:3000
+PUBLIC_CLIENT_URL=http://localhost:3000
+NEXTAUTH_SECRET=@oni20xcorp24Ration$
+NEXTAUTH_URL=http://localhost:3000
+NEXT_PUBLIC_CLIENT_URL=http://localhost:3000

@@ -44,6 +44,7 @@ export async function buscarContaByUser(id: any) {
   return response.json();
 }
 
+
 export async function convidarSolidario(formData: any) {
   const res = await fetch(`${process.env.CLIENT_URL}/api/pessoa/solidario`, {
     method: "POST",
@@ -67,6 +68,24 @@ export async function buscarGuardiao(id: any) {
   return response.json();
 }
 
+
+export async function buscarPropostaInvestidor(email:any){
+
+  const response = await fetch(
+    `${process.env.CLIENT_URL}/api/proponente/emprestimo/proposta/negocear?email=${email}`
+  );
+  return response.json();
+}
+
+
+export async function buscarPropostaEmprestimoById(investidorId:any, email:any){
+
+  const response = await fetch(
+    `${process.env.CLIENT_URL}/api/proponente/emprestimo/proposta/negocear/detalhes?email=${email}&investidorId=${investidorId}`
+  );
+  return response.json();
+}
+
 export async function uploadDocumento(data: FormData) {
   const formData = new FormData();
   const files = data.getAll("scanner") as File[];
@@ -81,7 +100,6 @@ export async function uploadDocumento(data: FormData) {
 
   return res;
 }
-
 export async function carregarConta(_prevState: any, formData: FormData) {
   const userId = formData.get("user_id");
 

@@ -15,6 +15,8 @@ import Conta from "@/models/Conta";
 import {sequelize} from '@/lib/sequelize'
 import {setupAssociations} from '@/lib/associations'
 import Proponente from "@/models/Proponente";
+import Papel from "@/models/Papel";
+import Emprestimo from "@/models/Emprestimo";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -34,7 +36,7 @@ export async function GET(req: NextRequest) {
       where: { email: email },
       attributes: { exclude: ["password"] },
       include: [
-        {model:Proponente},
+        {model:Proponente, include:[{model:Emprestimo,attributes:['id']}]},
         { model: Investidor },
         { model: Devedor },
         { model: Deposito },
@@ -42,6 +44,9 @@ export async function GET(req: NextRequest) {
         { model: Carteira },
         { model: Reclamacao },
         { model: Documento },
+        {model:Papel, 
+          attributes:['id', 'perfil']
+        },
         {
           model: Pessoa,
           include: [

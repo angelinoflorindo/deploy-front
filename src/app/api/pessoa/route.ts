@@ -16,6 +16,7 @@ async function findOrCreateResidencia(info: any) {
       tipo: info.tipo,
       data_inicio: info.data_inicio,
     },
+    transaction:info.t
   });
   return residencia;
 }
@@ -34,6 +35,7 @@ async function findOrCreateEmprego(info: any) {
       sector: info.sector,
       data_inicio: info.data_inicio,
     },
+    transaction:info.t
   });
   return emprego;
 }
@@ -63,29 +65,37 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+   const [emprego,residencia, pessoa ] =  await sequelize.transaction(async (t) => {
+      const residencia = await findOrCreateResidencia({
+        tipo: body.residencia.tipo,
+        data_inicio: new Date(body.residencia.data_inicio),
+        t: t,
+      });
 
-    const residencia = await findOrCreateResidencia({
-      tipo: body.residencia.tipo,
-      data_inicio: new Date(body.residencia.data_inicio),
-    });
+      const emprego = await findOrCreateEmprego({
+        area: body.emprego.area,
+        cargo: body.emprego.cargo,
+        sector: body.emprego.sector,
+        data_inicio: new Date(body.emprego.data_inicio),
+        t: t,
+      });
 
-    const emprego = await findOrCreateEmprego({
-      area: body.emprego.area,
-      cargo: body.emprego.cargo,
-      sector: body.emprego.sector,
-      data_inicio: new Date(body.emprego.data_inicio),
-    });
+      const pessoa = await Pessoa.create(
+        {
+          profissao: body.pessoa.profissao,
+          data_nascimento: new Date(body.pessoa.data_nascimento),
+          estado_civil: body.pessoa.estado_civil,
+          municipio: body.pessoa.municipio,
+          nivel_instrucao: body.pessoa.nivel_instrucao,
+          provincia: body.pessoa.provincia,
+          user_id: userId,
+          emprego_id: emprego.id,
+          residencia_id: residencia.id,
+        },
+        { transaction: t }
+      );
 
-    const pessoa = await Pessoa.create({
-      profissao: body.pessoa.profissao,
-      data_nascimento: new Date(body.pessoa.data_nascimento),
-      estado_civil: body.pessoa.estado_civil,
-      municipio: body.pessoa.municipio,
-      nivel_instrucao: body.pessoa.nivel_instrucao,
-      provincia: body.pessoa.provincia,
-      user_id: userId,
-      emprego_id: emprego.id,
-      residencia_id: residencia.id,
+      return [emprego, residencia, pessoa]
     });
 
     return NextResponse.json({

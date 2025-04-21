@@ -13,14 +13,14 @@ export  async function  GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
   
-    const page = await converterString(searchParams.get('page')) | 1 
-    const limit = await converterString(searchParams.get('limit')) | 5 
+    const page = await converterString(searchParams.get('page')) || 1
+    const limit = await converterString(searchParams.get('limit')) || 5
    const status = searchParams.get('status') 
 
     const offset = (Number(page) - 1) * Number(limit);
     const where: any = {estado:true};
     // para definir as condições de listagem apartir do client
-   if (status) where.estado = status;
+  // if (status) where.estado = status;
     
     const { rows: data, count: total } = await Reclamacao.findAndCountAll({
       where,
