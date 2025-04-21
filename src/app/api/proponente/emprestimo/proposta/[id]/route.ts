@@ -48,7 +48,7 @@ export async function GET(
           include: [
             {
               model: User,
-              attributes: ["id", "primeiro_nome", "segundo_nome", "email"],
+              attributes: ["id", "primeiro_nome", "segundo_nome", "email", "telemovel"],
             },
             {
               model: ContaVinculada,

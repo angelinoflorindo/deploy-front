@@ -38,6 +38,9 @@ const Detalhes = ({data}:{data:EmprestimoDef}) => {
                     </div>
 
                 </div>
+                <span>
+                    {}
+                </span>
 
                 <hr className={styles.divider} />
 
@@ -54,7 +57,7 @@ const Detalhes = ({data}:{data:EmprestimoDef}) => {
                 <Link href={`/dashboard/proponente/${data.id}/negocear`} className="px-4 py-2 bg-gray-500  text-white rounded" >
                     Negocear
                 </Link>
-                <Link href={`/dashboard/proponente/${data.id}/teste`} className="px-4 py-2 bg-violet-500  text-white rounded" >
+                <Link href={`/dashboard/proponente/${data.id}/conceder`} className="px-4 py-2 bg-violet-500  text-white rounded" >
                     Avançar
                 </Link>
             </div>

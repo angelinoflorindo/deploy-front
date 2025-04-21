@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const userId = await converterString(body.user_id);
 
-  const data: any = {
+  const data:any = {
     emprestimo_id: await converterString(body.emprestimo_id),
     valor: await converterString(body.valor),
     juro: await converterString(body.juro),
@@ -26,6 +26,17 @@ export async function POST(req: NextRequest) {
     await sequelize.authenticate();
     await sequelize.sync();
     setupAssociations();
+
+    const emprestimoNegociado = await NegocearEmprestimos.findOne({
+      where: {
+        emprestimo_id: data.emprestimo_id,
+        pendencia: false,
+        estado: true,
+      },
+    });
+    if (emprestimoNegociado) {
+      return NextResponse.json({message:'Emprestimo já negociado'}, { status: 200 });
+    }
 
     const user = await User.findByPk(userId, {
       include: [{ model: Investidor, attributes: ["id"] }],
@@ -71,21 +82,26 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const email = searchParams.get("email")
- 
-  
+  const email = searchParams.get("email");
+
   try {
     await sequelize.authenticate();
     await sequelize.sync();
     setupAssociations();
 
-    const user = await User.findOne({where:{email:email}, attributes:['id'], include:[{model:Proponente, attributes:['id']}]})
-    const emprestimo = await Emprestimo.findOne({where:{estado:true,proponente_id:user?.toJSON().Proponente.id}})
+    const user = await User.findOne({
+      where: { email: email },
+      attributes: ["id"],
+      include: [{ model: Proponente, attributes: ["id"] }],
+    });
+    const emprestimo = await Emprestimo.findOne({
+      where: { estado: true, proponente_id: user?.toJSON().Proponente.id },
+    });
     const result = await NegocearEmprestimos.findAll({
       where: {
         pendencia: true,
         estado: true,
-        emprestimo_id:emprestimo?.toJSON().id,
+        emprestimo_id: emprestimo?.toJSON().id,
       },
       include: [
         {
@@ -100,11 +116,11 @@ export async function GET(req: NextRequest) {
         },
         {
           model: Emprestimo,
-          attributes: ["id"]
+          attributes: ["id"],
         },
       ],
     });
-  
+
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
     return NextResponse.json(

@@ -3,14 +3,19 @@
 import React from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import Conteudo from "./conteudo";
 import styles from "@/modules/Login.module.css"
-import Detalhes from ".";
-import { buscarEmprestimoById } from "@/app/actions/auth";
+import { getServerSession } from "next-auth";
+import { buscarEmprestimoById, buscarUser } from "@/app/actions/auth";
+import { UserInfo } from "@/services/user.service";
 
-const Proponente =  async (context: { params: { id: string } }) => {
+const Emprestar = async (context:{params:{id:string}}) => {
   const {id} = await context.params
-  const data = await buscarEmprestimoById(id)
-  //console.log('dados encontrados', data)
+  //const session = await getServerSession()
+ // const userData:UserInfo = await buscarUser(session?.user?.email)
+ 
+   const data =  await buscarEmprestimoById(id)
+
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg" >
@@ -19,8 +24,7 @@ const Proponente =  async (context: { params: { id: string } }) => {
 
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
-          {/*  <Pagamento /> */}
-          <Detalhes data={data} />
+          <Conteudo emprestimoData={data}/>
         </main>
 
         {/* Rodapé Fixo */}
@@ -30,4 +34,4 @@ const Proponente =  async (context: { params: { id: string } }) => {
   );
 };
 
-export default Proponente;
+export default Emprestar;

@@ -25,49 +25,47 @@ export async function GET(
 
   const investidorId = await converterString(searchParams.get("investidorId"));
 
-
-  await sequelize.authenticate();
-  await sequelize.sync();
-  setupAssociations();
-
-  const user = await User.findOne({
-    where: { email: email },
-    attributes: ["id"],
-    include: [{ model: Proponente, attributes: ["id"] }],
-  });
-  const emprestimo = await Emprestimo.findOne({
-    where: { estado: true, proponente_id: user?.toJSON().Proponente.id },
-  });
-  const result = await NegocearEmprestimos.findOne({
-    where: {
-      pendencia: true,
-      estado: true,
-      investidor_id:investidorId,
-      emprestimo_id: emprestimo?.toJSON().id,
-    },
-    include: [
-      {
-        model: Investidor,
-        attributes: ["id"],
-        include: [
-          {
-            model: User,
-            attributes: ["id", "primeiro_nome", "segundo_nome"],
-          },
-        ],
-      }
-    ],
-  });
-  //console.log(result)
-
-  return NextResponse.json(result, { status: 200 });
-
-  /*
   try {
-    
+
+
+    await sequelize.authenticate();
+    await sequelize.sync();
+    setupAssociations();
+  
+    const user = await User.findOne({
+      where: { email: email },
+      attributes: ["id"],
+      include: [{ model: Proponente, attributes: ["id"] }],
+    });
+    const emprestimo = await Emprestimo.findOne({
+      where: { estado: true, proponente_id: user?.toJSON().Proponente.id },
+    });
+    const result = await NegocearEmprestimos.findOne({
+      where: {
+        pendencia: true,
+        estado: true,
+        investidor_id:investidorId,
+        emprestimo_id: emprestimo?.toJSON().id,
+      },
+      include: [
+        {
+          model: Investidor,
+          attributes: ["id"],
+          include: [
+            {
+              model: User,
+              attributes: ["id", "primeiro_nome", "segundo_nome"],
+            },
+          ],
+        }
+      ],
+    });
+    //console.log(result)
+  
+    return NextResponse.json(result, { status: 200 });    
    
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }
-  */
+
 }
