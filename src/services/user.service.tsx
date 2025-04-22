@@ -1,3 +1,5 @@
+import { DiversificacaoProps } from "./Emprestimo.service";
+
 export interface UserInfo {
   id: number;
   primeiro_nome: any;
@@ -97,6 +99,8 @@ export interface InvestidorProps{
   user_id:any;
   createdAt: any;
   updatedAt: any;
+  User:UserProps,
+  Diversificacaos: DiversificacaoProps[]
 }
 
 

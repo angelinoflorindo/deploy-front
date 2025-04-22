@@ -6,16 +6,13 @@ import Diversificacao from "@/models/Diversificacao";
 import Emprestimo from "@/models/Emprestimo";
 import EmprestimoSolidario from "@/models/EmprestimoSolidario";
 import NegocearEmprestimos from "@/models/NegocearEmprestimo";
-import Proponente from "@/models/Proponente";
-import Solidario from "@/models/Solidario";
-import User from "@/models/User";
 import { NegociarEmprestimoProps } from "@/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
 import { fn, col, literal } from "sequelize";
 
 
 
-// Confirmar se o emprestimo já foi negociado
+// Confirmar se o emprestimo tem no mínimo uma negociação
 
 export async function GET(
   req: NextRequest,
@@ -40,7 +37,7 @@ export async function GET(
 
 
 
-// PUT - Aceitar a proposta do primeiro investidor
+// PUT - confirmar  a proposta do primeiro investidor
 export async function PUT(
   req: NextRequest,
   context: { params: { id: number } }
@@ -103,7 +100,7 @@ export async function PUT(
   }
 }
 
-// DELETE - Eliminar a proposta do investidor
+// REJEITAR a proposta do investidor
 export async function PATCH(
   req: NextRequest,
   context: { params: { id: string } }

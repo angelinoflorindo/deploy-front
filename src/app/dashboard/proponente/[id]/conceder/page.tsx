@@ -15,11 +15,22 @@ const Emprestar = async (context: { params: { id: string } }) => {
   const data: EmprestimoDef = await buscarEmprestimoById(id);
   const diversificado: any = {};
 
-  if (data.taxaDiversificada) {
+  // aqui se investe segundo a taxa disposta
+   data.Diversificacaos.forEach((data, index)=>{
+    if(user.Investidor.id === data.investidor_id){}
+    let income = data.valor * (data.taxa/ 100);
+    let inteiro = Math.round(income);
+    diversificado.saldo = inteiro; 
+  })
+
+   // Aqui se investe segundo o disponível
+   /*
+  if (data.taxaDiversificada) { 
+
     let income = data.valor * (1 - data.taxaDiversificada / 100);
     let inteiro = Math.round(income);
     diversificado.saldo = inteiro;
-  }
+  }*/
 
   return (
     <div className={styles.container}>

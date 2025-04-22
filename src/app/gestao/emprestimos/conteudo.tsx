@@ -21,9 +21,7 @@ export default function Conteudo() {
         window.location.reload();
         break;
       case "rejeitar":
-        await fetch(`${url}/api/proponente/emprestimo/${id}`, {
-          method: "GET",
-        });
+        await fetch(`${url}/api/proponente/emprestimo/${id}`);
         alert("Pedido Rejeitado");
         window.location.reload();
         break;
@@ -75,7 +73,6 @@ export default function Conteudo() {
             {/*<th className="py-2 px-4 border-b">#</th> */}
             <th className="py-2 px-4 border-b">Valor</th>
             <th className="py-2 px-4 border-b">situação</th>
-            <th className="py-2 px-4 border-b">Progresso</th>
             <th className="py-2 px-4 border-b">Proponente</th>
             <th className="py-2 px-4 border-b">Operação</th>
           </tr>
@@ -85,9 +82,6 @@ export default function Conteudo() {
             <tr key={dep.id} className="hover:bg-gray-50">
               {/*<td className="py-2 px-4 border-b">{(page - 1) * 5 + index + 1}</td>*/}
               <td className="py-2 px-4 border-b">{dep.valor}Kz</td>
-              <td className="py-2 px-4 border-b">
-                {dep.pendencia ? "Em espera" : "Aprovado"}
-              </td>
               <td className="py-2 px-4 border-b">{dep.progresso}</td>
               <td className="py-2 px-4 border-b">
                 {" "}

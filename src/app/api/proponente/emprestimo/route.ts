@@ -23,24 +23,30 @@ export async function GET(req: NextRequest) {
   const page = (await converterString(searchParams.get("page"))) || 1;
   const limit = (await converterString(searchParams.get("limit"))) || 5;
   const status = await validarEstado(searchParams.get("status"));
-  const pendencia = await validarEstado(searchParams.get("pendencia"));
+  const pendencia = await validarEstado(searchParams.get("pendencia"))
   const proponenteId = await converterString(searchParams.get('proponente'))
   const orderBy = searchParams.get("order") || "created_at";
   const offset = (Number(page) - 1) * Number(limit);
   const where: any = {};
   // para definir as condições de listagem apartir do client
+
+  //console.log('p', pendencia)
   if (status) {
     where.estado = status;
   }
 
   if (pendencia) {
-    where.pendencia = pendencia;
+    where.pendencia = pendencia; // passando a pendencia como false
   }
 
   if(proponenteId){
     where.proponente_id = {[Op.ne]:proponenteId}
   }
 
+  //conditions specials
+  where.progresso = 'CONCLUIDO'
+
+ // console.log('conditions',  where)
   try {
     await sequelize.authenticate();
     await sequelize.sync();

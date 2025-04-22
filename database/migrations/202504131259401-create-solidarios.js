@@ -32,7 +32,6 @@ export default {
       pessoa_id: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
-        unique: true,
         references: {
           model: 'pessoas', // nome da tabela
           key: 'id',

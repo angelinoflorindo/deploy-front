@@ -48,7 +48,6 @@ export default class Solidario extends Model {
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
-    unique: true,
   })
   pessoa_id!: number;
 

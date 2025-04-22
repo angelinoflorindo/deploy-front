@@ -44,7 +44,6 @@ export default class Saque extends Model {
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
-    unique: true,
   })
   user_id!: number;
 

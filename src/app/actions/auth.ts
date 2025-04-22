@@ -75,6 +75,22 @@ export async function buscarPropostaInvestidor(email: any) {
   return response.json();
 }
 
+
+export async function buscarReembolsoByProp(id: any) {
+  const response = await fetch(
+    `${process.env.CLIENT_URL}/api/operacao/reembolsar/${id}`
+  );
+  return response.json();
+}
+
+export async function buscarInvestidor(id: any) {
+  const response = await fetch(
+    `${process.env.CLIENT_URL}/api/pessoa/investidor/${id}`
+  );
+  return response.json();
+}
+
+
 export async function buscarPropostaEmprestimoById(
   investidorId: any,
   email: any
@@ -243,9 +259,13 @@ export async function buscarPropostasOpProponente(
   rules: any
 ) {
   const conditions: any = {};
-  if (rules.pageE) conditions.page = rules.pageE | 1;
+
+  if (rules.pageE) conditions.page = rules.pageE || 1;
+  
+  conditions.pendencia = true
+
   const res = await fetch(
-    `${process.env.CLIENT_URL}/api/proponente/emprestimo?page=${conditions.page}&proponente=${proponenteId}&limit=5&pendencia=false`
+    `${process.env.CLIENT_URL}/api/proponente/emprestimo?page=${conditions.page}&proponente=${proponenteId}&pendencia=${conditions.pendencia}`
   );
 
   if (!res.ok) {
@@ -272,14 +292,14 @@ export async function buscarEmprestimoById(id: any) {
 }
 
 
-export async function buscarEmprestimoValidadoById(id: any) {
+export async function buscarEmprestimoValidadoByEmail(email: any) {
   const res = await fetch(
-    `${process.env.CLIENT_URL}/api/proponente/emprestimo/proposta/${id}`
+    `${process.env.CLIENT_URL}/api/operacao/investir/emprestimo/?email=${email}`
   );
 
   if (!res.ok) {
     const text = await res.text(); // debug da resposta
-    console.error("Erro na API:", res.status, text);
+    console.error("Erro na API:", res.status);
     return;
   }
 
@@ -490,4 +510,15 @@ export async function validarEstado(value: any) {
   return false; // já é número ou não é conversível
 }
 
-//
+export async function calcularJurosCompostos(principal:any, taxa:number, prestacao:number){
+  const montante = principal*Math.pow((1+taxa), prestacao)
+  return Number(montante.toFixed(2))
+
+}
+
+
+export async function calcularJurosSimples(principal:any, taxa:number, prestacao:number){
+  const juros = principal*taxa*prestacao
+  const result = principal + juros
+  return result
+}

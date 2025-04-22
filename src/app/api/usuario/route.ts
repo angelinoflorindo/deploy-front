@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
       where: { email: email },
       attributes: { exclude: ["password"] },
       include: [
-        {model:Proponente, include:[{model:Emprestimo,attributes:['id']}]},
+        {model:Proponente, include:[{model:Emprestimo, attributes:['id']}]},
         { model: Investidor },
         { model: Devedor },
         { model: Deposito },
