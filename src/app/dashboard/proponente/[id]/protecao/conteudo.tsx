@@ -33,7 +33,7 @@ const Conteudo = ({
         <small>Avalie quanto podes aplicar neste pedido</small>
         {formData.Diversificacaos.length > 0 ? (
           <div className="flex justify-center items-center shadow-md p-2 h-20 w-[50%]">
-            <b>{formData.taxaDiversificada > 100 ? (
+            <b>{(formData.taxaDiversificada > 100 || formData.taxaDiversificada === 100 ) ? (
               <><small className="font-bold">Esgotado</small></>
             ): (<>{saldo},00kz</>) }</b>
           </div>

@@ -6,8 +6,16 @@ import global from "@/modules/global.module.css";
 import Image from "next/image";
 
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { buscarEmprestimoValidadoById, buscarUser } from "@/app/actions/auth";
+import { EmprestimoProps, UserInfo } from "@/services/user.service";
 
-const Emprestimo = () => {
+const Emprestimo = async () => {
+  const session  = await getServerSession()
+  const user:UserInfo = await buscarUser(session?.user.email)
+  const emprestimoId = user.Proponente.Emprestimos[0].id
+  const emprestimo:EmprestimoProps = await buscarEmprestimoValidadoById(emprestimoId) 
+  console.log('verificar emprestimo', emprestimo)
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
@@ -15,11 +23,11 @@ const Emprestimo = () => {
 
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
-          <div className={global.grid}>
-            <h1 className="font-bold text-center">Escolher garatias </h1>
+          <div className="">
+            <h2 className="text-xl font-bold mb-2">Escolher garatias </h2>
 
-            <section className="flex flex-col justify-around align-items-center h-60">
-            {/*
+            <section className="flex flex-col h-40">
+              {/*
               <Link
                 href="/desenvolvimento"
                 className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md"
@@ -61,6 +69,12 @@ const Emprestimo = () => {
                 Conta vinculada
               </Link>
             </section>
+            
+            <h2 className="text-xl font-bold mb-2">Efectuar pagamentos</h2>
+            <section>
+
+            </section>
+
           </div>
         </main>
         <Footer />

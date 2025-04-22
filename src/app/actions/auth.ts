@@ -98,22 +98,20 @@ export async function aceitarNegociar(data: NegociarEmprestimoProps) {
       body: JSON.stringify(data),
     }
   );
-  
+
   if (!response.ok) {
     console.log("Falha ao rejeitar proposta");
     return redirect(`/dashboard/historico/${data.investidor_id}/negociar`);
   }
-  
-  return redirect(`/dashboard/historico/`)
 
+  return redirect(`/dashboard/historico/`);
 }
 
-
-export async function confirmarNegociacao(emprestimoId:any) {
+export async function confirmarNegociacao(emprestimoId: any) {
   const response = await fetch(
-    `${process.env.CLIENT_URL}/api/proponente/emprestimo/proposta/negocear/detalhes/${emprestimoId}`,
+    `${process.env.CLIENT_URL}/api/proponente/emprestimo/proposta/negocear/detalhes/${emprestimoId}`
   );
-  
+
   if (!response.ok) {
     console.log("Erro tentar buscar diversificação");
     return redirect("/dashboard/proponente");
@@ -129,7 +127,7 @@ export async function rejeitarNegociar(data: NegociarEmprestimoProps) {
       headers: {
         "content-type": "application/json",
       },
-      body:JSON.stringify({emprestimoId:data.emprestimo_id})
+      body: JSON.stringify({ emprestimoId: data.emprestimo_id }),
     }
   );
 
@@ -137,8 +135,8 @@ export async function rejeitarNegociar(data: NegociarEmprestimoProps) {
     console.log("Falha ao rejeitar proposta");
     return redirect(`/dashboard/historico/${data.investidor_id}/negociar`);
   }
-  
-  return redirect(`/dashboard/historico/`)
+
+  return redirect(`/dashboard/historico/`);
 }
 
 export async function uploadDocumento(data: FormData) {
@@ -273,6 +271,21 @@ export async function buscarEmprestimoById(id: any) {
   return res.json();
 }
 
+
+export async function buscarEmprestimoValidadoById(id: any) {
+  const res = await fetch(
+    `${process.env.CLIENT_URL}/api/proponente/emprestimo/proposta/${id}`
+  );
+
+  if (!res.ok) {
+    const text = await res.text(); // debug da resposta
+    console.error("Erro na API:", res.status, text);
+    return;
+  }
+
+  return res.json();
+}
+
 export async function diversificarEmprestimo(
   _prevState: any,
   formData: FormData
@@ -306,6 +319,35 @@ export async function diversificarEmprestimo(
   }
 
   return redirect(`/dashboard/proponente/${formData.get("emprestimo_id")}`);
+}
+
+// Transferir emprestimos ao proponente
+
+export async function concederEmprestimo(_prevState: any, formData: FormData) {
+  const response = await fetch(
+    `${process.env.CLIENT_URL}/api/operacao/investir/emprestimo`,
+    {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: formData.get("userId"),
+        valor: formData.get("valor"),
+        propUserId: formData.get("propUserId"),
+        emprestimoId: formData.get("emprestimoId"),
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    return redirect("/dashboard/proponente");
+  }
+
+  if ((await response.json()) === false) {
+    return redirect("/ferramenta/cartao");
+  }
+  return redirect("/dashboard");
 }
 
 export async function sacarFundos(_prevState: any, formData: FormData) {
@@ -448,4 +490,4 @@ export async function validarEstado(value: any) {
   return false; // já é número ou não é conversível
 }
 
-// Tentendo criar funções automáticas
+//

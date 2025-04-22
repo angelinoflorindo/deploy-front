@@ -176,6 +176,7 @@ export interface EmprestimoDef{
   EmprestimoSolidarios:any[],
   Diversificacaos:any[],
   Proponente:{
+    id:any,
     User:UserProps,
     ContaVinculadas:ContaVinculadaProps[]
   }
