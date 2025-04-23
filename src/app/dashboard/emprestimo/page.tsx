@@ -84,7 +84,7 @@ const Emprestimo = async () => {
               </Link>
             </section>
 
-            <h2 className="text-xl font-bold mb-2">Efectuar pagamentos</h2>
+            <h2 className="text-xl font-bold mb-2">Efectuar reembolsos</h2>
             <section>
               {/*BUSANDO OS EMPRESTIMOS POR INVESTIDORES*/}
 

@@ -214,6 +214,7 @@ export interface DocumentoProps{
   user_id:any;
   createdAt: any;
   updatedAt: any;
+  User:UserProps
 }
 
 
