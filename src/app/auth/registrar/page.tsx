@@ -65,7 +65,7 @@ const RegisterForm = () => {
       body: JSON.stringify(usuario),
     });
     const response = await resp.json();
-   // console.log("user id", response.id);
+    // console.log("user id", response.id);
     if (!resp.ok) {
       console.log("Error de sintaxe", resp.statusText);
       return redirect("/auth/registrar");
@@ -106,7 +106,17 @@ const RegisterForm = () => {
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] bg-white mx-auto shadow-lg">
-        <Header />
+        <div className="p-4 " >
+          <button 
+            type="button"
+            onClick={() => {
+              redirect("/");
+            }}
+            className="px-4 py-2 bg-blue-500 text-white rounded  cursor-pointer"
+          >
+            Login
+          </button>
+        </div>
         <div className=" p-[20px]">
           <h2 className="text-xl font-bold text-start mb-4">
             {step === 1 ? "Criar uma conta" : "Criar uma conta"}

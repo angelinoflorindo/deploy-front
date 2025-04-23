@@ -77,15 +77,20 @@ export async function GET(req: NextRequest) {
   }
 }
 
+
+// registrar usuários 
+
 export async function POST(req: NextRequest) {
   const data = await req.json();
 
+ 
+  
   try {
     await sequelize.authenticate()
     await sequelize.sync()
     setupAssociations()
-
- 
+  
+  
     const user = await findOrCreateUser({ 
       primeiro_nome: data.primeiro_nome,
       password: data.password,
@@ -95,8 +100,10 @@ export async function POST(req: NextRequest) {
       segundo_nome: data.segundo_nome,
       telemovel: data.telemovel,
     });
-
+  
     return NextResponse.json({email:user.email, id:user.id});
+  
+  
   } catch (error) {
     //console.error(error); // Ajuda a depurar
     return NextResponse.json(
