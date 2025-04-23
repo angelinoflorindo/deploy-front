@@ -4,22 +4,26 @@ import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
 import { SubmitButton } from "@/components/submitButton";
 import { useActionState, useEffect, useState } from "react";
-import { concederEmprestimo } from "@/app/actions/auth";
-import { EmprestimoValidado, ReembolsoProps } from "@/services/Emprestimo.service";
+import { reembolsarFundos } from "@/app/actions/auth";
+import { EmprestimoValidado} from "@/services/Emprestimo.service";
 import { InvestidorProps } from "@/services/user.service";
 
 const Conteudo = ({
   emprestimoData,
   userData,
   saldo,
-  prestacao
+  prestacao,
+  montante,
+  limite
 }: {
   emprestimoData: EmprestimoValidado;
   userData: InvestidorProps;
   saldo: any;
-  prestacao:any
+  prestacao:any;
+  montante:any;
+  limite:any
 }) => {
-  const [state, formAction] = useActionState(concederEmprestimo, null);
+  const [state, formAction] = useActionState(reembolsarFundos, null);
   const [valor, setValor] = useState("");
 
   const handleValor = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +61,32 @@ const Conteudo = ({
         action={formAction}
         className="flex flex-col justify-center items-center"
       >
-        <div className="flex justify-start  w-[100%]">{prestacao}@ {" "}<b>Prestação:</b>  </div>
+        <div className="flex justify-between  w-[100%]"> <span> <b>Prestação</b>: {prestacao}/ {limite} </span> <span><b>Totalidade</b>: {montante},00kz</span></div>
+        
+        <input
+          type="text"
+          name="investidorId"
+          readOnly={true}
+          hidden={true}
+          value={userData.id}
+        />
+        
+        <input
+          type="text"
+          name="investUserId"
+          readOnly={true}
+          hidden={true}
+          value={userData.User.id}
+        />
+
+        <input
+          type="text"
+          name="prestacao"
+          readOnly={true}
+          hidden={true}
+          value={prestacao}
+        />
+
         <input
           type="text"
           name="emprestimoId"
@@ -89,7 +118,7 @@ const Conteudo = ({
           className={styles.input}
         />
         <input
-          type="number"
+          type="text"
           name="valor"
           placeholder="Especificar o valor"
           required

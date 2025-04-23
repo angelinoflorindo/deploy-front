@@ -3,7 +3,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Conteudo from "./conteudo";
 import styles from "@/modules/Login.module.css";
-import { buscarEmprestimoValidadoByEmail, buscarInvestidor, buscarReembolsoByProp, calcularJurosSimples } from "@/app/actions/auth";
+import { buscarEmprestimoValidadoByEmail, buscarInvestidor, buscarReembolsoByProp, calcularJurosSimples, calcularPrestacaoSimples } from "@/app/actions/auth";
 import { getServerSession } from "next-auth";
 import {InvestidorProps, UserInfo } from "@/services/user.service";
 import { EmprestimoValidado, ReembolsoProps } from "@/services/Emprestimo.service";
@@ -26,12 +26,9 @@ const Pagamento = async (context: { params: { id: string } }) => {
 
   } 
 
-  const montante = await calcularJurosSimples(saldo, investidordata.Diversificacaos[0].Emprestimo.juro, prestacao.valor)
-
-  console.log('saldo',saldo)
-  console.log('limitePrestacao',limitePrestacao)
-  console.log('reembolsoData',reembolsoData)
-  console.log('montante',montante)
+  const taxa = (investidordata.Diversificacaos[0].Emprestimo.juro)/100
+  const montante = await calcularJurosSimples(saldo,taxa,limitePrestacao)
+  const simples = await calcularPrestacaoSimples(saldo, taxa, limitePrestacao)
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
@@ -43,8 +40,10 @@ const Pagamento = async (context: { params: { id: string } }) => {
           <Conteudo
             userData={investidordata}
             emprestimoData={emprestimoByUser}
-            saldo={montante}
+            saldo={simples}
             prestacao={prestacao.valor}
+            montante={montante}
+            limite={limitePrestacao}
           />
         </main>
 

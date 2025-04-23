@@ -341,6 +341,39 @@ export async function diversificarEmprestimo(
   return redirect(`/dashboard/proponente/${formData.get("emprestimo_id")}`);
 }
 
+// Configurar a rota de reembolsar fundos!
+
+export async function reembolsarFundos(_prevState: any, formData: FormData) {
+  
+  const response = await fetch(
+    `${process.env.CLIENT_URL}/api/operacao/reembolsar`,
+    {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        investUserId: formData.get("investUserId"),
+        investidorId: formData.get("investidorId"),
+        valor: formData.get("valor"),
+        prestacao: formData.get("prestacao"),
+        detalhe: formData.get("detalhe"),
+        propUserId: formData.get("propUserId"),
+        proponenteId: formData.get("proponenteId"),
+        emprestimoId: formData.get("emprestimoId"),
+      }),
+    }
+  );
+
+  const investidorId = converterString(formData.get("investidorId"))
+  if (!response.ok) {
+    return redirect(`/dashboard/emprestimo/${investidorId}`);
+  }
+
+  return redirect("/dashboard");
+}
+
+
 // Transferir emprestimos ao proponente
 
 export async function concederEmprestimo(_prevState: any, formData: FormData) {
@@ -519,6 +552,14 @@ export async function calcularJurosCompostos(principal:any, taxa:number, prestac
 
 export async function calcularJurosSimples(principal:any, taxa:number, prestacao:number){
   const juros = principal*taxa*prestacao
-  const result = principal + juros
+  const result = Math.round(principal + juros)
+  return result
+}
+
+
+export async function calcularPrestacaoSimples(principal:any, taxa:number, prestacao:number){
+  const juroMensal = principal*taxa
+  const amortizacao = principal/prestacao
+  const result = Math.round(amortizacao + juroMensal)
   return result
 }
