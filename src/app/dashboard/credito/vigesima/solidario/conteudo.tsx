@@ -92,6 +92,10 @@ const Conteudo = ({
     }
 
     const resp = await convidarSolidario(solidario);
+    
+    if(!resp){
+      return redirect("/dashboard/credito/vigesima/solidario");
+    }
     setGuard("");
     setParentesco(false);
     setInvite(true);

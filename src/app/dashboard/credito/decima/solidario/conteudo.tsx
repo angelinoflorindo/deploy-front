@@ -10,8 +10,7 @@ import { Guardiao, SolidarioProps, UserInfo } from "@/services/user.service";
 import { SubmitButton } from "@/components/submitButton";
 import { clientAPI } from "@/app/lib/definitions";
 
-
-const url = clientAPI
+const url = clientAPI;
 const Conteudo = ({
   user,
   guardInfo,
@@ -92,11 +91,13 @@ const Conteudo = ({
     }
 
     const resp = await convidarSolidario(solidario);
+    if (!resp) {
+      return redirect("/dashboard/credito/decima/solidario");
+    }
     setGuard("");
     setParentesco(false);
     setInvite(true);
-    window.location.reload()
-
+    window.location.reload();
   }
 
   async function getNextPage() {
@@ -105,17 +106,17 @@ const Conteudo = ({
     }
 
     const proposta = await fetch(`${url}/api/devedor/solidario`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({ user_id: user.id}),
-      });
-    
-      if (!proposta.ok) {
-        return redirect("/dashboard/credito/decima/solidario");
-      }
-    
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ user_id: user.id }),
+    });
+
+    if (!proposta.ok) {
+      return redirect("/dashboard/credito/decima/solidario");
+    }
+
     return redirect("/dashboard/credito/decima/solicitar");
   }
 

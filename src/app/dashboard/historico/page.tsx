@@ -5,16 +5,14 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import styles from "@/modules/Login.module.css"
 import Conteudo from "./conteudo";
-import { buscarPropostaInvestidor, buscarUser } from "@/app/actions/auth";
+import { buscarPropostaInvestidor, buscarSolidarios, buscarUser } from "@/app/actions/auth";
 import { getServerSession } from "next-auth";
-import { UserInfo } from "@/services/user.service";
 
 const Historico = async () => {
   const session = await getServerSession()
-  
   const negoData = await buscarPropostaInvestidor(session?.user.email)
-  
-  //console.log("negociações", negoData)
+  const solidarios = await buscarSolidarios(session?.user.email)
+ // console.log("solidarios", solidarios)
 
   return (
     <div className={styles.container}>
@@ -24,7 +22,7 @@ const Historico = async () => {
 
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">       
-         <Conteudo negoData={negoData}/>
+         <Conteudo negoData={negoData} formData={solidarios}/>
         </main>
 
         {/* Rodapé Fixo */}

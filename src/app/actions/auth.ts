@@ -59,7 +59,7 @@ export async function convidarSolidario(formData: any) {
 
   if (!res.ok) {
     console.log("Error ao convidar");
-    redirect("/dashboard/credito/decima");
+    return null
   }
   return res.json();
 }
@@ -71,12 +71,24 @@ export async function buscarGuardiao(id: any) {
   return response.json();
 }
 
+
+
+
+export async function buscarSolidarios(email: any) {
+  const response = await fetch(
+    `${process.env.CLIENT_URL}/api/pessoa/solidario?email=${email}`
+  );
+  return response.json();
+}
+
 export async function buscarPropostaInvestidor(email: any) {
   const response = await fetch(
     `${process.env.CLIENT_URL}/api/proponente/emprestimo/proposta/negocear?email=${email}`
   );
   return response.json();
 }
+
+
 
 export async function buscarReembolsoByProp(id: any) {
   const response = await fetch(

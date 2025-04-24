@@ -1,10 +1,93 @@
 import { converterString } from "@/app/actions/auth";
 import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
+import Credito from "@/models/Credito";
+import CreditoSolidario from "@/models/CreditoSolidario";
+import Devedor from "@/models/Devedor";
+import Emprestimo from "@/models/Emprestimo";
+import EmprestimoSolidario from "@/models/EmprestimoSolidario";
 import Pessoa from "@/models/Pessoa";
+import Proponente from "@/models/Proponente";
 import Solidario from "@/models/Solidario";
 import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
+
+// PUT - Método que permite o guardião aceitar o convite
+export async function PUT(
+  req: NextRequest,
+  context: { params: { id: number } }
+) {
+  const { id } = await context.params;
+  const uuid = await converterString(id);
+  const body = await req.json();
+  const dbData: any = {};
+
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync();
+    setupAssociations();
+
+    const user = await User.findByPk(body.user_id, {
+      include: [
+        { model: Devedor, attributes: ["id"] },
+        { model: Proponente, attributes: ["id"] },
+      ],
+    });
+
+    if (user?.toJSON().Devedor) {
+      dbData.credito = await Credito.findOne({
+        where: {
+          devedor_id: user?.toJSON().Devedor.id,
+          progresso: "CONCLUIDO",
+          estado: true,
+        },
+      });
+    }
+
+    if (user?.toJSON().Proponente) {
+      dbData.emprestimo = await Emprestimo.findOne({
+        where: {
+          proponente_id: user?.toJSON().Proponente.id,
+          progresso: "CONCLUIDO",
+          estado: true,
+        },
+      });
+    }
+
+    await sequelize.transaction(async (t) => {
+      await Solidario.update(
+        { estado: true },
+        { where: { id: uuid, tipo: body.tipo }, transaction: t }
+      );
+
+      if (body.tipo === "CREDITO") {
+        const [result, iscreated] = await CreditoSolidario.findOrCreate({
+          where: {
+            credito_id: dbData.credito?.id,
+            solidario_id: uuid,
+          },
+          defaults: { credito_id: dbData.credito?.id, solidario_id: uuid },
+          transaction: t,
+        });
+      }
+
+      const [result, iscreated] = await EmprestimoSolidario.findOrCreate({
+        where: {
+          emprestimo_id: dbData.emprestimo?.id,
+          solidario_id: uuid,
+        },
+        defaults: { emprestimo_id: dbData.emprestimo?.id, solidario_id: uuid },
+        transaction: t,
+      });
+    });
+    return NextResponse.json(
+      { message: "convite aceite com sucesso!" },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json({ message: error }, { status: 404 });
+  }
+}
 
 export async function GET(
   req: NextRequest,
@@ -33,9 +116,9 @@ export async function GET(
       ],
     });
 
-    const total = await Solidario.sum("taxa",{
-      where:{estado:false,  user_id: uuid}
-    }) 
+    const total = await Solidario.sum("taxa", {
+      where: { estado: false, user_id: uuid },
+    });
 
     if (!resp) {
       return NextResponse.json(
@@ -48,7 +131,7 @@ export async function GET(
       data: resp,
       total: total,
     };
-   // console.log("Dados solicitados", result);
+    // console.log("Dados solicitados", result);
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
@@ -56,5 +139,26 @@ export async function GET(
       { message: "Erro ao buscar os dados", error },
       { status: 500 }
     );
+  }
+}
+
+// DELETE - rejeitar o pedido de guardião
+export async function DELETE(
+  req: NextRequest,
+  context: { params: { id: string } }
+) {
+  const { id } = await context.params;
+  const uuid = await converterString(id);
+
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync();
+    setupAssociations();
+
+    await Solidario.destroy({ where: { id: uuid } }); // posteriormente criar um atributo definido para remoção de dados
+
+    return NextResponse.json("Convite rejeitado!");
+  } catch (error) {
+    return NextResponse.json({ message: error }, { status: 404 });
   }
 }

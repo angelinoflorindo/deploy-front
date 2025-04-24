@@ -57,3 +57,4 @@ export interface CreditoDef{
     DebitoVinculados:DebitoVinculadoProps[]
   }
 }
+

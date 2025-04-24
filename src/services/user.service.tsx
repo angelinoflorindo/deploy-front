@@ -263,6 +263,19 @@ export interface DevedorProps{
   updatedAt: any;
 }
 
+export interface SolidarioFace{
+  id: any;
+  tipo: any;
+  parentesco: any;
+  taxa: any;
+  pessoa_id: any;
+  user_id:any;
+  createdAt: any;
+  updatedAt: any;
+  User:UserProps
+  
+}
+
 export interface SolidarioProps{
   id: any;
   tipo: any;
