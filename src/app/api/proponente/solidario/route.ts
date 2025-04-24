@@ -6,6 +6,8 @@ import Solidario from "@/models/Solidario";
 import { NextRequest, NextResponse } from "next/server";
 
 
+
+// Cria um proponente ao convidar o guardião
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const userId = await converterString(body.user_id);

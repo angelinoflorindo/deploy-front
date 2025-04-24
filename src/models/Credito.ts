@@ -10,6 +10,12 @@ import {
   UpdatedAt,
 } from "sequelize-typescript";
 
+export enum TipoCredito {
+  PENDENTE = "30_DIAS",
+  CONCLUIDO = "60_DIAS",
+  CANCELADO = "90_DIAS",
+}
+
 @Table({ tableName: "creditos" })
 export default class Credito extends Model {
   @PrimaryKey
@@ -17,8 +23,11 @@ export default class Credito extends Model {
   @Column(DataType.INTEGER)
   id!: number;
 
-  @Column(DataType.STRING)
-  tipo!: string;
+  @Column({
+    type: DataType.ENUM(...Object.values(TipoCredito)),
+    allowNull: false,
+  })
+  tipo!: TipoCredito;
 
   @Column(DataType.FLOAT)
   valor!: number;
@@ -37,9 +46,13 @@ export default class Credito extends Model {
 
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   pendencia!: boolean;
-
-  @Column(DataType.STRING)
-  progresso!: string;
+  
+  @Column({
+    type: DataType.ENUM(...Object.values(TipoCredito)),
+    allowNull: false,
+    defaultValue: "PENDENTE",
+  })
+  progresso!: TipoCredito;
 
   @Column(DataType.INTEGER)
   devedor_id!: number;

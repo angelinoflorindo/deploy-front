@@ -23,11 +23,12 @@ const CreditoMensal = () => {
                             <Image src="/img/proponente.png" className={global.imagens} alt="imagem" width={40} height={40} />
                             Aval solidário
                         </Link>
-                        <Link href="/dashboard/credito/mensal/debito" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md" >
-                            <Image src="/img/movel.png" className={global.imagens} alt="imagem" width={40} height={40} />
-                            Ordem de Débitos
-                        </Link>
+                    
                      
+                        <Link href="/dashboard/credito/mensal/vinculado" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md" >
+                            <Image src="/img/movel.png" className={global.imagens} alt="imagem" width={40} height={40} />
+                             Conta Vinculada
+                        </Link>
                         <div>
                             <Link href="/dashboard/credito/" className="px-4 py-2 bg-gray-500 text-white rounded" >
                                 Voltar

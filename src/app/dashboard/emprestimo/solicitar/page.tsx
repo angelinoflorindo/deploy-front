@@ -6,7 +6,7 @@ import Conteudo from "./conteudo";
 import { getServerSession } from "next-auth";
 import { buscarUser, buscarUserQuery } from "@/app/actions/auth";
 
-const SolicitarCredito = async () => {
+const SolicitarEmprestimo = async () => {
 
   const session = await getServerSession()
   const user = await buscarUser(session?.user?.email)
@@ -30,4 +30,4 @@ const SolicitarCredito = async () => {
   );
 };
 
-export default SolicitarCredito;
+export default SolicitarEmprestimo;

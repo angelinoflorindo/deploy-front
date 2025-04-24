@@ -6,6 +6,8 @@ import Solidario from "@/models/Solidario";
 import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
+
+// consulta auxiliar para convidar para classe de guarnição
 export async function GET(
   req: NextRequest,
   context: { params: { id: string } }

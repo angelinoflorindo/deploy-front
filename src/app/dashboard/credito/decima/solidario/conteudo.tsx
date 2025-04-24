@@ -8,7 +8,10 @@ import { buscarUserQuery, convidarSolidario } from "@/app/actions/auth";
 import { redirect } from "next/navigation";
 import { Guardiao, SolidarioProps, UserInfo } from "@/services/user.service";
 import { SubmitButton } from "@/components/submitButton";
+import { clientAPI } from "@/app/lib/definitions";
 
+
+const url = clientAPI
 const Conteudo = ({
   user,
   guardInfo,
@@ -89,20 +92,30 @@ const Conteudo = ({
     }
 
     const resp = await convidarSolidario(solidario);
+    setGuard("");
+    setParentesco(false);
+    setInvite(true);
+    window.location.reload()
 
-    //console.log("resp", resp)
-    if (resp) {
-      setGuard("");
-      setParentesco(false);
-      setInvite(true);
-      return redirect("/dashboard/credito/decima/solidario");
-    }
   }
 
   async function getNextPage() {
     if (total < 50) {
       return redirect("/dashboard/credito/decima/solidario");
     }
+
+    const proposta = await fetch(`${url}/api/devedor/solidario`, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ user_id: user.id}),
+      });
+    
+      if (!proposta.ok) {
+        return redirect("/dashboard/credito/decima/solidario");
+      }
+    
     return redirect("/dashboard/credito/decima/solicitar");
   }
 
@@ -292,7 +305,7 @@ const Conteudo = ({
           <button
             type="button"
             onClick={getNextPage}
-            className="px-4 py-2 bg-violet-500 text-white rounded"
+            className="px-4 py-2 bg-violet-500 text-white rounded cursor-pointer"
           >
             Proximo
           </button>

@@ -24,9 +24,7 @@ export async function GET(req: NextRequest) {
   const where: any = {};
   // para definir as condições de listagem apartir do client
   where.emprestimo_id = emprestimoId;
-  if (status) {
-    where.estado = status;
-  }
+
 
   try {
     await sequelize.authenticate();
@@ -39,7 +37,7 @@ export async function GET(req: NextRequest) {
 
     const { rows: vinculadaData, count: vinculos } =
       await ContaVinculada.findAndCountAll({
-        where: { proponente_id: emprestimo?.proponente_id },
+        where: { proponente_id: emprestimo?.proponente_id},
         offset,
         limit: Number(limit),
         order: [[`${orderBy}`, "DESC"]],
@@ -51,7 +49,7 @@ export async function GET(req: NextRequest) {
         offset,
         limit: Number(limit),
         order: [[`${orderBy}`, "DESC"]],
-        include: [{ model: Solidario }],
+        include: [{ model: Solidario,where:{estado:status} }],
       });
 
     const result = {

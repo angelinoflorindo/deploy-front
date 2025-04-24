@@ -25,6 +25,7 @@ export async function GET(req: NextRequest) {
   const status = await validarEstado(searchParams.get("status"));
   const pendencia = await validarEstado(searchParams.get("pendencia"))
   const proponenteId = await converterString(searchParams.get('proponente'))
+  const progresso = searchParams.get('progresso')
   const orderBy = searchParams.get("order") || "created_at";
   const offset = (Number(page) - 1) * Number(limit);
   const where: any = {};
@@ -44,8 +45,11 @@ export async function GET(req: NextRequest) {
   }
 
   //conditions specials
-  where.progresso = 'CONCLUIDO'
 
+  if(progresso){
+    where.progresso = 'CONCLUIDO'
+  }
+  
  // console.log('conditions',  where)
   try {
     await sequelize.authenticate();
@@ -111,6 +115,7 @@ export async function POST(req: NextRequest) {
       progresso: body.progresso,
     });
 
+    // parte reservada para confirmar o convite enviado pelo proponente
     if (body.guardiao === "on" || body.guardiao === true) {
       const solidarios = await Solidario.findAll({
         where: { user_id: userId, estado: false },
@@ -121,7 +126,7 @@ export async function POST(req: NextRequest) {
             emprestimo_id: result.id,
             solidario_id: aval.id,
           });
-          aval.estado = true;
+          aval.estado = false; // só passará true quando o guardião aceitar o convite
           aval.save();
         });
       }

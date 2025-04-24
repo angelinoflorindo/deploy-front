@@ -27,6 +27,7 @@ import Residencia from "../models/Residencia";
 import Emprego from "../models/Emprego";
 import CreditoSolidario from "../models/CreditoSolidario";
 import ContaVinculada from "../models/ContaVinculada";
+import DebitoVinculado from "../models/DebitoVinculado";
 import NegocearEmprestimo from "../models/NegocearEmprestimo";
 import {config} from 'dotenv'
 
@@ -70,6 +71,7 @@ config();
     Diversificacao,
     Pagamento,
     ContaVinculada,
+    DebitoVinculado,
     NegocearEmprestimo
   ],
   logging:false,

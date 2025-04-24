@@ -73,7 +73,7 @@ const Conteudo = ({
 
   async function onConvidar() {
     const solidario = {
-      tipo: "CREDITO",
+      tipo: "EMPRESTIMO",
       parentesco: familiar,
       taxa: taxa,
       pessoa_id: guardData.Pessoa.id,
@@ -93,13 +93,11 @@ const Conteudo = ({
 
     const resp = await convidarSolidario(solidario);
 
-    //console.log("resp", resp)
-    if (resp) {
-      setGuard("");
-      setParentesco(false);
-      setInvite(true);
-      return redirect("/dashboard/emprestimo/solidario");
-    }
+   
+    setGuard("");
+    setParentesco(false);
+    setInvite(true);
+    window.location.reload()    
   }
 
   async function getNextPage() {

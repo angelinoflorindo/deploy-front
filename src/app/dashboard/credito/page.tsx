@@ -6,11 +6,15 @@ import global from "@/modules/global.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
+import { UserInfo } from "@/services/user.service";
+import { buscarUser } from "@/app/actions/auth";
 
 const Credito = async () => {
-/*
+
    const session = await getServerSession();
-    const emprestimo: EmprestimoValidado = await buscarEmprestimoValidadoByEmail(
+   const user:UserInfo = await buscarUser(session?.user.email)
+   
+    /*const emprestimo: EmprestimoValidado = await buscarEmprestimoValidadoByEmail(
       session?.user.email
     );
     const diverseData = emprestimo.Proponente.Emprestimos[0].Diversificacaos;

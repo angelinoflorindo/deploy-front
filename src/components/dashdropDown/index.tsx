@@ -13,13 +13,14 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { label: 'Gerir Depósitos', path: '/gestao/depositos', roles: ['ADMIN', 'ANALISTA'] },
-  { label: 'Gerir Pagamentos', path: '/gestao/pagamentos', roles: ['ADMIN', 'ANALISTA'] },
+  //{ label: 'Gerir Pagamentos', path: '/gestao/pagamentos', roles: ['ADMIN', 'ANALISTA'] },
+  //{ label: 'Gerir Reembolsos', path: '/gestao/pagamentos', roles: ['ADMIN', 'ANALISTA'] },
   { label: 'Gerir Saques', path: '/gestao/saques', roles: ['ADMIN'] },
   { label: 'Gerir Empréstimos', path: '/gestao/emprestimos', roles: ['ADMIN'] },
   { label: 'Gerir Créditos', path: '/gestao/creditos', roles: ['ADMIN'] },
   { label: 'Gerir Reclamações', path: '/gestao/reclamacoes', roles: ['ADMIN', 'ANALISTA'] },
   { label: 'Gerir Documentos', path: '/gestao/documentos', roles: ['ADMIN', 'ANALISTA'] },
-  { label: 'Gerir Contas', path: '/gestao/contas', roles: ['ADMIN', 'ANALISTA'] },
+ // { label: 'Gerir Contas', path: '/gestao/contas', roles: ['ADMIN', 'ANALISTA'] }, // ficará pendente
   //{ label: 'Gerir Proteções', path: '/gestao/protecoes', roles: ['ADMIN'] },
 ];
 

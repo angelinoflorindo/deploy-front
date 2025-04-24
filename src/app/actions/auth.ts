@@ -1,8 +1,11 @@
-"use server";
+
+"use server"
 import { createSession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 import { NegociarEmprestimoProps } from "@/services/user.service";
+
+
 
 export async function buscarUser(email: any) {
   const response = await fetch(
@@ -75,7 +78,6 @@ export async function buscarPropostaInvestidor(email: any) {
   return response.json();
 }
 
-
 export async function buscarReembolsoByProp(id: any) {
   const response = await fetch(
     `${process.env.CLIENT_URL}/api/operacao/reembolsar/${id}`
@@ -89,7 +91,6 @@ export async function buscarInvestidor(id: any) {
   );
   return response.json();
 }
-
 
 export async function buscarPropostaEmprestimoById(
   investidorId: any,
@@ -254,6 +255,79 @@ export async function vincluarConta(_prevState: any, formData: FormData) {
   return redirect("/dashboard/emprestimo/solicitar");
 }
 
+// PARTE REZERVADA PARA VINCULAR DÉBITO
+
+export async function vincluarDebito(_prevState: any, formData: FormData) {
+  const userId = formData.get("user_id");
+  const returnUrl = formData.get("returnUrl")
+
+  formData.append("tipo", "ORDEM_DEBITO");
+  formData.append("titulo", "Débito de retenção");
+  formData.append("user_id", `${userId}`);
+
+  const files = formData.getAll("scanner") as File[];
+
+  if (files.length === 0 || files[0].size === 0) {
+    return redirect(`/dashboard/credito/${returnUrl}/vinculado`);
+  }
+
+  const res = await fetch(`${process.env.CLIENT_URL}/api/upload`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    console.log("Erro ao anexar comprovativo!");
+    return redirect(`/dashboard/credito/${returnUrl}/vinculado`);
+  }
+
+  const vincular = await fetch(
+    `${process.env.CLIENT_URL}/api/operacao/vincular/debito`,
+    {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ user_id: userId, valor: formData.get("valor") }),
+    }
+  );
+
+  if (!vincular.ok) {
+    return redirect(`/dashboard/credito/${returnUrl}/vinculado`);
+  }
+
+  return redirect(`/dashboard/credito/${returnUrl}/solicitar`);
+}
+
+
+
+
+export async function buscarPropostasOpDevedor(
+  devedorId: any,
+  rules: any
+) {
+  const conditions: any = {};
+
+  if (rules.pageE) conditions.page = rules.pageE || 1;
+
+  conditions.pendencia = true; // QUANDO NINGUÉM AINDA INVESTIU
+  conditions.progresso = 'CONCLUIDO' // QUANDO JÁ FOI APROVADO PELO ADMIN
+
+  const res = await fetch(
+    `${process.env.CLIENT_URL}/api/devedor/credito?page=${conditions.page}&proponente=${devedorId}&pendencia=${conditions.pendencia}&progresso=${conditions.progresso}`
+  );
+
+  if (!res.ok) {
+    const text = await res.text(); // debug da resposta
+    console.error("Erro na API:", res.status, text);
+    return;
+  }
+
+  return res.json();
+}
+
+
+
 export async function buscarPropostasOpProponente(
   proponenteId: any,
   rules: any
@@ -261,11 +335,12 @@ export async function buscarPropostasOpProponente(
   const conditions: any = {};
 
   if (rules.pageE) conditions.page = rules.pageE || 1;
-  
-  conditions.pendencia = true
+
+  conditions.pendencia = true; // QUANDO NINGUÉM AINDA INVESTIU
+  conditions.progresso = 'CONCLUIDO' // QUANDO JÁ FOI APROVADO PELO ADMIN
 
   const res = await fetch(
-    `${process.env.CLIENT_URL}/api/proponente/emprestimo?page=${conditions.page}&proponente=${proponenteId}&pendencia=${conditions.pendencia}`
+    `${process.env.CLIENT_URL}/api/proponente/emprestimo?page=${conditions.page}&proponente=${proponenteId}&pendencia=${conditions.pendencia}&progresso=${conditions.progresso}`
   );
 
   if (!res.ok) {
@@ -290,7 +365,6 @@ export async function buscarEmprestimoById(id: any) {
 
   return res.json();
 }
-
 
 export async function buscarEmprestimoValidadoByEmail(email: any) {
   const res = await fetch(
@@ -344,7 +418,6 @@ export async function diversificarEmprestimo(
 // Configurar a rota de reembolsar fundos!
 
 export async function reembolsarFundos(_prevState: any, formData: FormData) {
-  
   const response = await fetch(
     `${process.env.CLIENT_URL}/api/operacao/reembolsar`,
     {
@@ -365,14 +438,13 @@ export async function reembolsarFundos(_prevState: any, formData: FormData) {
     }
   );
 
-  const investidorId = converterString(formData.get("investidorId"))
+  const investidorId = converterString(formData.get("investidorId"));
   if (!response.ok) {
     return redirect(`/dashboard/emprestimo/${investidorId}`);
   }
 
   return redirect("/dashboard");
 }
-
 
 // Transferir emprestimos ao proponente
 
@@ -439,6 +511,67 @@ export async function submitCredito(_prevState: any, formData: FormData) {
     return redirect("/ferramenta/cartao/sacar");
   }
   return redirect("/ferramenta");
+}
+
+// REZERVADO PARA SOLICITAÇÃO DE CRÉDITOS
+export async function solicitarCredito(_prevState: any, formData: FormData) {
+  const info = {
+    user_id: formData.get("user_id"),
+    valor: await converterString(formData.get("valor")),
+    juro: formData.get("juro"),
+    prazo: formData.get("prazo"),
+    prestacao: formData.get("prestacao"),
+    guardiao: formData.get("guardiao"),
+    tipo: formData.get("tipo"),
+    duracao: formData.get("duracao"),
+  };
+
+  let Data: any = {};
+
+  Data.mesPrazo = new Date(JSON.stringify(info.prazo)).getUTCMonth() + 1  
+  Data.date = new Date().toLocaleDateString()
+  Data.mesActual = new Date(Data.date).getUTCMonth() + 1
+  
+  const duracaoMes = Data.mesPrazo - Data.mesActual;
+
+  // Controlar o valor solicitado
+
+  if (info.duracao == "30_DIAS") {
+    if (info.valor > 50000 || duracaoMes > 1) {
+      console.log("Excedeu os limites");
+      return redirect(`/dashboard/credito/${info.tipo}/solicitar`);
+    }
+  }
+
+  
+  if (info.duracao == "60_DIAS") {
+    if (info.valor > 150000 || duracaoMes > 2) {
+      console.log("Excedeu os limites");
+      return redirect(`/dashboard/credito/${info.tipo}/solicitar`);
+    }
+  }
+
+  
+  if (info.duracao == "90_DIAS") {
+    if (info.valor > 250000 || duracaoMes > 3) {
+      console.log("Excedeu os limites");
+      return redirect(`/dashboard/credito/${info.tipo}/solicitar`);
+    }
+  }
+
+  const fundos = await fetch(`${process.env.CLIENT_URL}/api/devedor/credito`, {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify(info),
+  });
+
+  if (!fundos.ok) {
+    return redirect(`/dashboard/credito/${info.tipo}/solicitar`);
+
+  }
+  return redirect("/dashboard");
 }
 
 export async function submitEmprestimo(_prevState: any, formData: FormData) {
@@ -513,14 +646,6 @@ export async function efectuarReclamacao(_prevState: any, formData: FormData) {
   }
 }
 
-// utils/cardGenerator.ts
-export async function gerarNumeroCartao() {
-  return Math.floor(1000000000 + Math.random() * 9000000000).toString(); // 10 dígitos
-}
-
-export async function gerarCodigoCartao() {
-  return Math.floor(1000 + Math.random() * 9000).toString(); // 4 dígitos
-}
 export async function hashPassword(password: string) {
   const saltRounds = 12; // Definir número de rounds (quanto maior, mais seguro, mas mais lento)
   const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -543,23 +668,32 @@ export async function validarEstado(value: any) {
   return false; // já é número ou não é conversível
 }
 
-export async function calcularJurosCompostos(principal:any, taxa:number, prestacao:number){
-  const montante = principal*Math.pow((1+taxa), prestacao)
-  return Number(montante.toFixed(2))
-
+export async function calcularJurosCompostos(
+  principal: any,
+  taxa: number,
+  prestacao: number
+) {
+  const montante = principal * Math.pow(1 + taxa, prestacao);
+  return Number(montante.toFixed(2));
 }
 
-
-export async function calcularJurosSimples(principal:any, taxa:number, prestacao:number){
-  const juros = principal*taxa*prestacao
-  const result = Math.round(principal + juros)
-  return result
+export async function calcularJurosSimples(
+  principal: any,
+  taxa: number,
+  prestacao: number
+) {
+  const juros = principal * taxa * prestacao;
+  const result = Math.round(principal + juros);
+  return result;
 }
 
-
-export async function calcularPrestacaoSimples(principal:any, taxa:number, prestacao:number){
-  const juroMensal = principal*taxa
-  const amortizacao = principal/prestacao
-  const result = Math.round(amortizacao + juroMensal)
-  return result
+export async function calcularPrestacaoSimples(
+  principal: any,
+  taxa: number,
+  prestacao: number
+) {
+  const juroMensal = principal * taxa;
+  const amortizacao = principal / prestacao;
+  const result = Math.round(amortizacao + juroMensal);
+  return result;
 }

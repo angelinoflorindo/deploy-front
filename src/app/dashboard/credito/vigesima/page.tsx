@@ -23,9 +23,9 @@ const CreditoVigesima = () => {
                             <Image src="/img/proponente.png" className={global.imagens} alt="imagem" width={40} height={40} />
                             Aval solidário
                         </Link>
-                        <Link href="/dashboard/credito/vigesima/debito" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md" >
+                        <Link href="/dashboard/credito/vigesima/vinculado" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md" >
                             <Image src="/img/movel.png" className={global.imagens} alt="imagem" width={40} height={40} />
-                            Ordem de Débitos
+                             Conta Vinculada
                         </Link>
                      
                         <div>

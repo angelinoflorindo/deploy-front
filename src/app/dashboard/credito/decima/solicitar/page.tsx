@@ -5,7 +5,6 @@ import Footer from "@/components/footer";
 import Conteudo from "./conteudo";
 import { getServerSession } from "next-auth";
 import { buscarUser, buscarUserQuery } from "@/app/actions/auth";
-import { Guardiao } from "@/services/user.service";
 
 const SolicitarCredito = async () => {
 

@@ -110,16 +110,23 @@ export async function POST(req: NextRequest) {
       defaults: info,
     });
 
-    // console.log("proponente", proponente)
-    //console.log("proponente guardado ", proponente[0].id)
-    const result = await ContaVinculada.create({
-      valor_retido: await converterString(body.valor),
-      proponente_id: proponente[0].id,
-      data_desbloqueio: new Date(),
-    });
-
-    // console.log("vinculada", result)
-
+    const [result, iscreated] = await ContaVinculada.findOrCreate(
+      {where:{
+        proponente_id: proponente[0].id,
+        estado:true
+      }, defaults:{
+        proponente_id: proponente[0].id,
+        valor_retido: await converterString(body.valor),
+        data_desbloqueio: new Date()
+      }}
+    );
+    
+    if(!iscreated){
+      await ContaVinculada.update({estado:false}, {where:{proponente_id:proponente[0].id}})
+      await ContaVinculada.create({ proponente_id: proponente[0].id,
+        valor_retido: await converterString(body.valor),
+        data_desbloqueio: new Date()})
+    }
     return NextResponse.json(
       { message: "registrado com sucesso" },
       { status: 200 }

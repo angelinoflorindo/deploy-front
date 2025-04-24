@@ -24,6 +24,7 @@ import Residencia from "../models/Residencia";
 import Emprego from "../models/Emprego";
 import CreditoSolidario from "../models/CreditoSolidario";
 import ContaVinculada from "../models/ContaVinculada";
+import DebitoVinculado from "../models/DebitoVinculado"
 import NegocearEmprestimo from "../models/NegocearEmprestimo";
 
 export function setupAssociations() {
@@ -33,6 +34,7 @@ export function setupAssociations() {
   User.hasOne(Investidor, { foreignKey: "user_id" });
   User.hasMany(Reclamacao, { foreignKey: "user_id" });
   User.hasOne(Proponente, { foreignKey: "user_id" });
+  User.hasOne(Devedor, { foreignKey: "user_id" });
   User.hasMany(Saque, { foreignKey: "user_id" });
   User.hasMany(Deposito, { foreignKey: "user_id" });
   User.hasOne(Carteira, { foreignKey: "user_id" });
@@ -94,6 +96,7 @@ export function setupAssociations() {
   Pessoa.hasOne(Conta, { foreignKey: "pessoa_id" });
 
   Proponente.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
+  Devedor.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
 
   Reclamacao.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
 
@@ -115,6 +118,10 @@ export function setupAssociations() {
 
   Solidario.hasMany(EmprestimoSolidario, { foreignKey: "solidario_id" });
   EmprestimoSolidario.belongsTo(Solidario, { foreignKey: "solidario_id" });
+  
+  Solidario.hasMany(CreditoSolidario, { foreignKey: "solidario_id" });
+  CreditoSolidario.belongsTo(Solidario, { foreignKey: "solidario_id" });
+
 
   Investidor.hasMany(Diversificacao, {
     foreignKey: "investidor_id",
@@ -170,6 +177,17 @@ export function setupAssociations() {
     onDelete: "CASCADE",
   });
   
+  
+  
+  DebitoVinculado.belongsTo(Devedor, {
+    foreignKey: "devedor_id",
+    onDelete: "CASCADE",
+  });
+
+  Devedor.hasMany(DebitoVinculado, {
+    foreignKey: "devedor_id",
+    onDelete: "CASCADE",
+  });
   
   Credito.hasMany(CreditoSolidario, { foreignKey: "credito_id" });
   CreditoSolidario.belongsTo(Credito, { foreignKey: "credito_id" });

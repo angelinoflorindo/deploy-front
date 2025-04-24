@@ -40,14 +40,17 @@ export async function PUT(
     const carteira = await Carteira.findOne({
       where: { user_id: usuario?.id },
     });
+    if (!carteira) {
+      return NextResponse.json(
+        { message: "Carteira digital não encontrada" },
+        { status: 403 }
+      );
+    }
     carteira!.saldo = carteira!.saldo + vinculo.valor_retido;
-    vinculo.estado = false;
+    vinculo.estado = false; 
     vinculo.save();
     carteira?.save();
-    return NextResponse.json(
-      { message: "Serviço efectuado" },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: "Serviço efectuado" }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }
@@ -82,8 +85,14 @@ export async function GET(
     const carteira = await Carteira.findOne({
       where: { user_id: usuario?.id },
     });
+    if (!carteira) {
+      return NextResponse.json(
+        { message: "Carteira digital não encontrada" },
+        { status: 403 }
+      );
+    }
     carteira!.saldo = carteira!.saldo - vinculo.valor_retido;
-    vinculo.estado = true;
+    vinculo.estado = true; 
     vinculo.save();
     carteira?.save();
     return NextResponse.json(

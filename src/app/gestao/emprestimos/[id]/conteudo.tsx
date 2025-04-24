@@ -46,7 +46,7 @@ export default function Conteudo({ emprestimoId }: { emprestimoId: string }) {
 
   const fetchData = async () => {
     const res = await fetch(
-      `${url}/api/proponente/garantias?page=${page}&limit=5&id=${emprestimoId}`
+      `${url}/api/proponente/garantias?page=${page}&status=${true}&id=${emprestimoId}`
     );
 
     if (!res.ok) {

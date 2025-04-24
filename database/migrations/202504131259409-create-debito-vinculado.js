@@ -5,30 +5,28 @@ import { DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('creditos', {
+    await queryInterface.createTable('debitos_vinculado', {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
       },
-      tipo: {
-        type: DataTypes.STRING,
+      devedor_id:  {
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
+        references: {
+          model: 'proponentes', // relacionamento com a tabela User
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
-      valor: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-      },
-      prestacao: {
+      valor_retido: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      juro: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      prazo: {
+      data_desbloqueio: {
         type: DataTypes.DATE,
         allowNull: false,
       },
@@ -36,25 +34,6 @@ export default {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
         allowNull: false,
-      },
-      pendencia: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
-        allowNull: false,
-      },
-      progresso: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      devedor_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: false,
-        references: {
-          model: 'pessoas', // presumindo que devedor seja uma Pessoa
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
       },
       created_at: {
         allowNull: false,
@@ -70,6 +49,6 @@ export default {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('creditos');
+    await queryInterface.dropTable('conta_vinculadas');
   },
 };

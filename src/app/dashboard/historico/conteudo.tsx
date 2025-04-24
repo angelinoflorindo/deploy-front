@@ -19,6 +19,7 @@ const Conteudo = ({ negoData }: { negoData: NegociarEmprestimoProps[] }) => {
       {/* RESOLVENDO OS DESAFIOS */}
       <div>
         {/*BUSANDO AS NEGOCIAÇÕES INVESTIDOR - EMPRESTIMO */}
+      {negoData.length ? (<>
         {negoData.map((data) => (
           <Link
             href={`/dashboard/historico/${data.investidor_id}/negociar`}
@@ -30,6 +31,7 @@ const Conteudo = ({ negoData }: { negoData: NegociarEmprestimoProps[] }) => {
             <span>{data.valor},00kz</span>
           </Link>
         ))}
+      </>):(<div className="text-blue-500 font-bold"> Sem nenhum registro</div>)}
       </div>
     </div>
   );

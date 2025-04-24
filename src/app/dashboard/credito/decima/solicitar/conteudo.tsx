@@ -4,15 +4,22 @@ import styles from "@/modules/Login.module.css";
 import { SubmitButton } from "@/components/submitButton";
 import { useActionState, useState } from "react";
 import { UserInfo } from "@/services/user.service";
-import { submitCredito } from "@/app/actions/auth";
+import { solicitarCredito } from "@/app/actions/auth";
 
 const Conteudo = ({ user }: { user: UserInfo }) => {
   const [valor, setValor] = useState<any>(0);
-  const [state, formAction] = useActionState(submitCredito, null);
+  const [prazo, setPrazo] = useState<any>(0);
+  const [guardiao, setGuardiao] = useState(false);
+  const [state, formAction] = useActionState(solicitarCredito, null);
 
-  const handler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const valorHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValor(e.target.value);
   };
+
+  const prazoHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPrazo(e.target.value);
+  };
+
   return (
     <div className={global.grid}>
       <header className={global.cartao_header_depositar}>
@@ -21,29 +28,65 @@ const Conteudo = ({ user }: { user: UserInfo }) => {
             <b>Valor:</b> {valor},00kz
           </h1>
           <h1>
-            <b>Prestações:</b>4
+            <b>Prestações:</b>
+            15/15 dias
           </h1>
         </div>
         <div className={global.cartao_direita_solicitar}>
           <h1>
-            <b>Juros:</b> 10%
+            <b>Juros:</b>
+            10%
           </h1>
           <h1>
-            <b>Até:</b> 10 dias
+            <b>Prazo:</b>
+            {prazo}
           </h1>
         </div>
       </header>
 
-      <div className="py-4">
-        <h1>
-          <b>Crédito permitido:</b> max(50.000kz)
-        </h1>
-      </div>
       <div className="flex py-2 flex-col justify-center itmes-center">
+        <h3 className="text-blue-500">
+          {guardiao
+            ? "Guardiãos convidados"
+            : "Sem guardiãos | clicar duas vezes!"}
+        </h3>
         <form
           action={formAction}
           className="flex flex-col  justify-center itmes-center"
         >
+          
+          <input
+            type="text"
+            name="tipo"
+            value="decima"
+            readOnly={true}
+            hidden={true}
+          />
+
+          <input
+            type="text"
+            name="duracao"
+            value="30_DIAS"
+            readOnly={true}
+            hidden={true}
+          />
+
+          <input
+            type="number"
+            name="prestacao"
+            value="15"
+            readOnly={true}
+            hidden={true}
+          />
+
+          <input
+            type="checkbox"
+            checked={guardiao}
+            name="guardiao"
+            readOnly={true}
+            hidden={true}
+          />
+
           <input
             type="text"
             name="user_id"
@@ -54,12 +97,43 @@ const Conteudo = ({ user }: { user: UserInfo }) => {
 
           <input
             type="number"
-            name="valor"
-            onChange={handler}
-            placeholder="Ex:1000(mil Kz) "
-            className={styles.input}
+            name="juro"
+            value="10"
+            readOnly={true}
+            hidden={true}
           />
-          <SubmitButton />
+          <div className="p-2 mb-2">
+            <input
+              type="number"
+              name="valor"
+              onChange={valorHandler}
+              placeholder="valor max. 50000,00kz"
+              className={styles.input}
+            />
+            <input
+              type="date"
+              name="prazo"
+              onChange={prazoHandler}
+              className={styles.input}
+            />
+          </div>
+
+          <div className="flex flex-row justify-around">
+            <button
+              type="button"
+              className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
+              onDoubleClick={() => {
+                setGuardiao(false);
+              }}
+              onClick={() => {
+                setGuardiao(true);
+              }}
+            >
+              Guardião
+            </button>
+
+            <SubmitButton />
+          </div>
         </form>
       </div>
     </div>

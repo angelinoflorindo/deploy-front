@@ -11,25 +11,41 @@ import {
   buscarEmprestimoValidadoByEmail,
   buscarUser,
 } from "@/app/actions/auth";
-import { EmprestimoValidado } from "@/services/Emprestimo.service";
+import {
+  DiversificacaoProps,
+  EmprestimoValidado,
+} from "@/services/Emprestimo.service";
+import { UserInfo } from "@/services/user.service";
+import { redirect } from "next/navigation";
 
 const Emprestimo = async () => {
   const session = await getServerSession();
+  const user: UserInfo = await buscarUser(session?.user.email);
   const emprestimo: EmprestimoValidado = await buscarEmprestimoValidadoByEmail(
     session?.user.email
   );
-  const diverseData = emprestimo.Proponente.Emprestimos[0].Diversificacaos;
-  const multipleIncome: any = [];
+  let diverseData = new Array<DiversificacaoProps>();
+  let multipleIncome: any = [];
 
-  if (emprestimo.Proponente.Emprestimos[0].Diversificacaos.length > 0) {
-    diverseData.forEach((data, index) => {
-      multipleIncome.push({
-        investidorId: data.investidor_id,
-        content: Math.round(emprestimo.Proponente.Emprestimos[0].valor * (data.taxa / 100)),
+  if (emprestimo.Proponente) {
+    diverseData = emprestimo.Proponente.Emprestimos[0].Diversificacaos;
+
+    if (emprestimo.Proponente.Emprestimos[0].Diversificacaos.length > 0) {
+      diverseData.forEach((data, index) => {
+        multipleIncome.push({
+          investidorId: data.investidor_id,
+          content: Math.round(
+            emprestimo.Proponente.Emprestimos[0].valor * (data.taxa / 100)
+          ),
+        });
       });
-    });
+    }
   }
 
+  if (user.Carteira == null || user.Carteira == undefined) {
+    console.log("sem conta digital");
+    return redirect("/ferramenta/cartao");
+  }
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
@@ -87,58 +103,69 @@ const Emprestimo = async () => {
             <h2 className="text-xl font-bold mb-2">Efectuar reembolsos</h2>
             <section>
               {/*BUSANDO OS EMPRESTIMOS POR INVESTIDORES*/}
-
-              {diverseData.length > 1 ? (
+              {emprestimo.Proponente ? (
                 <div>
-                  {diverseData.map((data, index) => (
-                    <Link
-                      key={data.investidor_id}
-                      href={`/dashboard/emprestimo/${data.investidor_id}`}
-                      className="flex flex-col px-4 py-2 h-20 shadow-md w-[100%]"
-                    >
-                      <span className="flex flex-row justify-between">
-                        <p className="font-bold"> Emprestimo até</p>{" "}
-                        {
-                          emprestimo.Proponente.Emprestimos[0].prazo.split(
-                            "T"
-                          )[0]
+                  {diverseData.length > 1 ? (
+                    <div>
+                      {diverseData.map((data, index) => (
+                        <Link
+                          key={data.investidor_id}
+                          href={`/dashboard/emprestimo/${data.investidor_id}`}
+                          className="flex flex-col px-4 py-2 h-20 shadow-md w-[100%]"
+                        >
+                          <span className="flex flex-row justify-between">
+                            <p className="font-bold"> Emprestimo até</p>{" "}
+                            {
+                              emprestimo.Proponente.Emprestimos[0].prazo.split(
+                                "T"
+                              )[0]
+                            }
+                          </span>
+                          <div className="flex flex-row justify-between">
+                            <span className="py-1">
+                              <b> Prestação:</b>
+                              {emprestimo.Proponente.Emprestimos[0].prestacao}
+                            </span>
+                            <span className="flex flex-row justify-between">
+                              <b>Valor:</b> {multipleIncome[index].content},00kz
+                            </span>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    <div>
+                      <Link
+                        key={
+                          emprestimo.Proponente.Emprestimos[0]
+                            .Diversificacaos[0].investidor_id
                         }
-                      </span>
-                      <div className="flex flex-row justify-between">
-                        <span className="py-1">
-                          <b> Prestação:</b>
-                          {emprestimo.Proponente.Emprestimos[0].prestacao}
-                        </span>
+                        href={`/dashboard/emprestimo/${emprestimo.Proponente.Emprestimos[0].Diversificacaos[0].investidor_id}`}
+                        className="flex flex-col px-4 py-2 h-20 shadow-md w-[100%]"
+                      >
                         <span className="flex flex-row justify-between">
-                          <b>Valor:</b> {multipleIncome[index].content},00kz
+                          <p className="font-bold"> Emprestimo até</p>{" "}
+                          {
+                            emprestimo.Proponente.Emprestimos[0].prazo.split(
+                              "T"
+                            )[0]
+                          }
                         </span>
-                      </div>
-                    </Link>
-                  ))}
+                        <div className="flex flex-row justify-between">
+                          <span className="py-1">
+                            <b> Prestação:</b>
+                            {emprestimo.Proponente.Emprestimos[0].prestacao}
+                          </span>
+                          <span className="flex flex-row justify-between">
+                            <b>Valor:</b> {multipleIncome[0].content},00kz
+                          </span>
+                        </div>
+                      </Link>
+                    </div>
+                  )}
                 </div>
               ) : (
-                <div>
-                  <Link
-                    key={emprestimo.Proponente.Emprestimos[0].Diversificacaos[0].investidor_id}
-                    href={`/dashboard/emprestimo/${emprestimo.Proponente.Emprestimos[0].Diversificacaos[0].investidor_id}`}
-                    className="flex flex-col px-4 py-2 h-20 shadow-md w-[100%]"
-                  >
-                    <span className="flex flex-row justify-between">
-                      <p className="font-bold"> Emprestimo até</p>{" "}
-                      {emprestimo.Proponente.Emprestimos[0].prazo.split("T")[0]}
-                    </span>
-                    <div className="flex flex-row justify-between">
-                      <span className="py-1">
-                        <b> Prestação:</b>
-                        {emprestimo.Proponente.Emprestimos[0].prestacao}
-                      </span>
-                      <span className="flex flex-row justify-between">
-                        <b>Valor:</b>{" "}
-                        {multipleIncome[0].content},00kz
-                      </span>
-                    </div>
-                  </Link>
-                </div>
+                <div className="text-blue font-bold"> Sem emprestimos </div>
               )}
             </section>
           </div>

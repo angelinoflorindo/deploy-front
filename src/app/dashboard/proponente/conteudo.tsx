@@ -9,12 +9,14 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { buscarPropostasOpProponente } from "@/app/actions/auth";
+import { buscarPropostasOpDevedor, buscarPropostasOpProponente } from "@/app/actions/auth";
 import { redirect } from "next/navigation";
+import { CreditoDef } from "@/services/Credito.service";
 
 const url = clientAPI;
 export default function Conteudo({ user }: { user: UserInfo }) {
   const [propostas, setPropostas] = useState<EmprestimoDef[]>([]);
+  const [creditos, setCreditos] = useState<CreditoDef[]>([]);
   const [step, setStep] = useState(true);
   const [pageE, setPageE] = useState(1);
   const [pageC, setPageC] = useState(1);
@@ -26,13 +28,19 @@ export default function Conteudo({ user }: { user: UserInfo }) {
     const search = await buscarPropostasOpProponente(user.Proponente.id, {
       pageE,
     });
-    //console.log("emprestimos", search.data);
+
+    const creditoProps = await buscarPropostasOpDevedor(user.Devedor.id, {
+      pageE,
+    });
+
+
     setPropostas(search.data);
     setTotalPagesE(search.totalPages);
     setPageE(search.total);
 
-    setPageC(search.total);
-    setTotalPagesC(search.totalPages);
+    setPageC(creditoProps.total);
+    setCreditos(creditoProps.data)
+    setTotalPagesC(creditoProps.totalPages);
   };
 
   useEffect(() => {
@@ -126,24 +134,30 @@ export default function Conteudo({ user }: { user: UserInfo }) {
           </section>
         ) : (
           <section className="py-4">
-            <div>
-              <Link
-                href="/dashboard/proponente/3"
-                className="flex flex-row justify-evenly p-4   shadow-md w-[100%]"
-              >
-                <Image src="/img/guardiao.png" width={40} height={30} alt="" />
-                <div className="flex flex-col w-[100%] px-4">
-                  <span>Celeste Domingos</span>
-                  <div className="flex flex-row justify-between items-center">
-                    <span className="flex font-bold justify-center items-center">
-                      XY,00KZ
-                    </span>
-                    <span className="flex  justify-center items-center">
-                      <b className="px-2">8%</b> mensal
-                    </span>
-                  </div>
+              <div>
+              {creditos.map((emp, index) => {
+                return (
+                  <div key={emp.id}>
+                  <Link
+                    href={`/dashboard/devedor/${emp.id}`}
+                    className="flex flex-row justify-evenly p-4   shadow-md w-[100%]"
+                  >
+                    <Image src="/img/guardiao.png" width={40} height={30} alt="" />
+                    <div className="flex flex-col w-[100%] px-4">
+                      <span>{emp.Devedor.User.primeiro_nome} {" "} {emp.Devedor.User.segundo_nome}</span>
+                      <div className="flex flex-row justify-between items-center">
+                        <span className="flex font-bold justify-center items-center">
+                          {emp.valor},00kz
+                        </span>
+                        <span className="flex  justify-center items-center">
+                          <b className="px-2">{emp.juro}%</b> mensal
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
                 </div>
-              </Link>
+                );
+              })}
             </div>
 
             <div className="flex justify-between items-center mt-4">
