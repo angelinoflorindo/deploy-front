@@ -3,23 +3,24 @@ import global from "@/modules/global.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import { EmprestimoDef } from "@/services/user.service";
+import { CreditoDef } from "@/services/Credito.service";
 
-const Conteudo = ({ formData }: { formData: EmprestimoDef }) => {
+const Conteudo = ({ formData }: { formData: CreditoDef }) => {
   return (
     <div className="flex flex-col justify-start items-start">
       <h2 className="text-xl font-bold mb-4">Garantias associadas</h2>
       <br />
 
       <h3>Valores retidos </h3>
-      {formData.Proponente.ContaVinculadas.length > 0 ? (
+      {formData.Devedor.DebitoVinculados.length > 0 ? (
         <div className="flex justify-between items-center  w-[100%]  ">
           <span className="flex flex-col font-bold   w-40 h-30 justify-center items-center shadow-md ">
-            {formData.Proponente.ContaVinculadas[0].valor_retido}
+            {formData.Devedor.DebitoVinculados[0].valor_retido}
             <p className="py-2">Valor retido</p>
           </span>
 
           <span className="flex flex-col font-bold  w-40 h-30 justify-center items-center shadow-md">
-            {formData.Proponente.ContaVinculadas[0].updatedAt.split("T")[0]}
+            {formData.Devedor.DebitoVinculados[0].updatedAt.split("T")[0]}
             <p className="py-2">Data de confirmação</p>
           </span>
         </div>
@@ -34,7 +35,7 @@ const Conteudo = ({ formData }: { formData: EmprestimoDef }) => {
 
       <h3>Guardiões do emprestimo</h3>
 
-      {formData.EmprestimoSolidarios.length > 0 ? (
+      {formData.CreditoSolidarios.length > 0 ? (
         <div className="flex justify-between items-center  w-[100%]  ">
           <span className="flex flex-col font-bold   w-40 h-30 justify-center items-center shadow-md ">
             {formData.totalGuardiaos}
@@ -57,7 +58,7 @@ const Conteudo = ({ formData }: { formData: EmprestimoDef }) => {
 
       <div className="py-4">
         <Link
-          href={`/dashboard/proponente/${formData.id}`}
+          href={`/dashboard/devedor/${formData.id}`}
           className="px-6 py-2 bg-gray-500  text-white rounded"
         >
           Voltar

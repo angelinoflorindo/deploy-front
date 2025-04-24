@@ -29,6 +29,7 @@ const Pagamento = async (context: { params: { id: string } }) => {
   const taxa = (investidordata.Diversificacaos[0].Emprestimo.juro)/100
   const montante = await calcularJurosSimples(saldo,taxa,limitePrestacao)
   const simples = await calcularPrestacaoSimples(saldo, taxa, limitePrestacao)
+  const arround = Math.round(montante)
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
@@ -42,7 +43,7 @@ const Pagamento = async (context: { params: { id: string } }) => {
             emprestimoData={emprestimoByUser}
             saldo={simples}
             prestacao={prestacao.valor}
-            montante={montante}
+            montante={arround}
             limite={limitePrestacao}
           />
         </main>

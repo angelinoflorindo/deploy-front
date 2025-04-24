@@ -6,8 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { EmprestimoDef } from "@/services/user.service";
 
-
-const Detalhes = ({data}:{data:EmprestimoDef}) => {
+const Detalhes = ({data, retorno}:{data:EmprestimoDef; retorno:any}) => {
 
 
     return (
@@ -48,7 +47,7 @@ const Detalhes = ({data}:{data:EmprestimoDef}) => {
                 <div className="flex flex-row justify-between py-2" >
                     <Link href={`/dashboard/proponente/${data.id}/avaliacao`}><Image src="/img/avaliacao.png" alt="imagem" className={global.footerImagem} width={30} height={30} /></Link>
                     <div className="bg-gray-100  w-30 h-15  font-bold flex rounded justify-center  items-center " >
-                        {data.valor},00kz
+                        {retorno},00kz
                     </div>
                     <Link href={`/dashboard/proponente/${data.id}/protecao`} ><Image src="/img/protecao.png" alt="imagem" className={global.footerImagem} width={30} height={30} /></Link>
                 </div>

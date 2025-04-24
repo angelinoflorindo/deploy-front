@@ -3,21 +3,23 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import styles from "@/modules/Login.module.css";
 import Conteudo from "./conteudo";
-import { buscarEmprestimoById, buscarUser } from "@/app/actions/auth";
+import { buscarCreditoById, buscarEmprestimoById, buscarUser } from "@/app/actions/auth";
 import { getServerSession } from "next-auth";
 
 const Protecao = async (context: { params: { id: string } }) => {
   const { id } = await context.params;
   const session = await getServerSession()
-  const data = await buscarEmprestimoById(id);
+  const data = await buscarCreditoById(id);
   const user = await buscarUser(session?.user.email)
-  const diversificado:any ={}
+  
+  /*const diversificado:any ={}
 
   if(data.taxaDiversificada){
     let income = data.valor*(1-(data.taxaDiversificada/100))
     let inteiro = Math.round(income)
     diversificado.saldo = inteiro
   }
+    */
 
   //console.log("emprestimo", data)
   return (
@@ -28,7 +30,7 @@ const Protecao = async (context: { params: { id: string } }) => {
 
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
-          <Conteudo saldo={diversificado.saldo}  formData={data} userData={user}/>
+          <Conteudo saldo={data.valor}  formData={data} userData={user}/>
         </main>
 
         {/* Rodapé Fixo */}

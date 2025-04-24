@@ -5,13 +5,14 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import styles from "@/modules/Login.module.css"
 import Conteudo from "./conteudo";
-import { buscarEmprestimoById } from "@/app/actions/auth";
+import { buscarCreditoById, buscarEmprestimoById } from "@/app/actions/auth";
+import { CreditoDef } from "@/services/Credito.service";
 
 
 
 const Avaliacao = async (context:{params:{id:string}}) => {
   const {id} = await context.params
-  const data = await buscarEmprestimoById(id)
+  const data:CreditoDef = await buscarCreditoById(id)
   //console.log("adicionais", data)
   return (
     <div className={styles.container}>

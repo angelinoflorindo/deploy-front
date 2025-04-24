@@ -6,13 +6,14 @@ import Link from "next/link";
 import { EmprestimoDef, UserInfo } from "@/services/user.service";
 import { SubmitButton } from "@/components/submitButton";
 import { diversificarEmprestimo } from "@/app/actions/auth";
+import { CreditoDef } from "@/services/Credito.service";
 
 const Conteudo = ({
   formData,
   userData,
   saldo
 }: {
-  formData: EmprestimoDef;
+  formData: CreditoDef;
   userData: UserInfo;
   saldo:any;
 }) => {
@@ -31,13 +32,7 @@ const Conteudo = ({
       <div className="py-2">
         <h2 className="font-bold  py-2">Quantia disponível</h2>
         <small>Avalie quanto podes aplicar neste pedido</small>
-        {formData.Diversificacaos.length > 0 ? (
-          <div className="flex justify-center items-center shadow-md p-2 h-20 w-[50%]">
-            <b>{(formData.taxaDiversificada > 100 || formData.taxaDiversificada === 100 ) ? (
-              <><small className="font-bold">Esgotado</small></>
-            ): (<>{saldo},00kz</>) }</b>
-          </div>
-        ) : (
+        {saldo > 0 ?  (<>{saldo},00kz</>) : (
           <>
             <h3 className="text-blue-500 font-bold">
               {" "}

@@ -300,8 +300,6 @@ export async function vincluarDebito(_prevState: any, formData: FormData) {
 }
 
 
-
-
 export async function buscarPropostasOpDevedor(
   devedorId: any,
   rules: any
@@ -314,7 +312,7 @@ export async function buscarPropostasOpDevedor(
   conditions.progresso = 'CONCLUIDO' // QUANDO JÁ FOI APROVADO PELO ADMIN
 
   const res = await fetch(
-    `${process.env.CLIENT_URL}/api/devedor/credito?page=${conditions.page}&proponente=${devedorId}&pendencia=${conditions.pendencia}&progresso=${conditions.progresso}`
+    `${process.env.CLIENT_URL}/api/devedor/credito?page=${conditions.page}&devedor=${devedorId}&pendencia=${conditions.pendencia}&progresso=${conditions.progresso}`
   );
 
   if (!res.ok) {
@@ -351,6 +349,26 @@ export async function buscarPropostasOpProponente(
 
   return res.json();
 }
+
+
+
+
+
+export async function buscarCreditoById(id: any) {
+  const res = await fetch(
+    `${process.env.CLIENT_URL}/api/devedor/credito/proposta/${id}`
+  );
+
+  if (!res.ok) {
+    const text = await res.text(); // debug da resposta
+    console.error("Erro na API:", res.status, text);
+    return;
+  }
+
+  return res.json();
+}
+
+
 
 export async function buscarEmprestimoById(id: any) {
   const res = await fetch(
@@ -445,6 +463,34 @@ export async function reembolsarFundos(_prevState: any, formData: FormData) {
 
   return redirect("/dashboard");
 }
+
+
+// Transferir creditos
+export async function concederCredito(_prevState: any, formData: FormData) {
+  const response = await fetch(
+    `${process.env.CLIENT_URL}/api/operacao/investir/credito`,
+    {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: formData.get("userId"),
+        valor: formData.get("valor"),
+        devUserId: formData.get("devUserId"),
+        creditoId: formData.get("creditoId"),
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    return redirect("/dashboard/proponente");
+  }
+
+ 
+  return redirect("/dashboard");
+}
+
 
 // Transferir emprestimos ao proponente
 

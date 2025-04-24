@@ -5,18 +5,18 @@ import styles from "@/modules/Login.module.css";
 import { EmprestimoDef, UserInfo } from "@/services/user.service";
 import { SubmitButton } from "@/components/submitButton";
 import { useActionState, useEffect, useState } from "react";
-import { concederEmprestimo } from "@/app/actions/auth";
+import { CreditoDef } from "@/services/Credito.service";
+import { concederCredito } from "@/app/actions/auth";
 
 const Conteudo = ({
-  emprestimoData,
-  saldo,
+  creditoData,
   userData,
 }: {
-  emprestimoData: EmprestimoDef;
-  saldo: any;
+  creditoData: CreditoDef;
+
   userData: UserInfo;
 }) => {
-  const [state, formAction] = useActionState(concederEmprestimo, null);
+  const [state, formAction] = useActionState(concederCredito, null);
   const [valor, setValor] = useState('');
 
   const handleValor = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,14 +24,8 @@ const Conteudo = ({
   };
 
   useEffect(() => {
-    if (
-      emprestimoData.taxaDiversificada > 100 ||
-      emprestimoData.taxaDiversificada === 100
-    ) {
-      setValor(emprestimoData.valor);
-    }
 
-    setValor(saldo);
+    setValor(creditoData.valor);
   }, []);
 
   return (
@@ -40,12 +34,12 @@ const Conteudo = ({
         <div className={global.cartao_esquerda_depositar}>
           Transferir fundos à
           <h1>
-            <b>Beneficiário:</b> {emprestimoData.Proponente.User.primeiro_nome}{" "}
-            {emprestimoData.Proponente.User.segundo_nome}
+            <b>Beneficiário:</b> {creditoData.Devedor.User.primeiro_nome}{" "}
+            {creditoData.Devedor.User.segundo_nome}
           </h1>
           <h3>
             <b>Telemovel: </b>
-            {emprestimoData.Proponente.User.telemovel}
+            {creditoData.Devedor.User.telemovel}
           </h3>
         </div>
         <div className={global.cartao_direita_depositar}>
@@ -63,10 +57,10 @@ const Conteudo = ({
       >
           <input
           type="text"
-          name="emprestimoId"
+          name="creditoId"
           readOnly={true}
           hidden={true}
-          value={emprestimoData.id}
+          value={creditoData.id}
         />
         <input
           type="text"
@@ -78,10 +72,10 @@ const Conteudo = ({
 
         <input
           type="text"
-          name="propUserId"
+          name="devUserId"
           readOnly={true}
           hidden={true}
-          value={emprestimoData.Proponente.User.id}
+          value={creditoData.Devedor.User.id}
         />
 
         <input

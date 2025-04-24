@@ -54,6 +54,6 @@ export interface CreditoDef{
   Devedor:{
     id:any,
     User:UserProps,
-    DebitoVinculado:DebitoVinculadoProps[]
+    DebitoVinculados:DebitoVinculadoProps[]
   }
 }

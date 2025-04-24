@@ -3,16 +3,19 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Conteudo from "./conteudo";
 import styles from "@/modules/Login.module.css";
-import { buscarEmprestimoById, buscarUser } from "@/app/actions/auth";
+import { buscarCreditoById, buscarEmprestimoById, buscarUser } from "@/app/actions/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { EmprestimoDef, UserInfo } from "@/services/user.service";
+import { CreditoDef } from "@/services/Credito.service";
 
 const Emprestar = async (context: { params: { id: string } }) => {
   const { id } = await context.params;
   const session = await getServerSession();
   const user: UserInfo = await buscarUser(session?.user.email);
-  const data: EmprestimoDef = await buscarEmprestimoById(id);
+  const data: CreditoDef = await buscarCreditoById(id);
+ 
+ /*
   const diversificado: any = {};
 
   // aqui se investe segundo a taxa disposta
@@ -22,6 +25,7 @@ const Emprestar = async (context: { params: { id: string } }) => {
     let inteiro = Math.round(income);
     diversificado.saldo = inteiro; 
   })
+    */
 
    // Aqui se investe segundo o disponível
    /*
@@ -41,9 +45,8 @@ const Emprestar = async (context: { params: { id: string } }) => {
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
           <Conteudo
-            saldo={diversificado.saldo}
             userData={user}
-            emprestimoData={data}
+            creditoData={data}
           />
         </main>
 

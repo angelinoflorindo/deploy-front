@@ -1,7 +1,5 @@
 import {
   converterString,
-  gerarCodigoCartao,
-  gerarNumeroCartao,
 } from "@/app/actions/auth";
 import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";

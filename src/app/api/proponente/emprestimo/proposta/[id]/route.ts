@@ -40,7 +40,7 @@ export async function GET(
       include: [
         {
           model: EmprestimoSolidario,
-          include: [{ model: Solidario, attributes: ['parentesco', 'taxa', 'tipo'] }],
+          include: [{ model: Solidario, where:{estado:true}, attributes: ['parentesco', 'taxa', 'tipo'] }],
         },
         {model:Diversificacao},
         {
