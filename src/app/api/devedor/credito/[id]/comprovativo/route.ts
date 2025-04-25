@@ -8,13 +8,13 @@ import { setupAssociations } from "@/lib/associations";
 import Documento from "@/models/Documento";
 import User from "@/models/User";
 import DebitoVinculado from "@/models/DebitoVinculado";
-import Devedor from "@/models/Devedor";
 
+import Devedor from "@/models/Devedor";
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await context.params;
+  const { id } = params;
   const uuid = await converterString(id);
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
@@ -22,77 +22,69 @@ export async function GET(
     return NextResponse.json("Não autorizado", { status: 403 });
   }
 
-  
   try {
-   
-  await sequelize.authenticate();
-  await sequelize.sync();
-  setupAssociations();
+    await sequelize.authenticate();
+    await sequelize.sync();
+    setupAssociations();
 
-  const vinculo = await DebitoVinculado.findOne({
-    where: { id: uuid },
-  });
+    const vinculo = await DebitoVinculado.findOne({
+      where: { id: uuid },
+    });
 
-  const devedor = await Devedor.findOne({where:{id:vinculo?.devedor_id}})
-  const usuario = await User.findOne({where:{id:devedor?.user_id}})
+    const devedor = await Devedor.findOne({ where: { id: vinculo?.devedor_id } });
+    const usuario = await User.findOne({ where: { id: devedor?.user_id } });
 
-  //console.log('vinculos', vinculo)
+    const infovinculo = {
+      data: vinculo?.createdAt.getDate(),
+      horas: vinculo?.createdAt.getHours(),
+    };
 
-  const infovinculo = {
-    data: vinculo?.createdAt.getDate(),
-    horas: vinculo?.createdAt.getHours(),
-  };
+    const documentos = await Documento.findAll({
+      where: {
+        user_id: usuario?.id,
+        tipo: "ORDEM_DEBITO",
+        estado: true,
+      },
+    });
 
-  const documentos = await Documento.findAll({
-    where: {
-      user_id: usuario?.id,
-      tipo: "ORDEM_DEBITO",
-      estado:true
-    },
-  });
+    const comprovativo: any = {};
+    documentos.forEach((doc) => {
+      if (
+        doc.createdAt.getDate() === infovinculo.data &&
+        doc.createdAt.getHours() === infovinculo.horas
+      ) {
+        comprovativo.nome_original = doc.nome_original;
+        comprovativo.nome_salvado = doc.nome_salvado;
+        comprovativo.extensao = doc.extensao;
+        comprovativo.tamanho = doc.tamanho;
+        comprovativo.user_id = doc.user_id;
+        return;
+      }
+    });
 
-  const comprovativo: any = {};
-  documentos.forEach((doc) => {
-    if (
-      doc.createdAt.getDate() === infovinculo.data &&
-      doc.createdAt.getHours() === infovinculo.horas
-    ) {
-      comprovativo.nome_original = doc.nome_original;
-      comprovativo.nome_salvado = doc.nome_salvado;
-      comprovativo.extensao = doc.extensao;
-      comprovativo.tamanho = doc.tamanho;
-      comprovativo.user_id = doc.user_id;
-      return;
-    }
-  });
-
-  // Caminho absoluto do arquivo (ajuste conforme tua estrutura)
-  const filePath = path.join(
-    process.cwd(),
-    "uploads",
-    `user_${comprovativo.user_id}`,
-    `${comprovativo.nome_salvado}`
-  );
-
-  console.log("caminho", filePath);
-
-  if (!fs.existsSync(filePath)) {
-    return NextResponse.json(
-      { message: "Arquivo não encontrado" },
-      { status: 404 }
+    const filePath = path.join(
+      process.cwd(),
+      "uploads",
+      `user_${comprovativo.user_id}`,
+      `${comprovativo.nome_salvado}`
     );
-  }
 
-  const fileBuffer = fs.readFileSync(filePath);
+    if (!fs.existsSync(filePath)) {
+      return NextResponse.json(
+        { message: "Arquivo não encontrado" },
+        { status: 404 }
+      );
+    }
 
-  return new NextResponse(fileBuffer, {
-    status: 200,
-    headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="${comprovativo.nome_salvado}"`,
-    },
-  });
+    const fileBuffer = fs.readFileSync(filePath);
 
+    return new NextResponse(fileBuffer, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="${comprovativo.nome_salvado}"`,
+      },
+    });
   } catch (error) {
     console.error("error de download", error);
     return NextResponse.json(error, { status: 404 });
