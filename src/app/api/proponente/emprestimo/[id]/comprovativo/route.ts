@@ -12,9 +12,10 @@ import User from "@/models/User";
 
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await context.params;
+  const { id } = params;
+  
   const uuid = await converterString(id);
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
