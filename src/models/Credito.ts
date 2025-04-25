@@ -29,7 +29,7 @@ export default class Credito extends Model {
   })
   tipo!: TipoCredito;
 
-  @Column(DataType.FLOAT)
+  @Column(DataType.BIGINT)
   valor!: number;
 
   @Column(DataType.INTEGER)

@@ -23,7 +23,7 @@ export default {
         onDelete: 'CASCADE',
       },
       valor_retido: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         allowNull: false,
       },
       data_desbloqueio: {

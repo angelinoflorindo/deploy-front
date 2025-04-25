@@ -24,7 +24,7 @@ export default class NegocearEmprestimos extends Model {
   @Column(DataType.INTEGER)
   emprestimo_id!: number;
 
-  @Column({ type: DataType.FLOAT, allowNull: false })
+  @Column({ type: DataType.BIGINT, allowNull: false })
   valor!: number;
 
   @Column({ type: DataType.INTEGER, allowNull: false })

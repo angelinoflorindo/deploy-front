@@ -19,7 +19,7 @@ export default class Pagamento extends Model {
   @Column(DataType.INTEGER)
   id!: number;
 
-  @Column({ type: DataType.FLOAT, allowNull: false })
+  @Column({ type: DataType.BIGINT, allowNull: false })
   valor!: number;
 
   @Column({ type: DataType.STRING, allowNull: false })

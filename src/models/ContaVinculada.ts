@@ -20,7 +20,7 @@ export default class ContaVinculada extends Model {
   @Column(DataType.INTEGER)
   proponente_id!: number;
 
-  @Column(DataType.INTEGER)
+  @Column(DataType.BIGINT)
   valor_retido!: number;
 
   @Column(DataType.DATE)

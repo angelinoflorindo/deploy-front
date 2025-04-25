@@ -22,7 +22,7 @@ export default {
         allowNull: false,
       },
       valor: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.BIGINT,
         allowNull: false,
       },
       prestacao: {

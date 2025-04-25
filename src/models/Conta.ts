@@ -20,7 +20,7 @@ export default class Conta extends Model {
   @Column(DataType.STRING)
   nome!: string;
 
-  @Column(DataType.INTEGER)
+  @Column(DataType.BIGINT)
   salario!: number;
 
   @Column(DataType.STRING)

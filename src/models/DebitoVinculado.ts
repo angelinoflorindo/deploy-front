@@ -20,7 +20,7 @@ export default class DebitoVinculado extends Model {
   @Column(DataType.INTEGER)
   devedor_id!: number;
 
-  @Column(DataType.INTEGER)
+  @Column(DataType.BIGINT)
   valor_retido!: number;
 
   @Column(DataType.DATE)

@@ -17,7 +17,7 @@ export default class Deposito extends Model {
   @Column(DataType.INTEGER)
   id!: number;
 
-  @Column(DataType.FLOAT)
+  @Column(DataType.BIGINT)
   valor!: number;
 
   @Column({ type: DataType.BOOLEAN, defaultValue: true })

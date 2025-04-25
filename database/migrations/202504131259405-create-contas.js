@@ -17,7 +17,7 @@ export default {
         allowNull: false,
       },
       salario: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         allowNull: false,
       },
       iban: {

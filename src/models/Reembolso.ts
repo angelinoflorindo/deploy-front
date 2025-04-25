@@ -20,7 +20,7 @@ export default class Reembolso extends Model {
   id!: number;
 
   @Column({
-    type: DataType.FLOAT,
+    type: DataType.BIGINT,
     allowNull: false,
   })
   valor!: number;
