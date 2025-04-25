@@ -8,13 +8,16 @@ import { setupAssociations } from "@/lib/associations";
 import Documento from "@/models/Documento";
 import User from "@/models/User";
 import DebitoVinculado from "@/models/DebitoVinculado";
-
 import Devedor from "@/models/Devedor";
+
+
+
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: number }>}
 ) {
-  const { id } = params;
+  const id =  (await params).id
+  
   const uuid = await converterString(id);
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
