@@ -11,7 +11,7 @@ const Proponente =  async (context: { params: { id: string } }) => {
   const {id} = await context.params
   const data = await buscarEmprestimoById(id)
   const retorno = await calcularJurosSimples(data.valor, ((data.juro-2)/100), data.prestacao)
-   const arround = Math.round(retorno)
+  const arround = Math.round(retorno)
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg" >

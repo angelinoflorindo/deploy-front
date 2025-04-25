@@ -1,10 +1,9 @@
-import {
-  converterString,
-} from "@/app/actions/auth";
+import { converterString } from "@/app/actions/auth";
 import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
 import Carteira from "@/models/Carteira";
 import Credito from "@/models/Credito";
+import Credora from "@/models/Credora";
 import Deposito from "@/models/Deposito";
 import Devedor from "@/models/Devedor";
 import Diversificacao from "@/models/Diversificacao";
@@ -27,15 +26,24 @@ export async function GET(req: NextRequest) {
 
     const result = await User.findOne({
       where: { email: email },
-      attributes: ["id", "primeiro_nome", "segundo_nome", "email", "bilhete", "telemovel"],
+      attributes: [
+        "id",
+        "primeiro_nome",
+        "segundo_nome",
+        "email",
+        "bilhete",
+        "telemovel",
+      ],
       include: [
         {
           model: Devedor,
           include: [
             {
               model: Credito,
-              where: { estado: true, progresso: "CONCLUIDO" },
-            
+              where: { estado: true, progresso: "CONCLUIDO", pendencia: false },
+              include: [
+                { model: Credora, where: { estado: true, corrente: true } },
+              ],
             },
           ],
         },
@@ -54,34 +62,35 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
 
   const valor = await converterString(body.valor);
-  const userId = await converterString(body.userId);
+  const userId = await converterString(body.userId); // investidor
   const creditoId = await converterString(body.creditoId);
   const devUserId = await converterString(body.devUserId);
+  const devedorId = await converterString(body.devedorId);
+  const investidorId = await converterString(body.investidorId);
   const income: any = {};
 
-  
-  
-  
   try {
     await sequelize.authenticate();
     await sequelize.sync();
     setupAssociations();
-  
+
     const carteira = await Carteira.findOne({ where: { user_id: userId } }); // carteira do  investidor
-  
-    const credito = await Credito.findOne({where:{id:creditoId, valor:valor}});
+
+    const credito = await Credito.findOne({
+      where: { id: creditoId, devedor_id: devedorId, pendencia: true },
+    });
     const devCarteira = await Carteira.findOne({
       where: { user_id: devUserId },
     }); // carteira do  proponente
-  
+
     if (valor > carteira!.saldo) {
       console.log("investimento maior que a carteira!");
       return NextResponse.json(false, { status: 200 });
     }
-  
+
     income.saqueado = carteira!.saldo - valor;
     income.bonificado = devCarteira!.saldo + valor;
-  
+
     const result = await sequelize.transaction(async (t) => {
       // Parte do investidor
       const historicoSaque = await Saque.create(
@@ -92,7 +101,12 @@ export async function POST(req: NextRequest) {
         { saldo: income.saqueado },
         { where: { user_id: userId }, transaction: t }
       );
-  
+
+      const investimento = await Credora.create(
+        { investidor_id: investidorId, credito_id: creditoId },
+        { transaction: t }
+      ); // o Atributo corrente pode ser alterado quando o crédito vencer
+
       // Parte do proponente
       const historicoDeposito = await Deposito.create(
         { valor: valor, estado: true, pendencia: false, user_id: userId },
@@ -102,27 +116,26 @@ export async function POST(req: NextRequest) {
         { saldo: income.bonificado },
         { where: { user_id: devUserId }, transaction: t }
       );
-  
-      if(credito){
+
+      if (credito) {
         income.creditoResolvido = await Credito.update(
           { pendencia: false, progresso: "CONCLUIDO" },
           { where: { id: creditoId }, transaction: t }
         );
       }
-      const creditoResolvido = income.creditoResolvido
-  
+      const creditoResolvido = income.creditoResolvido;
+
       return {
         historicoDeposito,
         historicoSaque,
         desconto,
         bonus,
         creditoResolvido,
+        investimento,
       };
     });
-  
-    return NextResponse.json(result,{status:200});
-    
-  
+
+    return NextResponse.json(result, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }

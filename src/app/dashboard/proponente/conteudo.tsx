@@ -9,7 +9,10 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { buscarPropostasOpDevedor, buscarPropostasOpProponente } from "@/app/actions/auth";
+import {
+  buscarPropostasOpDevedor,
+  buscarPropostasOpProponente,
+} from "@/app/actions/auth";
 import { redirect } from "next/navigation";
 import { CreditoDef } from "@/services/Credito.service";
 
@@ -25,37 +28,47 @@ export default function Conteudo({ user }: { user: UserInfo }) {
   const [totalPagesC, setTotalPagesC] = useState(1);
 
   const fetchData = async () => {
-    const search = await buscarPropostasOpProponente(user.Proponente.id, {
-      pageE,
-    });
+    const response: any = {};
+    if (user.Proponente) {
+      response.search = await buscarPropostasOpProponente(user.Proponente.id, {
+        pageE,
+      });
+    } else {
+      response.search = await buscarPropostasOpProponente(null, {
+        pageE,
+      });
+    }
+    if (user.Devedor) {
+      response.credito = await buscarPropostasOpDevedor(user.Devedor.id, {
+        pageC,
+      });
+    } else {
+      response.credito = await buscarPropostasOpDevedor(null, {
+        pageC,
+      });
+    }
 
-    const creditoProps = await buscarPropostasOpDevedor(user.Devedor.id, {
-      pageE,
-    });
+    setPropostas(response.search.data);
+    setTotalPagesE(response.search.totalPages);
+    setPageE(response.search.total);
 
-
-    setPropostas(search.data);
-    setTotalPagesE(search.totalPages);
-    setPageE(search.total);
-
-    setPageC(creditoProps.total);
-    setCreditos(creditoProps.data)
-    setTotalPagesC(creditoProps.totalPages);
+    setPageC(response.credito.total);
+    setCreditos(response.credito.data);
+    setTotalPagesC(response.credito.totalPages);
   };
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  if(user.Investidor === null || user.Investidor == undefined){
-    return redirect('/ferramenta/investidor')
+  if (user.Investidor === null || user.Investidor == undefined) {
+    return redirect("/ferramenta/investidor");
   }
 
-  
-  if(user.Carteira === null || user.Carteira == undefined){
-    return redirect('/ferramenta/cartao')
+  if (user.Carteira === null || user.Carteira == undefined) {
+    return redirect("/ferramenta/cartao");
   }
-  
+
   return (
     <div>
       <h1 className="text-xl font-bold mb-4">Solicitações!</h1>
@@ -89,24 +102,32 @@ export default function Conteudo({ user }: { user: UserInfo }) {
               {propostas.map((emp, index) => {
                 return (
                   <div key={emp.id}>
-                  <Link
-                    href={`/dashboard/proponente/${emp.id}`}
-                    className="flex flex-row justify-evenly p-4   shadow-md w-[100%]"
-                  >
-                    <Image src="/img/guardiao.png" width={40} height={30} alt="" />
-                    <div className="flex flex-col w-[100%] px-4">
-                      <span>{emp.Proponente.User.primeiro_nome} {" "} {emp.Proponente.User.segundo_nome}</span>
-                      <div className="flex flex-row justify-between items-center">
-                        <span className="flex font-bold justify-center items-center">
-                          {emp.valor},00kz
+                    <Link
+                      href={`/dashboard/proponente/${emp.id}`}
+                      className="flex flex-row justify-evenly p-4   shadow-md w-[100%]"
+                    >
+                      <Image
+                        src="/img/guardiao.png"
+                        width={40}
+                        height={30}
+                        alt=""
+                      />
+                      <div className="flex flex-col w-[100%] px-4">
+                        <span>
+                          {emp.Proponente.User.primeiro_nome}{" "}
+                          {emp.Proponente.User.segundo_nome}
                         </span>
-                        <span className="flex  justify-center items-center">
-                          <b className="px-2">{emp.juro}%</b> mensal
-                        </span>
+                        <div className="flex flex-row justify-between items-center">
+                          <span className="flex font-bold justify-center items-center">
+                            {emp.valor},00kz
+                          </span>
+                          <span className="flex  justify-center items-center">
+                            <b className="px-2">{emp.juro}%</b> mensal
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                </div>
+                    </Link>
+                  </div>
                 );
               })}
             </div>
@@ -134,28 +155,36 @@ export default function Conteudo({ user }: { user: UserInfo }) {
           </section>
         ) : (
           <section className="py-4">
-              <div>
+            <div>
               {creditos.map((emp, index) => {
                 return (
                   <div key={emp.id}>
-                  <Link
-                    href={`/dashboard/devedor/${emp.id}`}
-                    className="flex flex-row justify-evenly p-4   shadow-md w-[100%]"
-                  >
-                    <Image src="/img/guardiao.png" width={40} height={30} alt="" />
-                    <div className="flex flex-col w-[100%] px-4">
-                      <span>{emp.Devedor.User.primeiro_nome} {" "} {emp.Devedor.User.segundo_nome}</span>
-                      <div className="flex flex-row justify-between items-center">
-                        <span className="flex font-bold justify-center items-center">
-                          {emp.valor},00kz
+                    <Link
+                      href={`/dashboard/devedor/${emp.id}`}
+                      className="flex flex-row justify-evenly p-4   shadow-md w-[100%]"
+                    >
+                      <Image
+                        src="/img/guardiao.png"
+                        width={40}
+                        height={30}
+                        alt=""
+                      />
+                      <div className="flex flex-col w-[100%] px-4">
+                        <span>
+                          {emp.Devedor.User.primeiro_nome}{" "}
+                          {emp.Devedor.User.segundo_nome}
                         </span>
-                        <span className="flex  justify-center items-center">
-                          <b className="px-2">{emp.juro}%</b> mensal
-                        </span>
+                        <div className="flex flex-row justify-between items-center">
+                          <span className="flex font-bold justify-center items-center">
+                            {emp.valor},00kz
+                          </span>
+                          <span className="flex  justify-center items-center">
+                            <b className="px-2">{emp.juro}%</b> mensal
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                </div>
+                    </Link>
+                  </div>
                 );
               })}
             </div>

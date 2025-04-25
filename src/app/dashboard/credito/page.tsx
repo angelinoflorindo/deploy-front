@@ -7,29 +7,24 @@ import Image from "next/image";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { UserInfo } from "@/services/user.service";
-import { buscarUser } from "@/app/actions/auth";
+import { buscarCreditoValidadoByEmail, buscarUser } from "@/app/actions/auth";
+import { CreditoUserProps } from "@/services/Credito.service";
+import { redirect } from "next/navigation";
 
 const Credito = async () => {
+  const session = await getServerSession();
+  const user: UserInfo = await buscarUser(session?.user.email);
 
-   const session = await getServerSession();
-   const user:UserInfo = await buscarUser(session?.user.email)
-   
-    /*const emprestimo: EmprestimoValidado = await buscarEmprestimoValidadoByEmail(
-      session?.user.email
-    );
-    const diverseData = emprestimo.Proponente.Emprestimos[0].Diversificacaos;
-    const multipleIncome: any = [];
-  
-    if (emprestimo.Proponente.Emprestimos[0].Diversificacaos.length > 0) {
-      diverseData.forEach((data, index) => {
-        multipleIncome.push({
-          investidorId: data.investidor_id,
-          content: Math.round(emprestimo.Proponente.Emprestimos[0].valor * (data.taxa / 100)),
-        });
-      });
-    }
-    */
-  
+  const credito: CreditoUserProps = await buscarCreditoValidadoByEmail(
+    session?.user.email
+  );
+
+ //console.log('creditos', credito)
+
+  if (user.Carteira == null || user.Carteira == undefined) {
+    console.log("sem conta digital");
+    return redirect("/ferramenta/cartao");
+  }
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
@@ -102,35 +97,34 @@ const Credito = async () => {
           </section>
 
           <h2 className="text-xl font-bold mb-2">Efectuar pagamentos</h2>
-                      <section>
-                        {/*BUSANDO OS EMPRESTIMOS POR INVESTIDORES*/}
-
-                      {/*
-                      
-                            <div>
-                            <Link
-                              key={emprestimo.Proponente.Emprestimos[0].Diversificacaos[0].investidor_id}
-                              href={`/dashboard/emprestimo/${emprestimo.Proponente.Emprestimos[0].Diversificacaos[0].investidor_id}`}
-                              className="flex flex-col px-4 py-2 h-20 shadow-md w-[100%]"
-                            >
-                              <span className="flex flex-row justify-between">
-                                <p className="font-bold"> Emprestimo até</p>{" "}
-                                {emprestimo.Proponente.Emprestimos[0].prazo.split("T")[0]}
-                              </span>
-                              <div className="flex flex-row justify-between">
-                                <span className="py-1">
-                                  <b> Prestação:</b>
-                                  {emprestimo.Proponente.Emprestimos[0].prestacao}
-                                </span>
-                                <span className="flex flex-row justify-between">
-                                  <b>Valor:</b>{" "}
-                                  {multipleIncome[0].content},00kz
-                                </span>
-                              </div>
-                            </Link>
-                          </div>
-                      */}
-                      </section>
+          <section>
+            {/*BUSANDO OS EMPRESTIMOS POR INVESTIDORES*/}
+            {credito.Devedor ? (
+              <div>
+                <Link
+                  key={credito.Devedor.Creditos[0].id}
+                  href={`/dashboard/credito/${credito.Devedor.Creditos[0].Credoras[0].investidor_id}`}
+                  className="flex flex-col px-4 py-2 h-20 shadow-md w-[100%]"
+                >
+                  <span className="flex flex-row justify-start">
+                    <p className="font-bold"> Crédito até: </p>{" "}
+                    {credito.Devedor.Creditos[0].prazo.split("T")[0]}
+                  </span>
+                  <div className="flex flex-row justify-between">
+                    <span className="py-1">
+                      <b> Prestação:</b>
+                      {credito.Devedor.Creditos[0].prestacao}
+                    </span>
+                    <span className="flex flex-row justify-between">
+                      <b>Valor:</b> {credito.Devedor.Creditos[0].valor},00kz
+                    </span>
+                  </div>
+                </Link>
+              </div>
+            ) : (
+              <div className="text-blue-500 font-bold"> Sem crétidos </div>
+            )}
+          </section>
         </main>
         <Footer />
       </div>

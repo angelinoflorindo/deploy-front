@@ -1,11 +1,8 @@
-
-"use server"
+"use server";
 import { createSession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 import { NegociarEmprestimoProps } from "@/services/user.service";
-
-
 
 export async function buscarUser(email: any) {
   const response = await fetch(
@@ -59,7 +56,7 @@ export async function convidarSolidario(formData: any) {
 
   if (!res.ok) {
     console.log("Error ao convidar");
-    return null
+    return null;
   }
   return res.json();
 }
@@ -70,9 +67,6 @@ export async function buscarGuardiao(id: any) {
   );
   return response.json();
 }
-
-
-
 
 export async function buscarSolidarios(email: any) {
   const response = await fetch(
@@ -88,7 +82,12 @@ export async function buscarPropostaInvestidor(email: any) {
   return response.json();
 }
 
-
+export async function buscarPagamentoByDev(id: any) {
+  const response = await fetch(
+    `${process.env.CLIENT_URL}/api/operacao/pagar/${id}`
+  );
+  return response.json();
+}
 
 export async function buscarReembolsoByProp(id: any) {
   const response = await fetch(
@@ -271,7 +270,7 @@ export async function vincluarConta(_prevState: any, formData: FormData) {
 
 export async function vincluarDebito(_prevState: any, formData: FormData) {
   const userId = formData.get("user_id");
-  const returnUrl = formData.get("returnUrl")
+  const returnUrl = formData.get("returnUrl");
 
   formData.append("tipo", "ORDEM_DEBITO");
   formData.append("titulo", "Débito de retenção");
@@ -311,20 +310,17 @@ export async function vincluarDebito(_prevState: any, formData: FormData) {
   return redirect(`/dashboard/credito/${returnUrl}/solicitar`);
 }
 
-
-export async function buscarPropostasOpDevedor(
-  devedorId: any,
-  rules: any
-) {
+export async function buscarPropostasOpDevedor(devedorId: any, rules: any) {
   const conditions: any = {};
 
-  if (rules.pageE) conditions.page = rules.pageE || 1;
+  if (rules.pageC) conditions.page = rules.pageC;
+  if (devedorId) conditions.devedorId = devedorId;
 
   conditions.pendencia = true; // QUANDO NINGUÉM AINDA INVESTIU
-  conditions.progresso = 'CONCLUIDO' // QUANDO JÁ FOI APROVADO PELO ADMIN
+  conditions.progresso = "CONCLUIDO"; // QUANDO JÁ FOI APROVADO PELO ADMIN
 
   const res = await fetch(
-    `${process.env.CLIENT_URL}/api/devedor/credito?page=${conditions.page}&devedor=${devedorId}&pendencia=${conditions.pendencia}&progresso=${conditions.progresso}`
+    `${process.env.CLIENT_URL}/api/devedor/credito?page=${conditions.page}&devedor=${conditions.devedorId}&pendencia=${conditions.pendencia}&progresso=${conditions.progresso}`
   );
 
   if (!res.ok) {
@@ -335,8 +331,6 @@ export async function buscarPropostasOpDevedor(
 
   return res.json();
 }
-
-
 
 export async function buscarPropostasOpProponente(
   proponenteId: any,
@@ -344,13 +338,13 @@ export async function buscarPropostasOpProponente(
 ) {
   const conditions: any = {};
 
-  if (rules.pageE) conditions.page = rules.pageE || 1;
-
+  if (rules.pageE) conditions.page = rules.pageE;
+  if (proponenteId) conditions.proponenteId = proponenteId;
   conditions.pendencia = true; // QUANDO NINGUÉM AINDA INVESTIU
-  conditions.progresso = 'CONCLUIDO' // QUANDO JÁ FOI APROVADO PELO ADMIN
+  conditions.progresso = "CONCLUIDO"; // QUANDO JÁ FOI APROVADO PELO ADMIN
 
   const res = await fetch(
-    `${process.env.CLIENT_URL}/api/proponente/emprestimo?page=${conditions.page}&proponente=${proponenteId}&pendencia=${conditions.pendencia}&progresso=${conditions.progresso}`
+    `${process.env.CLIENT_URL}/api/proponente/emprestimo?page=${conditions.page}&proponente=${conditions.proponenteId}&pendencia=${conditions.pendencia}&progresso=${conditions.progresso}`
   );
 
   if (!res.ok) {
@@ -361,10 +355,6 @@ export async function buscarPropostasOpProponente(
 
   return res.json();
 }
-
-
-
-
 
 export async function buscarCreditoById(id: any) {
   const res = await fetch(
@@ -380,8 +370,6 @@ export async function buscarCreditoById(id: any) {
   return res.json();
 }
 
-
-
 export async function buscarEmprestimoById(id: any) {
   const res = await fetch(
     `${process.env.CLIENT_URL}/api/proponente/emprestimo/proposta/${id}`
@@ -390,6 +378,21 @@ export async function buscarEmprestimoById(id: any) {
   if (!res.ok) {
     const text = await res.text(); // debug da resposta
     console.error("Erro na API:", res.status, text);
+    return;
+  }
+
+  return res.json();
+}
+
+// Buscar por créditos já investidos
+export async function buscarCreditoValidadoByEmail(email: any) {
+  const res = await fetch(
+    `${process.env.CLIENT_URL}/api/operacao/investir/credito/?email=${email}`
+  );
+
+  if (!res.ok) {
+    const text = await res.text(); // debug da resposta
+    console.error("Erro na API:", res.status);
     return;
   }
 
@@ -476,6 +479,32 @@ export async function reembolsarFundos(_prevState: any, formData: FormData) {
   return redirect("/dashboard");
 }
 
+// garantir pagamento de créditos
+export async function pagarCreditos(_prevState: any, formData: FormData) {
+  const response = await fetch(`${process.env.CLIENT_URL}/api/operacao/pagar`, {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({
+      investUserId: formData.get("investUserId"),
+      investidorId: formData.get("investidorId"),
+      valor: formData.get("valor"),
+      prestacao: formData.get("prestacao"),
+      detalhe: formData.get("detalhe"),
+      devUserId: formData.get("devUserId"),
+      devedorId: formData.get("devedorId"),
+      creditoId: formData.get("creditoId"),
+    }),
+  });
+
+  const investidorId = converterString(formData.get("investidorId"));
+  if (!response.ok) {
+    return redirect(`/dashboard/emprestimo/${investidorId}`);
+  }
+
+  return redirect("/dashboard");
+}
 
 // Transferir creditos
 export async function concederCredito(_prevState: any, formData: FormData) {
@@ -488,8 +517,10 @@ export async function concederCredito(_prevState: any, formData: FormData) {
       },
       body: JSON.stringify({
         userId: formData.get("userId"),
+        investidorId: formData.get("investidorId"),
         valor: formData.get("valor"),
         devUserId: formData.get("devUserId"),
+        devedorId: formData.get("devedorId"),
         creditoId: formData.get("creditoId"),
       }),
     }
@@ -499,10 +530,8 @@ export async function concederCredito(_prevState: any, formData: FormData) {
     return redirect("/dashboard/proponente");
   }
 
- 
   return redirect("/dashboard");
 }
-
 
 // Transferir emprestimos ao proponente
 
@@ -586,10 +615,10 @@ export async function solicitarCredito(_prevState: any, formData: FormData) {
 
   let Data: any = {};
 
-  Data.mesPrazo = new Date(JSON.stringify(info.prazo)).getUTCMonth() + 1  
-  Data.date = new Date().toLocaleDateString()
-  Data.mesActual = new Date(Data.date).getUTCMonth() + 1
-  
+  Data.mesPrazo = new Date(JSON.stringify(info.prazo)).getUTCMonth() + 1;
+  Data.date = new Date().toLocaleDateString();
+  Data.mesActual = new Date(Data.date).getUTCMonth() + 1;
+
   const duracaoMes = Data.mesPrazo - Data.mesActual;
 
   // Controlar o valor solicitado
@@ -601,7 +630,6 @@ export async function solicitarCredito(_prevState: any, formData: FormData) {
     }
   }
 
-  
   if (info.duracao == "60_DIAS") {
     if (info.valor > 150000 || duracaoMes > 2) {
       console.log("Excedeu os limites");
@@ -609,7 +637,6 @@ export async function solicitarCredito(_prevState: any, formData: FormData) {
     }
   }
 
-  
   if (info.duracao == "90_DIAS") {
     if (info.valor > 250000 || duracaoMes > 3) {
       console.log("Excedeu os limites");
@@ -627,7 +654,6 @@ export async function solicitarCredito(_prevState: any, formData: FormData) {
 
   if (!fundos.ok) {
     return redirect(`/dashboard/credito/${info.tipo}/solicitar`);
-
   }
   return redirect("/dashboard");
 }
@@ -731,8 +757,25 @@ export async function calcularJurosCompostos(
   taxa: number,
   prestacao: number
 ) {
+  /* const parcela = await calcularPrestacaoCompostas(principal, taxa, prestacao);
+  const montante = parcela * prestacao;
+  return Math.round(montante)
+  */
   const montante = principal * Math.pow(1 + taxa, prestacao);
-  return Number(montante.toFixed(2));
+  return Math.round(montante);
+}
+
+export async function calcularPrestacaoCompostas(
+  principal: any,
+  taxa: number,
+  prestacao: number
+) {
+  const i = taxa; // taxa já em decimal (ex: 0.05 para 5%)
+  const numerador = i * Math.pow(1 + i, prestacao);
+  const denominador = Math.pow(1 + i, prestacao) - 1;
+  const parcela = principal * (numerador / denominador);
+
+  return Math.round(parcela); // prestação fixa mensal
 }
 
 export async function calcularJurosSimples(

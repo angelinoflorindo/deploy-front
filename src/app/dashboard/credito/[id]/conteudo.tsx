@@ -4,26 +4,25 @@ import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
 import { SubmitButton } from "@/components/submitButton";
 import { useActionState, useEffect, useState } from "react";
-import { reembolsarFundos } from "@/app/actions/auth";
-import { EmprestimoValidado} from "@/services/Emprestimo.service";
+import { pagarCreditos, reembolsarFundos } from "@/app/actions/auth";
+import { EmprestimoValidado } from "@/services/Emprestimo.service";
 import { InvestidorProps } from "@/services/user.service";
+import { CreditoProps, CreditoUserProps } from "@/services/Credito.service";
 
 const Conteudo = ({
-  emprestimoData,
+  creditoData,
   userData,
   saldo,
   prestacao,
   montante,
-  limite
 }: {
-  emprestimoData: EmprestimoValidado;
+  creditoData: CreditoUserProps;
   userData: InvestidorProps;
   saldo: any;
-  prestacao:any;
-  montante:any;
-  limite:any
+  prestacao: any;
+  montante: any;
 }) => {
-  const [state, formAction] = useActionState(reembolsarFundos, null);
+  const [state, formAction] = useActionState(pagarCreditos, null);
   const [valor, setValor] = useState("");
 
   const handleValor = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,8 +60,17 @@ const Conteudo = ({
         action={formAction}
         className="flex flex-col justify-center items-center"
       >
-        <div className="flex justify-between  w-[100%]"> <span> <b>Prestação</b>: {prestacao}/ {limite} </span> <span><b>Totalidade</b>: {montante},00kz</span></div>
-        
+        <div className="flex justify-between  w-[100%]">
+          {" "}
+          <span>
+            {" "}
+            <b>Prestação</b>: {prestacao}/3
+          </span>{" "}
+          <span>
+            <b>Totalidade</b>: {montante},00kz
+          </span>
+        </div>
+
         <input
           type="text"
           name="investidorId"
@@ -70,7 +78,7 @@ const Conteudo = ({
           hidden={true}
           value={userData.id}
         />
-        
+
         <input
           type="text"
           name="investUserId"
@@ -89,25 +97,25 @@ const Conteudo = ({
 
         <input
           type="text"
-          name="emprestimoId"
+          name="creditoId"
           readOnly={true}
           hidden={true}
-          value={userData.Diversificacaos[0].emprestimo_id}
+          value={creditoData.Devedor.Creditos[0].id}
         />
         <input
           type="text"
-          name="propUserId"
+          name="devUserId"
           readOnly={true}
           hidden={true}
-          value={emprestimoData.id}
+          value={creditoData.id}
         />
 
         <input
           type="text"
-          name="proponenteId"
+          name="devedorId"
           readOnly={true}
           hidden={true}
-          value={emprestimoData.Proponente.id}
+          value={creditoData.Devedor.id}
         />
 
         <input

@@ -12,7 +12,7 @@ const Devedor =  async (context: { params: { id: string } }) => {
   const {id} = await context.params
   const data:CreditoDef = await buscarCreditoById(id)
   const retorno = await calcularJurosCompostos(data.valor, ((data.juro-2)/100), 3)
-  const arround = Math.round(retorno)
+ 
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg" >
@@ -22,7 +22,7 @@ const Devedor =  async (context: { params: { id: string } }) => {
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
           {/*  <Pagamento /> */}
-          <Detalhes data={data} retorno={arround} />
+          <Detalhes data={data} retorno={retorno} />
         </main>
 
         {/* Rodapé Fixo */}

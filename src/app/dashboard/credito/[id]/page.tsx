@@ -3,32 +3,31 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Conteudo from "./conteudo";
 import styles from "@/modules/Login.module.css";
-import { buscarEmprestimoValidadoByEmail, buscarInvestidor, buscarReembolsoByProp, calcularJurosSimples, calcularPrestacaoSimples } from "@/app/actions/auth";
+import { buscarCreditoValidadoByEmail, buscarEmprestimoValidadoByEmail, buscarInvestidor, buscarPagamentoByDev, buscarReembolsoByProp, calcularJurosCompostos, calcularJurosSimples, calcularPrestacaoSimples } from "@/app/actions/auth";
 import { getServerSession } from "next-auth";
 import {InvestidorProps, UserInfo } from "@/services/user.service";
 import { EmprestimoValidado, ReembolsoProps } from "@/services/Emprestimo.service";
+import { CreditoUserProps, PagamentosProps } from "@/services/Credito.service";
 
 const Pagamento = async (context: { params: { id: string } }) => {
   const { id } = await context.params; // id do investidor
   const session = await getServerSession();
-  const emprestimoByUser:EmprestimoValidado = await buscarEmprestimoValidadoByEmail(session?.user.email)
+  const creditoByUser:CreditoUserProps = await buscarCreditoValidadoByEmail(session?.user.email)
   const investidordata:InvestidorProps   = await buscarInvestidor(id)
-  const saldo = Math.round(investidordata.Diversificacaos[0].Emprestimo.valor * (investidordata.Diversificacaos[0].taxa / 100))
-  const limitePrestacao = investidordata.Diversificacaos[0].Emprestimo.prestacao
+
   // calcular a prestação
   const prestacao :any = {}
-  const reembolsoData:ReembolsoProps = await buscarReembolsoByProp(emprestimoByUser.Proponente.id)
+  const pagamentoData:PagamentosProps = await buscarPagamentoByDev(creditoByUser.Devedor.id)
 
-  if(!reembolsoData || reembolsoData === undefined){
+  if(!pagamentoData || pagamentoData === undefined){
     prestacao.valor = 1
-  } else if(reembolsoData.prestacao < limitePrestacao){
-    prestacao.valor = reembolsoData.prestacao + 1
+  } else if(pagamentoData.prestacao < 3){
+    prestacao.valor = pagamentoData.prestacao + 1
 
   } 
-
-  const taxa = (investidordata.Diversificacaos[0].Emprestimo.juro)/100
-  const montante = await calcularJurosSimples(saldo,taxa,limitePrestacao)
-  const simples = await calcularPrestacaoSimples(saldo, taxa, limitePrestacao)
+  const taxa = creditoByUser.Devedor.Creditos[0].juro -2
+  const montante = await calcularJurosCompostos(creditoByUser.Devedor.Creditos[0].valor,(taxa/100),3)
+  const parcela = await calcularPrestacaoSimples(creditoByUser.Devedor.Creditos[0].valor,(taxa/100), 3)
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
@@ -39,11 +38,11 @@ const Pagamento = async (context: { params: { id: string } }) => {
         <main className="flex-1 overflow-y-auto p-4 bg-white">
           <Conteudo
             userData={investidordata}
-            emprestimoData={emprestimoByUser}
-            saldo={simples}
+            creditoData={creditoByUser}
+            saldo={parcela}
             prestacao={prestacao.valor}
             montante={montante}
-            limite={limitePrestacao}
+
           />
         </main>
 

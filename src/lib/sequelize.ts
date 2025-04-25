@@ -29,6 +29,9 @@ import CreditoSolidario from "../models/CreditoSolidario";
 import ContaVinculada from "../models/ContaVinculada";
 import DebitoVinculado from "../models/DebitoVinculado";
 import NegocearEmprestimo from "../models/NegocearEmprestimo";
+import Credora from "../models/Credora";
+
+
 import {config} from 'dotenv'
 
 
@@ -72,7 +75,8 @@ config();
     Pagamento,
     ContaVinculada,
     DebitoVinculado,
-    NegocearEmprestimo
+    NegocearEmprestimo,
+    Credora
   ],
   logging:false,
 

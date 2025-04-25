@@ -19,57 +19,53 @@ export async function GET(
   const { id } = await context.params;
   const uuid = await converterString(id);
   
-  await sequelize.authenticate();
-  await sequelize.sync();
-  setupAssociations();
 
- 
-  const credito = await Credito.findOne({
-    where: { id: uuid },
-    attributes: [
-      "id", "juro", "prestacao", "valor","tipo", "prazo","progresso", "devedor_id",
-      "created_at", "updated_at",
-      [fn("COUNT", literal("DISTINCT CreditoSolidarios.id")), "totalGuardiaos"],
-      [fn("COALESCE", fn("SUM", col("CreditoSolidarios.Solidario.taxa")), 0), "totalTaxa"],
-    ],
-    include: [
-      {
-        model: CreditoSolidario,
-        include: [{ model: Solidario, where:{estado:true}, attributes: ['parentesco', 'taxa', 'tipo'] }],
-      },
-      {
-        model: Devedor,
-        include: [
-          {
-            model: User,
-            attributes: ["id", "primeiro_nome", "segundo_nome", "email", "telemovel"],
-          },
-          {
-            model: DebitoVinculado,
-            attributes: ['id', 'valor_retido', 'created_at', 'updated_at'],
-            where: { estado: true },
-            required: false,
-          },
-        ],
-      },
-    ],
-    group: ["Credito.id", "Devedor.id", "Devedor->User.id", "Devedor->DebitoVinculados.id"],
-    raw: false,
-  });
-
-  //console.log("validar", credito)
-  return NextResponse.json(credito, {status:200});
-
-
-
-
-  /*
   try {
-
+    await sequelize.authenticate();
+    await sequelize.sync();
+    setupAssociations();
+  
+   
+    const credito = await Credito.findOne({
+      where: { id: uuid, progresso:'CONCLUIDO', estado:true, pendencia:true },
+      attributes: [
+        "id", "juro", "prestacao", "valor","tipo", "prazo","progresso", "devedor_id",
+        "created_at", "updated_at",
+        [fn("COUNT", literal("DISTINCT CreditoSolidarios.id")), "totalGuardiaos"],
+        [fn("COALESCE", fn("SUM", col("CreditoSolidarios.Solidario.taxa")), 0), "totalTaxa"],
+      ],
+      include: [
+        {
+          model: CreditoSolidario,
+          include: [{ model: Solidario, where:{estado:true}, attributes: ['parentesco', 'taxa', 'tipo'] }],
+        },
+        {
+          model: Devedor,
+          include: [
+            {
+              model: User,
+              attributes: ["id", "primeiro_nome", "segundo_nome", "email", "telemovel"],
+            },
+            {
+              model: DebitoVinculado,
+              where: { estado: true },
+              required: false,
+            },
+          ],
+        },
+      ],
+      group: ["Credito.id", "Devedor.id", "Devedor->User.id", "Devedor->DebitoVinculados.id"],
+      raw: false,
+    });
+  
+    //console.log("validar", credito)
+    return NextResponse.json(credito, {status:200});
+  
+  
     
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
-  }*/
+  }
 }
 
 // PUT - Atualizar a taxa de participação do investidor

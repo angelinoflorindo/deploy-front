@@ -69,6 +69,13 @@ const Conteudo = ({
           hidden={true}
           value={userData.id}
         />
+           <input
+          type="text"
+          name="investidorId"
+          readOnly={true}
+          hidden={true}
+          value={userData.Investidor.id}
+        />
 
         <input
           type="text"
@@ -76,6 +83,13 @@ const Conteudo = ({
           readOnly={true}
           hidden={true}
           value={creditoData.Devedor.User.id}
+        />
+           <input
+          type="text"
+          name="devedorId"
+          readOnly={true}
+          hidden={true}
+          value={creditoData.Devedor.id}
         />
 
         <input

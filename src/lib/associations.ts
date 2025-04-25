@@ -26,6 +26,7 @@ import CreditoSolidario from "../models/CreditoSolidario";
 import ContaVinculada from "../models/ContaVinculada";
 import DebitoVinculado from "../models/DebitoVinculado"
 import NegocearEmprestimo from "../models/NegocearEmprestimo";
+import Credora from "@/models/Credora";
 
 export function setupAssociations() {
   User.hasOne(Pessoa, { foreignKey: "user_id" });
@@ -134,6 +135,17 @@ export function setupAssociations() {
   });
 
   
+  Investidor.hasMany(Credora, {
+    foreignKey: "investidor_id",
+    onDelete: "CASCADE",
+  });
+
+  Credora.belongsTo(Investidor, {
+    foreignKey: "investidor_id",
+    onDelete: "CASCADE",
+  });
+
+  
   Investidor.hasMany(NegocearEmprestimo, {
     foreignKey: "investidor_id",
     onDelete: "CASCADE",
@@ -152,6 +164,17 @@ export function setupAssociations() {
   
   Diversificacao.belongsTo(Emprestimo, {
     foreignKey: "emprestimo_id",
+    onDelete: "CASCADE",
+  });
+
+  Credito.hasMany(Credora, {
+    foreignKey: "credito_id",
+    onDelete: "CASCADE",
+  });
+
+  
+  Credora.belongsTo(Credito, {
+    foreignKey: "credito_id",
     onDelete: "CASCADE",
   });
 

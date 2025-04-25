@@ -14,14 +14,14 @@ const Conteudo = ({ formData }: { formData: CreditoDef }) => {
       <h3>Valores retidos </h3>
       {formData.Devedor.DebitoVinculados.length > 0 ? (
         <div className="flex justify-between items-center  w-[100%]  ">
-          <span className="flex flex-col font-bold   w-40 h-30 justify-center items-center shadow-md ">
-            {formData.Devedor.DebitoVinculados[0].valor_retido}
-            <p className="py-2">Valor retido</p>
+          <span className="flex flex-col   w-40 h-30 justify-center items-center shadow-md ">
+            <b>{formData.Devedor.DebitoVinculados[0].valor_retido}</b>
+            <small className="py-2">Valor retido</small>
           </span>
 
-          <span className="flex flex-col font-bold  w-40 h-30 justify-center items-center shadow-md">
-            {formData.Devedor.DebitoVinculados[0].updatedAt.split("T")[0]}
-            <p className="py-2">Data de confirmação</p>
+          <span className="flex flex-col  w-40 h-30 justify-center items-center shadow-md">
+            <b>{formData.Devedor.DebitoVinculados[0].updatedAt.split("T")[0]}</b>
+            <small className="py-2">Data de confirmação</small>
           </span>
         </div>
       ) : (
