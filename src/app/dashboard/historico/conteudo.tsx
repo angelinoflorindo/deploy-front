@@ -10,45 +10,77 @@ import {
   SolidarioFace,
 } from "@/services/user.service";
 import { clientAPI } from "@/app/lib/definitions";
+import {
+  aceitarSolidario,
+  buscarPropostaInvestidor,
+  buscarSolidarios,
+  rejeitarSolidario,
+} from "@/app/actions/auth";
+import { useSession } from "next-auth/react";
 
 const url = clientAPI;
-const Conteudo = ({
-  negoData,
-  formData,
-}: {
-  negoData: NegociarEmprestimoProps[];
-  formData: SolidarioFace;
-}) => {
-
-  const [pessoa, setPessoa] = useState('')
-  const [user, setUser] = useState('')
-  const [tipo, setTipo] = useState('')
-
-  useEffect(()=>{
-    if(formData){
-      setPessoa(formData.pessoa_id)
-      setUser(formData.user_id)
-      setTipo(formData.tipo)
+const Conteudo = () => {
+  const { data: session, status } = useSession();
+  const [pessoa, setPessoa] = useState("");
+  const [user, setUser] = useState("");
+  const [tipo, setTipo] = useState("");
+  const [negoData, setNegoData] = useState<NegociarEmprestimoProps[]>([]);
+  const [formData, setFormData] = useState<SolidarioFace>({
+    id:undefined,
+    parentesco:undefined,
+    taxa:undefined,
+    user_id:undefined,
+    tipo:undefined,
+    pessoa_id:undefined,
+    updatedAt:undefined,
+    createdAt:undefined,
+    User:{
+      id: undefined,
+      primeiro_nome: undefined,
+      segundo_nome: undefined,
+      password: undefined,
+      email: undefined,
+      bilhete: undefined,
+      telemovel: undefined,
+      genero: undefined
     }
-  }, [])
-  function aceitarSolidario() {
-    fetch(`${url}/api/pessoa/solidario/${formData.id}`, { method: "PUT" , 
-      headers:{
-        'content-type':'application/json'
-      },
-      body:JSON.stringify({ pessoa_id:pessoa, user_id:user, tipo:tipo })
-    });
+  });
 
-    window.location.reload()
-  }
+  const fetchData = async () => {
+    if (session?.user.email) {
+      const result = await buscarPropostaInvestidor(session?.user.email);
+      const res = await buscarSolidarios(session?.user.email);
+      setNegoData(result);
+      setFormData(res);
+    }
+  };
 
-  function rejeitarSolidario() {
-    fetch(`${url}/api/pessoa/solidario/${formData.id}`, { method: "DELETE"});
+  useEffect(() => {
+    fetchData;
+  }, []);
+  useEffect(() => {
+    if (formData) {
+      setPessoa(formData.pessoa_id);
+      setUser(formData.user_id);
+      setTipo(formData.tipo);
+    }
+  }, []);
+  const onAccept = async () => {
+    const info = {
+      solidario: pessoa,
+      user: user,
+      tipo: tipo,
+    };
+   await aceitarSolidario(info);
+ 
+    window.location.reload();
+  };
 
-    window.location.reload()
-  }
-
-
+  const onReject = async () => {
+    await rejeitarSolidario(formData.id);
+  
+    window.location.reload();
+  };
 
   return (
     <div>
@@ -80,13 +112,13 @@ const Conteudo = ({
           </div>
           <div className="flex flex-row justify-between">
             <button
-              onClick={rejeitarSolidario}
+              onClick={onReject}
               className="px-4 py-2 bg-red-500 text-white rounded  cursor-pointer"
             >
               rejeitar
             </button>
             <button
-              onClick={aceitarSolidario}
+              onClick={onAccept}
               className="px-4 py-2 bg-violet-500 text-white rounded  cursor-pointer"
             >
               aceitar

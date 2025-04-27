@@ -856,3 +856,31 @@ export async function calcularPrestacaoSimples(
   const result = Math.round(amortizacao + juroMensal);
   return result;
 }
+
+
+// funções adicionais
+
+export async function aceitarSolidario(data:any){
+  const res =  await fetch(`${process.env.CLIENT_URL}/api/pessoa/solidario/${data.solidario}`, { method: "PUT" , 
+    headers:{
+      'content-type':'application/json'
+    },
+    body:JSON.stringify({ pessoa_id:data.pessoa, user_id:data.user, tipo:data.tipo })
+  });
+  if(!res.ok){
+    return
+  }
+  return res.json()
+
+}
+
+
+
+export async function rejeitarSolidario(id:any){
+ const res = await fetch(`${process.env.CLIENT_URL}/api/pessoa/solidario/${id}`, { method: "DELETE"});
+ if(!res.ok){
+  return
+}
+ return res.json()
+
+}
