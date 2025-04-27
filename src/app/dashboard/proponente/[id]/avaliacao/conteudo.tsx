@@ -1,10 +1,55 @@
-import React from "react";
-import global from "@/modules/global.module.css";
-import Image from "next/image";
+'use client';
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { EmprestimoDef } from "@/services/user.service";
+import { useParams } from "next/navigation";
+import { buscarEmprestimoById } from "@/app/actions/auth";
 
-const Conteudo = ({ formData }: { formData: EmprestimoDef }) => {
+const Conteudo = () => {
+  const params = useParams();
+  const id = params.id;
+  const [formData, setFormData] = useState<EmprestimoDef>({
+    id: undefined,
+    pendencia: undefined,
+    juro: undefined,
+    estado: true,
+    Diversificacaos: [],
+    EmprestimoSolidarios: [],
+    prazo: undefined,
+    prestacao: undefined,
+    progresso: undefined,
+    Proponente: {
+      id: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+      ContaVinculadas: [],
+    },
+    proponente_id: undefined,
+    totalTaxa: "",
+    totalGuardiaos: undefined,
+    user_id: undefined,
+    valor: undefined,
+    taxaDiversificada: undefined,
+    createdAt: undefined,
+    updatedAt: undefined,
+  });
+
+  const fetchData = async () => {
+    const data = await buscarEmprestimoById(id);
+    setFormData(data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <div className="flex flex-col justify-start items-start">
       <h2 className="text-xl font-bold mb-4">Garantias associadas</h2>

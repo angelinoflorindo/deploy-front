@@ -5,14 +5,9 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import styles from "@/modules/Login.module.css"
 import Conteudo from "./conteudo";
-import { getServerSession } from "next-auth";
-import { buscarPropostasOpProponente, buscarUser } from "@/app/actions/auth";
-import { UserInfo } from "@/services/user.service";
 
 
-const Proponente =  async () => {
-  const session = await getServerSession()
-  const user:UserInfo = await buscarUser(session?.user.email)
+const Proponente =   () => {
 return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg" >
@@ -21,7 +16,7 @@ return (
 
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">       
-         <Conteudo user={user} />
+         <Conteudo  />
         </main>
 
         {/* Rodapé Fixo */}

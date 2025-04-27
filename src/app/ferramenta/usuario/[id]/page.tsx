@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "@/modules/Login.module.css";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { clientAPI } from "@/app/lib/definitions";
 import { ConjugueProps, PessoaProps, UserInfo } from "@/services/user.service";
 import { redirect, useRouter, useParams } from "next/navigation";
@@ -10,7 +10,10 @@ import Footer from "@/components/footer";
 
 const userApi = clientAPI;
 const Page = () => {
-  const { data: session, status } = useSession();
+  const params = useParams();
+  const router = useRouter();
+  const id = params.id;
+  
   const [user, setUser] = useState<PessoaProps | null>(null);
   const [conjugueData, setConjugueData] = useState<ConjugueProps>({
     id: "",
@@ -19,10 +22,7 @@ const Page = () => {
     nivel_instrucao: "",
     data_nascimento: "",
   });
-  const params = useParams();
-  const router = useRouter();
-
-  const id = params.id;
+ 
 
   const handleConjugue = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

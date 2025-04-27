@@ -1,12 +1,69 @@
-import React from "react";
+'use client';
+import React, { useEffect, useState } from "react";
 import styles from "@/modules/Login.module.css";
 import global from "@/modules/global.module.css";
 import Image from "next/image";
 import Link from "next/link";
-import { EmprestimoDef } from "@/services/user.service";
 import { CreditoDef } from "@/services/Credito.service";
+import { buscarCreditoById, calcularJurosCompostos } from "@/app/actions/auth";
+import { useParams, useRouter } from "next/navigation";
 
-const Detalhes = ({ data, retorno }: { data: CreditoDef; retorno: any }) => {
+const Detalhes = () => {
+  const params = useParams();
+  const id = params.id;
+  const router = useRouter()
+  const [data, setData] = useState<CreditoDef>({
+    id:undefined,
+    juro:undefined,
+    estado:false,
+    prazo:undefined,
+    totalTaxa:"",
+    pendencia:undefined,
+    prestacao:undefined,
+    progresso:undefined,
+    totalGuardiaos:0,
+    user_id:undefined,
+    valor:undefined,
+    devedor_id:undefined,
+    updatedAt:undefined,
+    createdAt:undefined,
+    taxaDiversificada:undefined,
+    CreditoSolidarios:[],
+    Devedor:{
+      id: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined
+      },
+      DebitoVinculados: []
+    }
+  });
+  const [retorno, setRetorno] = useState(0);
+
+  const fetchData = async () => {
+    const result: CreditoDef = await buscarCreditoById(id);
+    const response = await calcularJurosCompostos(result.valor,(result.juro - 2) / 100,3);
+    setRetorno(response);
+    setData(result);
+  };
+
+      useEffect(() => {
+        if (!id) {
+          console.error('ID inválido');
+          router.push("/")
+          return  
+        }
+      }, [id]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <div className="flex flex-col justify-center items-center ">
       <h1 className="font-bold text-center">

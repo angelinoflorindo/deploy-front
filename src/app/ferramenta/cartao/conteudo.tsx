@@ -2,19 +2,34 @@
 import Image from "next/image";
 import global from "@/modules/global.module.css";
 import Link from "next/link";
-import { CarteiraProps, UserProps } from "@/services/user.service";
+import { CarteiraProps, UserInfo, UserProps } from "@/services/user.service";
 import { clientAPI } from "@/app/lib/definitions";
 import { redirect } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { buscarUser } from "@/app/actions/auth";
 
 const url = clientAPI;
-const Conteudo = ({
-  carteira,
-  userData,
-}: {
-  carteira: CarteiraProps;
-  userData: UserProps;
-}) => {
+const Conteudo = ( ) => {
+  const [carteira, setCarteira] = useState<CarteiraProps>({  id: undefined,
+    codigo: undefined,
+    createdAt: undefined,
+    numero: undefined,
+    saldo: undefined,
+    updatedAt: undefined,
+    user_id: undefined,})
+  const [userData, setUserData] = useState<UserProps>({
+    id: undefined,
+    primeiro_nome: undefined,
+    segundo_nome: undefined,
+    password: undefined,
+    email: undefined,
+    bilhete: undefined,
+    telemovel: undefined,
+    genero: undefined})
+
+  const { data: session, status } = useSession();
+
   async function gerarCartao() {
     //Gerar Cartão digital
     const cartaoDigital = await fetch(`${url}/api/usuario/carteira`, {
@@ -31,17 +46,17 @@ const Conteudo = ({
     return redirect("/ferramenta/cartao");
   }
 
- /* const updateTransations = async () => {
-    const res = await fetch(
-      `${url}/api/operacao/depositar?page=1&pendencia=false&limit=1&order=updated_at`
-    );
-
-    console.log(await res.json())
+  const fetchData = async () => {
+    
+  const user: UserInfo = await buscarUser(session?.user?.email);
+  setUserData(user)
+  setCarteira(user.Carteira)
   };
 
   useEffect(() => {
-    updateTransations();
-  }, []);*/
+    fetchData();
+  }, []);
+
   return (
     <div className={global.grid}>
       <header className={global.cartao_header}>

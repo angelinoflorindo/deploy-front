@@ -1,61 +1,242 @@
 "use client";
 
 import { clientAPI } from "@/app/lib/definitions";
-import {
-  EmprestimoDef,
-  EmprestimoProps,
-  UserInfo,
-} from "@/services/user.service";
+import { EmprestimoDef, UserInfo } from "@/services/user.service";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { buscarPropostasOpDevedor, buscarPropostasOpProponente } from "@/app/actions/auth";
-import { redirect } from "next/navigation";
+import {
+  buscarPropostasOpDevedor,
+  buscarPropostasOpProponente,
+  buscarUser,
+} from "@/app/actions/auth";
+import { useRouter } from "next/navigation";
 import { CreditoDef } from "@/services/Credito.service";
+import { useSession } from "next-auth/react";
 
-const url = clientAPI;
-export default function Conteudo({ user }: { user: UserInfo }) {
+
+export default function Conteudo() {
   const [propostas, setPropostas] = useState<EmprestimoDef[]>([]);
   const [creditos, setCreditos] = useState<CreditoDef[]>([]);
   const [step, setStep] = useState(true);
   const [pageE, setPageE] = useState(1);
   const [pageC, setPageC] = useState(1);
-
   const [totalPagesE, setTotalPagesE] = useState(1);
   const [totalPagesC, setTotalPagesC] = useState(1);
-
+  const { data: session, status } = useSession();
+  const [user, setUser] = useState<UserInfo>({
+    id: "",
+    bilhete: "",
+    email: "",
+    genero: "",
+    password: "",
+    primeiro_nome: "",
+    segundo_nome: "",
+    telemovel: "",
+    Carteira: {
+      id: "",
+      codigo: "",
+      createdAt: "",
+      numero: "",
+      saldo: "",
+      updatedAt: "",
+      user_id: "",
+    },
+    Depositos: {
+      id: "",
+      user_id: "",
+      estado: true,
+      pendencia: true,
+      createdAt: "",
+      updatedAt: "",
+      valor: "",
+    },
+    Devedor: {
+      id: "",
+      estado: true,
+      inadimplencia: "",
+      adimplencia: "",
+      solicitacao: "",
+      updatedAt: "",
+      createdAt: "",
+      user_id: "",
+    },
+    Investidor: {
+      id: undefined,
+      maior_risco: false,
+      maior_seguranca: false,
+      saque_antecipado: false,
+      fundo_protegido: false,
+      partilhar_emprestimo: false,
+      estado: true,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+      Diversificacaos: [],
+    },
+    Documentos: {
+      id: undefined,
+      tipo: undefined,
+      titulo: undefined,
+      nome_salvado: undefined,
+      nome_original: undefined,
+      extensao: undefined,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+    },
+    Papel: {
+      id: undefined,
+      perfil: undefined,
+    },
+    Pessoa: {
+      id: undefined,
+      estado_civil: undefined,
+      provincia: undefined,
+      municipio: undefined,
+      profissao: undefined,
+      user_id: undefined,
+      emprego_id: undefined,
+      residencia_id: undefined,
+      nivel_instrucao: undefined,
+      data_nascimento: undefined,
+      Conjugue: {
+        id: undefined,
+        nome_completo: undefined,
+        nivel_instrucao: undefined,
+        dependentes: undefined,
+        data_nascimento: undefined,
+      },
+      Emprego: {
+        id: undefined,
+        data_inicio: undefined,
+        sector: undefined,
+        cargo: undefined,
+        area: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+      },
+      Residencium: {
+        id: undefined,
+        tipo: undefined,
+        data_inicio: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+      },
+      Contum: {
+        id: undefined,
+        nome: undefined,
+        iban: undefined,
+        salario: undefined,
+        emprego_id: undefined,
+        pessoa_id: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+      },
+      User: {
+        id: undefined,
+        email: undefined,
+      },
+    },
+    Proponente: {
+      id: undefined,
+      solicitacao: undefined,
+      reembolsar: undefined,
+      satisfeitos: undefined,
+      insatisfeitos: undefined,
+      estado: false,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+      Emprestimos: [],
+    },
+    Reclamacaos: {
+      id: undefined,
+      assunto: undefined,
+      conteudo: undefined,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+    },
+    Saque: {
+      id: undefined,
+      taxa: undefined,
+      valor: undefined,
+      estado: true,
+      pendencia: true,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+    },
+  });
+const router = useRouter()
   const fetchData = async () => {
-    const search = await buscarPropostasOpProponente(user.Proponente.id, {
-      pageE,
-    });
+    if (session?.user.email) {
+      const response: UserInfo = await buscarUser(session?.user.email);
+      setUser(response);
 
-    const creditoProps = await buscarPropostasOpDevedor(user.Devedor.id, {
-      pageE,
-    });
+      const search = await buscarPropostasOpProponente(response.Proponente.id, {
+        pageE,
+      });
 
+      const creditoProps = await buscarPropostasOpDevedor(response.Devedor.id, {
+        pageE,
+      });
 
-    setPropostas(search.data);
-    setTotalPagesE(search.totalPages);
-    setPageE(search.total);
+      setPropostas(search.data);
+      setTotalPagesE(search.totalPages);
+      setPageE(search.total);
 
-    setPageC(creditoProps.total);
-    setCreditos(creditoProps.data)
-    setTotalPagesC(creditoProps.totalPages);
+      setPageC(creditoProps.total);
+      setCreditos(creditoProps.data);
+      setTotalPagesC(creditoProps.totalPages);
+    }
   };
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  if(user.Investidor === null || user.Investidor == undefined){
-    return redirect('/ferramenta/investidor')
+  if (user.Investidor === null || user.Investidor == undefined) {
+    router.push("/ferramenta/investidor");
+    return 
   }
 
-  
-  if(user.Carteira === null || user.Carteira == undefined){
-    return redirect('/ferramenta/cartao')
+  if (user.Carteira === null || user.Carteira == undefined) {
+    router.push("/ferramenta/cartao");
+    return 
   }
-  
+
   return (
     <div>
       <h1 className="text-xl font-bold mb-4">Solicitações!</h1>
@@ -89,24 +270,32 @@ export default function Conteudo({ user }: { user: UserInfo }) {
               {propostas.map((emp, index) => {
                 return (
                   <div key={emp.id}>
-                  <Link
-                    href={`/dashboard/proponente/${emp.id}`}
-                    className="flex flex-row justify-evenly p-4   shadow-md w-[100%]"
-                  >
-                    <Image src="/img/guardiao.png" width={40} height={30} alt="" />
-                    <div className="flex flex-col w-[100%] px-4">
-                      <span>{emp.Proponente.User.primeiro_nome} {" "} {emp.Proponente.User.segundo_nome}</span>
-                      <div className="flex flex-row justify-between items-center">
-                        <span className="flex font-bold justify-center items-center">
-                          {emp.valor},00kz
+                    <Link
+                      href={`/dashboard/proponente/${emp.id}`}
+                      className="flex flex-row justify-evenly p-4   shadow-md w-[100%]"
+                    >
+                      <Image
+                        src="/img/guardiao.png"
+                        width={40}
+                        height={30}
+                        alt=""
+                      />
+                      <div className="flex flex-col w-[100%] px-4">
+                        <span>
+                          {emp.Proponente.User.primeiro_nome}{" "}
+                          {emp.Proponente.User.segundo_nome}
                         </span>
-                        <span className="flex  justify-center items-center">
-                          <b className="px-2">{emp.juro}%</b> mensal
-                        </span>
+                        <div className="flex flex-row justify-between items-center">
+                          <span className="flex font-bold justify-center items-center">
+                            {emp.valor},00kz
+                          </span>
+                          <span className="flex  justify-center items-center">
+                            <b className="px-2">{emp.juro}%</b> mensal
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                </div>
+                    </Link>
+                  </div>
                 );
               })}
             </div>
@@ -134,28 +323,36 @@ export default function Conteudo({ user }: { user: UserInfo }) {
           </section>
         ) : (
           <section className="py-4">
-              <div>
+            <div>
               {creditos.map((emp, index) => {
                 return (
                   <div key={emp.id}>
-                  <Link
-                    href={`/dashboard/devedor/${emp.id}`}
-                    className="flex flex-row justify-evenly p-4   shadow-md w-[100%]"
-                  >
-                    <Image src="/img/guardiao.png" width={40} height={30} alt="" />
-                    <div className="flex flex-col w-[100%] px-4">
-                      <span>{emp.Devedor.User.primeiro_nome} {" "} {emp.Devedor.User.segundo_nome}</span>
-                      <div className="flex flex-row justify-between items-center">
-                        <span className="flex font-bold justify-center items-center">
-                          {emp.valor},00kz
+                    <Link
+                      href={`/dashboard/devedor/${emp.id}`}
+                      className="flex flex-row justify-evenly p-4   shadow-md w-[100%]"
+                    >
+                      <Image
+                        src="/img/guardiao.png"
+                        width={40}
+                        height={30}
+                        alt=""
+                      />
+                      <div className="flex flex-col w-[100%] px-4">
+                        <span>
+                          {emp.Devedor.User.primeiro_nome}{" "}
+                          {emp.Devedor.User.segundo_nome}
                         </span>
-                        <span className="flex  justify-center items-center">
-                          <b className="px-2">{emp.juro}%</b> mensal
-                        </span>
+                        <div className="flex flex-row justify-between items-center">
+                          <span className="flex font-bold justify-center items-center">
+                            {emp.valor},00kz
+                          </span>
+                          <span className="flex  justify-center items-center">
+                            <b className="px-2">{emp.juro}%</b> mensal
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                </div>
+                    </Link>
+                  </div>
                 );
               })}
             </div>

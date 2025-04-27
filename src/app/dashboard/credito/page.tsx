@@ -13,8 +13,11 @@ import { redirect } from "next/navigation";
 
 const Credito = async () => {
   const session = await getServerSession();
-  const user: UserInfo = await buscarUser(session?.user.email);
 
+  if(!session?.user.email){
+    return redirect("/")
+  }
+  const user: UserInfo = await buscarUser(session?.user.email);
   const credito: CreditoUserProps = await buscarCreditoValidadoByEmail(
     session?.user.email
   );
@@ -99,7 +102,7 @@ const Credito = async () => {
           <h2 className="text-xl font-bold mb-2">Efectuar pagamentos</h2>
           <section>
             {/*BUSANDO OS EMPRESTIMOS POR INVESTIDORES*/}
-            {credito.Devedor ? (
+            {credito.Devedor && credito.Devedor.Creditos.length>0 ? (
               <div>
                 <Link
                   key={credito.Devedor.Creditos[0].id}

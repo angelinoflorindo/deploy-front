@@ -1,8 +1,7 @@
 "use client";
 
 import { clientAPI } from "@/app/lib/definitions";
-import { DepositoProps, DocumentoProps } from "@/services/user.service";
-import { redirect } from "next/navigation";
+import {  DocumentoProps } from "@/services/user.service";
 import { useEffect, useState } from "react";
 
 const url = clientAPI;
@@ -18,7 +17,7 @@ export default function Conteudo() {
           method: "DELETE",
         });
         alert("Documento arquivado");
-        window.location.reload();
+        fetchData()
         break;
       case "baixar":
         window.open(

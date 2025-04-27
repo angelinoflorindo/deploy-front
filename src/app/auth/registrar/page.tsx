@@ -4,7 +4,7 @@ import styles from "@/modules/Login.module.css";
 import Header from "@/components/header";
 import { hashPassword } from "@/app/actions/auth";
 import { useState } from "react";
-import { redirect } from "next/navigation";
+import { useRouter} from "next/navigation";
 import { signIn } from "next-auth/react";
 import { clientAPI } from "@/app/lib/definitions";
 import { SubmitButton } from "@/components/submitButton";
@@ -13,7 +13,7 @@ const url = clientAPI;
 const RegisterForm = () => {
   const [step, setStep] = useState(1);
   const [gender, setGender] = useState("");
-
+  const router = useRouter()
   const [formData, setFormData] = useState({
     primeiro_nome: "",
     segundo_nome: "",
@@ -53,7 +53,8 @@ const RegisterForm = () => {
 
     if (picture === null || !picture) {
       console.log("Anexe os documentos!");
-      return redirect("/auth/registrar");
+       router.push("/auth/registrar");
+       return
     }
 
     const resp = await fetch(`${url}/api/usuario`, {
@@ -65,10 +66,11 @@ const RegisterForm = () => {
       body: JSON.stringify(usuario),
     });
     const response = await resp.json();
-    // console.log("user id", response.id);
     if (!resp.ok) {
       console.log("Error de sintaxe", resp.statusText);
-      return redirect("/auth/registrar");
+      router.push("/auth/registrar");
+      return 
+
     }
     const data = new FormData();
     data.append("tipo", "BILHETE");
@@ -86,7 +88,7 @@ const RegisterForm = () => {
 
     if (!result.ok) {
       console.log("Erro ao anexar documentos", result.statusText);
-      redirect("/auth/registrar");
+      router.push("/auth/registrar");
     }
 
     const res = await signIn("credentials", {
@@ -97,9 +99,13 @@ const RegisterForm = () => {
 
     if (res?.error) {
       console.log("Erro na autenticação:", res.error);
-      redirect("/");
+      router.push("/");
+      return 
+
     } else {
-      return redirect("/dashboard");
+      router.push("/dashboard");
+      return 
+
     }
   }
 
@@ -110,7 +116,7 @@ const RegisterForm = () => {
           <button 
             type="button"
             onClick={() => {
-              redirect("/");
+              router.push("/");
             }}
             className="px-4 py-2 bg-blue-500 text-white rounded  cursor-pointer"
           >

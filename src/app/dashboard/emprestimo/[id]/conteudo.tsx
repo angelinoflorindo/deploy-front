@@ -4,37 +4,141 @@ import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
 import { SubmitButton } from "@/components/submitButton";
 import { useEffect, useState } from "react";
-import { reembolsarFundos } from "@/app/actions/auth";
-import { EmprestimoValidado } from "@/services/Emprestimo.service";
+import {
+  buscarEmprestimoValidadoByEmail,
+  buscarInvestidor,
+  buscarReembolsoByProp,
+  calcularJurosSimples,
+  calcularPrestacaoSimples,
+  reembolsarFundos,
+} from "@/app/actions/auth";
+import {
+  EmprestimoValidado,
+  ReembolsoProps,
+} from "@/services/Emprestimo.service";
 import { InvestidorProps } from "@/services/user.service";
-import { useForm, useFormState } from "react-hook-form";
+import { useSession } from "next-auth/react";
+import { useParams, useRouter } from "next/navigation";
 
-const Conteudo = ({
-  emprestimoData,
-  userData,
-  saldo,
-  prestacao,
-  montante,
-  limite,
-}: {
-  emprestimoData: EmprestimoValidado;
-  userData: InvestidorProps;
-  saldo: any;
-  prestacao: any;
-  montante: any;
-  limite: any;
-}) => {
-  const { register, handleSubmit, control } = useForm<FormData>();
-  const { isDirty, isValid } = useFormState({ control });
+const Conteudo = () => {
+  const { data: session, status } = useSession();
+  const params = useParams();
+  const id = params.id;
+  const router = useRouter();
+  const [emprestimoData, setEmprestimoData] = useState<EmprestimoValidado>({
+    bilhete: undefined,
+    email: undefined,
+    id: undefined,
+    primeiro_nome: undefined,
+    Proponente: {
+      id: undefined,
+      createdAt: undefined,
+      estado: true,
+      updatedAt: undefined,
+      user_id: undefined,
+      Emprestimos: [
+        {
+          id: undefined,
+          valor: undefined,
+          estado: undefined,
+          juro: undefined,
+          prestacao: undefined,
+          prazo: undefined,
+          progresso: undefined,
+          proponente_id: undefined,
+          pendencia: undefined,
+          user_id: undefined,
+          createdAt: undefined,
+          updatedAt: undefined,
+          Diversificacaos: [],
+        },
+      ],
+    },
+    segundo_nome: undefined,
+  });
+  const [userData, setUserData] = useState<InvestidorProps>({
+    id: "",
+    maior_risco: false,
+    maior_seguranca: false,
+    estado: true,
+    saque_antecipado: false,
+    fundo_protegido: false,
+    partilhar_emprestimo: false,
+    user_id: "",
+    createdAt: "",
+    updatedAt: "",
+    User: {
+      id: "",
+      primeiro_nome: "",
+      segundo_nome: "",
+      password: "",
+      email: "",
+      bilhete: "",
+      telemovel: "",
+      genero: "",
+    },
+    Diversificacaos: [],
+  });
+  const [saldo, setSaldo] = useState(0);
+  const [prestacao, setPrestacao] = useState(0);
+  const [montante, setMontante] = useState(0);
+  const [limite, setLimite] = useState(0);
 
   const [valor, setValor] = useState("");
-
   const handleValor = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValor(e.target.value);
   };
 
+  const fetchData = async () => {
+    const emprestimoByUser: EmprestimoValidado =
+      await buscarEmprestimoValidadoByEmail(session?.user.email);
+    const investidordata: InvestidorProps = await buscarInvestidor(id);
+    const limitePrestacao =
+      investidordata.Diversificacaos[0].Emprestimo.prestacao;
+
+    // calcular a prestação
+    const prestacao: any = {};
+    const reembolsoData: ReembolsoProps = await buscarReembolsoByProp(
+      emprestimoByUser.Proponente.id
+    );
+
+    if (!reembolsoData || reembolsoData === undefined) {
+      prestacao.valor = 1;
+    } else if (reembolsoData.prestacao < limitePrestacao) {
+      prestacao.valor = reembolsoData.prestacao + 1;
+    }
+
+    const saldo = Math.round(
+      investidordata.Diversificacaos[0].Emprestimo.valor *
+        (investidordata.Diversificacaos[0].taxa / 100)
+    );
+    const taxa = investidordata.Diversificacaos[0].Emprestimo.juro / 100;
+    const montante = await calcularJurosSimples(saldo, taxa, limitePrestacao);
+    const simples = await calcularPrestacaoSimples(
+      saldo,
+      taxa,
+      limitePrestacao
+    );
+    const arround = Math.round(montante);
+
+    setMontante(arround);
+    setSaldo(simples);
+
+    setLimite(limitePrestacao);
+    setUserData(investidordata);
+    setEmprestimoData(emprestimoByUser);
+  };
   useEffect(() => {
-    setValor(saldo);
+    if (!id) {
+      console.error("ID inválido");
+      router.push("/");
+      return;
+    }
+  }, [id]);
+
+  useEffect(() => {
+    fetchData();
+    setValor(`${saldo}`);
   }, []);
 
   return (
@@ -61,7 +165,7 @@ const Conteudo = ({
         </div>
       </header>
       <form
-        onSubmit={handleSubmit(reembolsarFundos)}
+        action={reembolsarFundos}
         className="flex flex-col justify-center items-center"
       >
         <div className="flex justify-between  w-[100%]">

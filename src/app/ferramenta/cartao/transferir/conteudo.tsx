@@ -5,21 +5,21 @@ import styles from "@/modules/Login.module.css";
 import { UserInfo } from "@/services/user.service";
 import { SubmitButton } from "@/components/submitButton";
 
-const Conteudo = ({user}:{user:UserInfo}) => {
+const Conteudo = () => {
   return (
     <div className={global.grid}>
       <header className={global.cartao_header_depositar}>
         <div className={global.cartao_esquerda_depositar}>
           Transferir fundos à
           <h1>
-            <b>Gestor:</b> Angelino Franisco
+            <b>Gestor:</b> XXXXXXXXXX
           </h1>
           
           <h3>
-            <b>Conta:</b>Banco Sol
+            <b>Conta:</b>XXXXXXXXXX
           </h3>
           <h3>
-            <b>Iban:</b> 0040.0000.4234
+            <b>Iban:</b> XXXXXXXXXX
           </h3>
         </div>
         <div className={global.cartao_direita_depositar}>

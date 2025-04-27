@@ -5,15 +5,10 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Conteudo from "./conteudo";
 import styles from "@/modules/Login.module.css"
-import { getServerSession } from "next-auth";
-import { buscarUser } from "@/app/actions/auth";
-import { UserInfo } from "@/services/user.service";
 
 
 
-const Cartao = async () => {
-  const session = await getServerSession()
-  const user:UserInfo = await buscarUser(session?.user?.email)
+const Cartao =  () => {
   
   
   return (
@@ -24,7 +19,7 @@ const Cartao = async () => {
 
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
-          <Conteudo carteira={user.Carteira} userData={user} />
+          <Conteudo />
         </main>
 
         {/* Rodapé Fixo */}

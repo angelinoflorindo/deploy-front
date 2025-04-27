@@ -1,71 +1,73 @@
-import { buscarPessoa } from "@/app/actions/auth";
+"use client";
+import { buscarPessoa, submitDetalhes } from "@/app/actions/auth";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import styles from "@/modules/Login.module.css";
 import { PessoaDef } from "@/services/user.service";
-import { getServerSession } from "next-auth";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-const PageInfo = async (context: { params: { id: string } }) => {
-  const { id } = await context.params;
-  const session = await getServerSession();
+const PageInfo = async () => {
+  const params = useParams();
+  const id = params.id;
+  const [pessoaData, setPessoaData] = useState<PessoaDef>({
+    id: undefined,
+    municipio: undefined,
+    emprego_id: undefined,
+    user_id: undefined,
+    estado_civil: undefined,
+    residencia_id: undefined,
+    provincia: undefined,
+    nivel_instrucao: undefined,
+    data_nascimento: undefined,
+    Conjugue: {
+      id: undefined,
+      nome_completo: undefined,
+      nivel_instrucao: undefined,
+      dependentes: undefined,
+      data_nascimento: undefined,
+    },
+    Emprego: {
+      id: undefined,
+      data_inicio: undefined,
+      sector: undefined,
+      cargo: undefined,
+      area: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+    },
+    profissao: {},
+    Contum: {
+      id: undefined,
+      nome: undefined,
+      iban: undefined,
+      salario: undefined,
+      emprego_id: undefined,
+      pessoa_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+    },
+    Residencium: {
+      id: undefined,
+      tipo: undefined,
+      data_inicio: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+    },
+    User: {
+      id: undefined,
+      email: undefined,
+    },
+  });
+  const fetchData = async () => {
+    const pessoa: PessoaDef = await buscarPessoa(id);
+    setPessoaData(pessoa);
+  };
 
-  const pessoaData: PessoaDef = await buscarPessoa(id);
-  async function submitForm(formData: FormData) {
-    "use server";
-
-    const dataSend = {
-      nome: formData.get("nome"),
-      iban: formData.get("iban"),
-      salario: formData.get("salario"),
-      emprego_id: pessoaData.emprego_id,
-      pessoa_id: pessoaData.id,
-    };
-
-    formData.append("tipo", "DECLARACAO_TRABALHO");
-    formData.append("titulo", "Documentos financeiros");
-    formData.append("user_id", `${pessoaData.User.id}`);
-    const files = formData.getAll("scanner") as File[];
-
-    if (files[0].size === 0 || files.length === 0) {
-       return redirect("/ferramenta/detalhes");
-    }
-    const result = await fetch(`${process.env.CLIENT_URL}/api/upload`, {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!result.ok) {
-      console.log("Erro ao anexar documentos", result.statusText);
-      return redirect("/ferramenta/detalhes");
-    }
-
-    if (pessoaData.Contum) {
-      await fetch(
-        `${process.env.CLIENT_URL}/api/pessoa/conta/${pessoaData.Contum.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify(dataSend),
-        }
-      );
-
-      return redirect("/ferramenta/detalhes");
-    } else {
-      await fetch(`${process.env.CLIENT_URL}/api/pessoa/conta`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(dataSend),
-      });
-
-      return redirect("/ferramenta/detalhes");
-    }
-  }
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className={styles.Contuminer}>
@@ -75,11 +77,34 @@ const PageInfo = async (context: { params: { id: string } }) => {
 
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
-          <form action={submitForm}>
+          <form action={submitDetalhes}>
             <h2>
               <b>Informações financeiras</b>
             </h2>
 
+            <input
+              type="text"
+              name="pessoaId"
+              value={id}
+              readOnly={true}
+              hidden={true}
+            />
+
+            <input
+              type="text"
+              name="empregoId"
+              value={pessoaData.emprego_id}
+              readOnly={true}
+              hidden={true}
+            />
+            
+            <input
+              type="text"
+              name="userId"
+              value={pessoaData.user_id}
+              readOnly={true}
+              hidden={true}
+            />
             {pessoaData.Contum === null ? (
               <div>
                 <input

@@ -5,13 +5,8 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Conteudo from "./conteudo";
 import styles from "@/modules/Login.module.css"
-import { getServerSession } from "next-auth";
-import { buscarUser } from "@/app/actions/auth";
-import { UserInfo } from "@/services/user.service";
 
-const Transferir = async () => {
-  const session = await getServerSession()
-  const userData:UserInfo = await buscarUser(session?.user?.email)
+const Transferir =  () => {
 
   return (
     <div className={styles.container}>
@@ -21,7 +16,7 @@ const Transferir = async () => {
 
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
-          <Conteudo user={userData}/>
+          <Conteudo />
         </main>
 
         {/* Rodapé Fixo */}

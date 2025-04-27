@@ -2,7 +2,6 @@
 
 import { clientAPI } from "@/app/lib/definitions";
 import { CreditoProps } from "@/services/Credito.service";
-import { DepositoProps, EmprestimoProps } from "@/services/user.service";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -19,19 +18,19 @@ export default function Conteudo() {
           method: "PUT",
         });
         alert("Pedido aprovado");
-        window.location.reload();
+        fetchData()
         break;
       case "rejeitar":
         await fetch(`${url}/api/devedor/credito/${id}`);
         alert("Pedido Rejeitado");
-        window.location.reload();
+        fetchData()
         break;
       case "eliminar":
         await fetch(`${url}/api/devedor/credito/${id}`, {
           method: "DELETE",
         });
         alert("Pedido eliminado");
-        window.location.reload();
+        fetchData()
         break;
       case "garantias":
         redirect(`/gestao/creditos/${id}`)

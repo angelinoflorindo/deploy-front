@@ -1,13 +1,65 @@
-
-import React from "react";
+'use client';
+import React, { useEffect, useState } from "react";
 import styles from "@/modules/Login.module.css"
 import global from "@/modules/global.module.css"
 import Image from "next/image";
 import Link from "next/link";
 import { EmprestimoDef } from "@/services/user.service";
+import { buscarEmprestimoById, calcularJurosSimples } from "@/app/actions/auth";
+import { useParams } from "next/navigation";
 
-const Detalhes = ({data, retorno}:{data:EmprestimoDef; retorno:any}) => {
+const Detalhes = () => {
+    const params = useParams()
+    const id  =params.id
+    const [data, setData] = useState<EmprestimoDef>({
+        id:undefined,
+        pendencia:undefined,
+        juro:undefined,
+        estado:true,
+        Diversificacaos:[],
+        EmprestimoSolidarios:[],
+        prazo:undefined,
+        prestacao:undefined,
+        progresso:undefined,
+        Proponente:{
+            id: undefined,
+            User: {
+                id: undefined,
+                primeiro_nome: undefined,
+                segundo_nome: undefined,
+                password: undefined,
+                email: undefined,
+                bilhete: undefined,
+                telemovel: undefined,
+                genero: undefined
+            },
+            ContaVinculadas: []
+        },
+        proponente_id:undefined,
+        totalTaxa:'',
+        totalGuardiaos:undefined,
+        user_id:undefined,
+        valor:undefined,
+        taxaDiversificada:undefined,
+        createdAt:undefined,
+        updatedAt:undefined
 
+    })
+    const [retorno, setRetorno] = useState(0)
+
+
+
+    const fetchData = async ()=>{
+        const data = await buscarEmprestimoById(id)
+        const result = await calcularJurosSimples(data.valor, ((data.juro-2)/100), data.prestacao)
+        const arround = Math.round(result)
+        setRetorno(arround)
+        setData(data)
+    }
+
+    useEffect(()=>{
+        fetchData()
+    }, [])
 
     return (
 

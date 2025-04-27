@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import styles from "@/modules/Login.module.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
@@ -6,7 +7,6 @@ import global from "@/modules/global.module.css";
 import Image from "next/image";
 
 import Link from "next/link";
-import { getServerSession } from "next-auth";
 import {
   buscarEmprestimoValidadoByEmail,
   buscarUser,
@@ -17,35 +17,256 @@ import {
 } from "@/services/Emprestimo.service";
 import { UserInfo } from "@/services/user.service";
 import { redirect } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-const Emprestimo = async () => {
-  const session = await getServerSession();
-  const user: UserInfo = await buscarUser(session?.user.email);
-  const emprestimo: EmprestimoValidado = await buscarEmprestimoValidadoByEmail(
-    session?.user.email
-  );
-  let diverseData = new Array<DiversificacaoProps>();
+const Emprestimo = () => {
+  const { data: session, status } = useSession();
+  const [emprestimo, setEmprestimo] = useState<EmprestimoValidado>({
+    id: undefined,
+    email: undefined,
+    primeiro_nome: undefined,
+    segundo_nome: undefined,
+    bilhete: undefined,
+    Proponente: {
+      id: undefined,
+      estado: undefined,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      Emprestimos: [
+        {
+          id: undefined,
+          valor: undefined,
+          estado: undefined,
+          juro: undefined,
+          prestacao: undefined,
+          prazo: undefined,
+          progresso: undefined,
+          proponente_id: undefined,
+          pendencia: undefined,
+          user_id: undefined,
+          createdAt: undefined,
+          updatedAt: undefined,
+          Diversificacaos: [],
+        },
+      ],
+    },
+  });
+  const [user, setUser] = useState<UserInfo>({
+    id: "",
+    bilhete: "",
+    email: "",
+    genero: "",
+    password: "",
+    primeiro_nome: "",
+    segundo_nome: "",
+    telemovel: "",
+    Carteira: {
+      id: "",
+      codigo: "",
+      createdAt: "",
+      numero: "",
+      saldo: "",
+      updatedAt: "",
+      user_id: "",
+    },
+    Depositos: {
+      id: "",
+      user_id: "",
+      estado: true,
+      pendencia: true,
+      createdAt: "",
+      updatedAt: "",
+      valor: "",
+    },
+    Devedor: {
+      id: "",
+      estado: true,
+      inadimplencia: "",
+      adimplencia: "",
+      solicitacao: "",
+      updatedAt: "",
+      createdAt: "",
+      user_id: "",
+    },
+    Investidor: {
+      id: undefined,
+      maior_risco: false,
+      maior_seguranca: false,
+      saque_antecipado: false,
+      fundo_protegido: false,
+      partilhar_emprestimo: false,
+      estado: true,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+      Diversificacaos: [],
+    },
+    Documentos: {
+      id: undefined,
+      tipo: undefined,
+      titulo: undefined,
+      nome_salvado: undefined,
+      nome_original: undefined,
+      extensao: undefined,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+    },
+    Papel: {
+      id: undefined,
+      perfil: undefined,
+    },
+    Pessoa: {
+      id: undefined,
+      estado_civil: undefined,
+      provincia: undefined,
+      municipio: undefined,
+      profissao: undefined,
+      user_id: undefined,
+      emprego_id: undefined,
+      residencia_id: undefined,
+      nivel_instrucao: undefined,
+      data_nascimento: undefined,
+      Conjugue: {
+        id: undefined,
+        nome_completo: undefined,
+        nivel_instrucao: undefined,
+        dependentes: undefined,
+        data_nascimento: undefined,
+      },
+      Emprego: {
+        id: undefined,
+        data_inicio: undefined,
+        sector: undefined,
+        cargo: undefined,
+        area: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+      },
+      Residencium: {
+        id: undefined,
+        tipo: undefined,
+        data_inicio: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+      },
+      Contum: {
+        id: undefined,
+        nome: undefined,
+        iban: undefined,
+        salario: undefined,
+        emprego_id: undefined,
+        pessoa_id: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+      },
+      User: {
+        id: undefined,
+        email: undefined,
+      },
+    },
+    Proponente: {
+      id: undefined,
+      solicitacao: undefined,
+      reembolsar: undefined,
+      satisfeitos: undefined,
+      insatisfeitos: undefined,
+      estado: false,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+      Emprestimos: [],
+    },
+    Reclamacaos: {
+      id: undefined,
+      assunto: undefined,
+      conteudo: undefined,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+    },
+    Saque: {
+      id: undefined,
+      taxa: undefined,
+      valor: undefined,
+      estado: true,
+      pendencia: true,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+    },
+  });
+
+ const [diverseData, setDiverseData] = useState<DiversificacaoProps[]>([])
   let multipleIncome: any = [];
 
-  if (emprestimo.Proponente) {
-    diverseData = emprestimo.Proponente.Emprestimos[0].Diversificacaos;
+  const fetchData = async () => {
+    const res: UserInfo = await buscarUser(session?.user.email);
+    const result: EmprestimoValidado = await buscarEmprestimoValidadoByEmail(
+      session?.user.email
+    );
 
-    if (emprestimo.Proponente.Emprestimos[0].Diversificacaos.length > 0) {
-      diverseData.forEach((data, index) => {
-        multipleIncome.push({
-          investidorId: data.investidor_id,
-          content: Math.round(
-            emprestimo.Proponente.Emprestimos[0].valor * (data.taxa / 100)
-          ),
+    if (result.Proponente) {
+      setDiverseData(result.Proponente.Emprestimos[0].Diversificacaos)
+
+      if (result.Proponente.Emprestimos[0].Diversificacaos.length > 0) {
+        diverseData.forEach((data, index) => {
+          multipleIncome.push({
+            investidorId: data.investidor_id,
+            content: Math.round(
+              result.Proponente.Emprestimos[0].valor * (data.taxa / 100)
+            ),
+          });
         });
-      });
+      }
     }
-  }
 
-  if (user.Carteira == null || user.Carteira == undefined) {
-    console.log("sem conta digital");
-    return redirect("/ferramenta/cartao");
-  }
+    if (res.Carteira == null || res.Carteira == undefined) {
+      console.log("sem conta digital");
+      return redirect("/ferramenta/cartao");
+    }
+
+    setUser(res);
+    setEmprestimo(result);
+  };
+
+  useEffect(() => {
+    if (session?.user.email) {
+      fetchData();
+    }
+  }, []);
+
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">

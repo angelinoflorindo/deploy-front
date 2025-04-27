@@ -2,14 +2,10 @@ import React from "react";
 import styles from "@/modules/Login.module.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import Conteudo from "./conteudo";
-import { getServerSession } from "next-auth";
-import { buscarUser, buscarUserQuery } from "@/app/actions/auth";
+import Conteudo from "./conteudo"
 
-const SolicitarCredito = async () => {
+const SolicitarCredito =  () => {
 
-  const session = await getServerSession()
-  const user = await buscarUser(session?.user?.email)
 
 
   return (
@@ -20,7 +16,7 @@ const SolicitarCredito = async () => {
 
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
-          <Conteudo user={user} />
+          <Conteudo />
         </main>
 
         {/* Rodapé Fixo */}

@@ -1,22 +1,33 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import global from "@/modules/Login.module.css";
 import { clientAPI } from "@/app/lib/definitions";
-import { efectuarReclamacao } from "@/app/actions/auth";
+import { buscarUser, efectuarReclamacao } from "@/app/actions/auth";
 import { SubmitButton } from "@/components/submitButton";
-import { useForm, useFormState } from "react-hook-form";
+import { useSession } from "next-auth/react";
+import { UserInfo } from "@/services/user.service";
 
 const url = clientAPI;
-const Conteudo = ({ userId }: { userId: number }) => {
-  const { register, handleSubmit, control } = useForm<FormData>();
-  const { isDirty, isValid } = useFormState({ control });
+const Conteudo = () => {
+  const [userId, setUserID] = useState(0)
+
+  const {data:session, status} = useSession()
+
+  const fetchData = async ()=>{
+    const userData: UserInfo = await buscarUser(session?.user?.email);
+    setUserID(userData.id)
+  }
+
+  useEffect(()=>{
+    fetchData()
+  }, [])
+
 
   return (
     <div className="flex flex-col justify-around items-center ">
       <h1 className="font-bold text-center">Comunicar um problema</h1>
 
-      <form
-        onSubmit={handleSubmit(efectuarReclamacao)}
+      <form action={efectuarReclamacao}
         className="shadow-md p-5 flex flex-col justify-center items-center"
       >
         <input

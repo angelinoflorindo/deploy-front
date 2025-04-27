@@ -66,13 +66,13 @@ export interface CreditoDef {
 }
 
 export interface CreditoUserProps {
-  id: number;
+  id: any;
   email: any;
   primeiro_nome: any;
   segundo_nome: any;
   bilhete: any;
   Devedor: {
-    id: number;
+    id: any;
     estado: any;
     user_id: any;
     createdAt: any;

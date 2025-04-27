@@ -1,7 +1,7 @@
 import { DiversificacaoProps } from "./Emprestimo.service";
 
 export interface UserInfo {
-  id: number;
+  id: any;
   primeiro_nome: any;
   segundo_nome: any;
   password: any;
@@ -19,7 +19,7 @@ export interface UserInfo {
   Carteira:CarteiraProps,
   Proponente:ProponenteProps,
   Papel:{
-    id:number,
+    id:any,
     perfil:any
   }
 
@@ -77,7 +77,7 @@ export interface ResidenciaProps {
 }
 
 export interface ContaProps {
-  id: number;
+  id: any;
   nome: any;
   iban: any;
   salario: any;
@@ -116,7 +116,7 @@ export interface ProponenteProps{
   createdAt: any;
   updatedAt: any;
   User:UserProps,
-  Emprestimos:[{id:any}]
+  Emprestimos:any[]
 }
 
 
@@ -174,7 +174,7 @@ export interface EmprestimoDef{
   user_id:any;
   createdAt: any;
   updatedAt: any;
-  totalGuardiaos:number
+  totalGuardiaos:any
   totalTaxa:string
   taxaDiversificada:any
   EmprestimoSolidarios:any[],
@@ -253,7 +253,7 @@ export interface ContaVinculadaProps{
 
 
 export interface DevedorProps{
-  id:number;
+  id:any;
   solicitacao:any;
   adimplencia:any;
   inadimplencia:any;

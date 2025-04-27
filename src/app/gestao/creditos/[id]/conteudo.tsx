@@ -2,10 +2,15 @@
 
 import { clientAPI } from "@/app/lib/definitions";
 import { DebitoVinculadoProps } from "@/services/Credito.service";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const url = clientAPI;
-export default function Conteudo({ creditoId }: { creditoId: string }) {
+export default function Conteudo() {
+  const params = useParams();
+  const id = params.id;
+  const creditoId = Number(id)
+
   const [depositos, setDepositos] = useState<DebitoVinculadoProps[]>([]);
   const [solidarios, setSolidarios] = useState<any[]>([]);
   const [step, setStep] = useState(true);

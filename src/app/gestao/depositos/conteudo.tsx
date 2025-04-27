@@ -3,7 +3,6 @@
 
 import { clientAPI } from "@/app/lib/definitions";
 import { DepositoProps } from "@/services/user.service";
-import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const url = clientAPI;
@@ -19,21 +18,21 @@ export default function Conteudo() {
           method: "PUT",
         });
         alert("Depósito aprovado");
-        window.location.reload()
+       fetchData()
         break
       case "reverter":
         await fetch(`${url}/api/operacao/depositar/${id}`, {
           method: "GET",
         });
         alert("Depósito Revertido");
-        window.location.reload()
+        fetchData()
         break
       case "eliminar":
         await fetch(`${url}/api/operacao/depositar/${id}`, {
           method: "DELETE",
         });
         alert("Depósito eliminado");
-        window.location.reload()
+        fetchData()
         break
       case "baixar":
         window.open(`${url}/api/operacao/depositar/${id}/comprovativo`, "_blank");

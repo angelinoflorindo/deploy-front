@@ -18,19 +18,19 @@ export default function Conteudo() {
           method: "PUT",
         });
         alert("Pedido aprovado");
-        window.location.reload();
+        fetchData()
         break;
       case "rejeitar":
         await fetch(`${url}/api/proponente/emprestimo/${id}`);
         alert("Pedido Rejeitado");
-        window.location.reload();
+        fetchData()
         break;
       case "eliminar":
         await fetch(`${url}/api/proponente/emprestimo/${id}`, {
           method: "DELETE",
         });
         alert("Pedido eliminado");
-        window.location.reload();
+        fetchData()
         break;
       case "garantias":
         redirect(`/gestao/emprestimos/${id}`)

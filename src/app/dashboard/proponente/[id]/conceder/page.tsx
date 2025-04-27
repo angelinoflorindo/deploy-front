@@ -3,29 +3,9 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Conteudo from "./conteudo";
 import styles from "@/modules/Login.module.css";
-import { buscarEmprestimoById, buscarUser, calcularJurosSimples, calcularPrestacaoSimples } from "@/app/actions/auth";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { EmprestimoDef, UserInfo } from "@/services/user.service";
 
-const Emprestar = async (context: { params: { id: string } }) => {
-  const { id } = await context.params;
-  const session = await getServerSession();
-  const user: UserInfo = await buscarUser(session?.user.email);
-  const data: EmprestimoDef = await buscarEmprestimoById(id);
-  const diversificado: any = {};
+const Emprestar = () => {
 
-  // aqui se investe segundo a taxa disposta
-   data.Diversificacaos.forEach((data, index)=>{
-    if(user.Investidor.id === data.investidor_id){}
-    let income = data.valor * (data.taxa/ 100);
-    let inteiro = Math.round(income);
-    diversificado.saldo = inteiro; 
-  })
-
-  //const retorno = await calcularJurosSimples(diversificado.saldo, ((data.juro-2)/100), data.prestacao)
-  const parcela = await calcularPrestacaoSimples(diversificado.saldo, ((data.juro-2)/100), data.prestacao)
-    
 
   return (
     <div className={styles.container}>
@@ -36,9 +16,6 @@ const Emprestar = async (context: { params: { id: string } }) => {
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
           <Conteudo
-            saldo={parcela}
-            userData={user}
-            emprestimoData={data}
           />
         </main>
 

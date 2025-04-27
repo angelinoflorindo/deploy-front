@@ -4,22 +4,20 @@ import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { buscarUserQuery, convidarSolidario } from "@/app/actions/auth";
-import { redirect } from "next/navigation";
+import {
+  buscarGuardiao,
+  buscarUser,
+  buscarUserQuery,
+  convidarSolidario,
+} from "@/app/actions/auth";
+import { useRouter } from "next/navigation";
 import { Guardiao, SolidarioProps, UserInfo } from "@/services/user.service";
 import { SubmitButton } from "@/components/submitButton";
 import { clientAPI } from "@/app/lib/definitions";
+import { useSession } from "next-auth/react";
 
 const url = clientAPI;
-const Conteudo = ({
-  user,
-  guardInfo,
-  somaTaxa,
-}: {
-  user: UserInfo;
-  guardInfo: any;
-  somaTaxa: any;
-}) => {
+const Conteudo = () => {
   const [guard, setGuard] = useState("");
   const [familiar, setFamiliar] = useState("");
   const [proximo, setProximo] = useState(false);
@@ -37,6 +35,200 @@ const Conteudo = ({
     user_id: "",
   });
 
+  const [guardInfo, setGuardInfo] = useState<SolidarioProps[]>([]);
+  const [user, setUser] = useState<UserInfo>({
+    id: "",
+    bilhete: "",
+    email: "",
+    genero: "",
+    password: "",
+    primeiro_nome: "",
+    segundo_nome: "",
+    telemovel: "",
+    Carteira: {
+      id: "",
+      codigo: "",
+      createdAt: "",
+      numero: "",
+      saldo: "",
+      updatedAt: "",
+      user_id: "",
+    },
+    Depositos: {
+      id: "",
+      user_id: "",
+      estado: true,
+      pendencia: true,
+      createdAt: "",
+      updatedAt: "",
+      valor: "",
+    },
+    Devedor: {
+      id: "",
+      estado: true,
+      inadimplencia: "",
+      adimplencia: "",
+      solicitacao: "",
+      updatedAt: "",
+      createdAt: "",
+      user_id: "",
+    },
+    Investidor: {
+      id: undefined,
+      maior_risco: false,
+      maior_seguranca: false,
+      saque_antecipado: false,
+      fundo_protegido: false,
+      partilhar_emprestimo: false,
+      estado: true,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+      Diversificacaos: [],
+    },
+    Documentos: {
+      id: undefined,
+      tipo: undefined,
+      titulo: undefined,
+      nome_salvado: undefined,
+      nome_original: undefined,
+      extensao: undefined,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+    },
+    Papel: {
+      id: undefined,
+      perfil: undefined,
+    },
+    Pessoa: {
+      id: undefined,
+      estado_civil: undefined,
+      provincia: undefined,
+      municipio: undefined,
+      profissao: undefined,
+      user_id: undefined,
+      emprego_id: undefined,
+      residencia_id: undefined,
+      nivel_instrucao: undefined,
+      data_nascimento: undefined,
+      Conjugue: {
+        id: undefined,
+        nome_completo: undefined,
+        nivel_instrucao: undefined,
+        dependentes: undefined,
+        data_nascimento: undefined,
+      },
+      Emprego: {
+        id: undefined,
+        data_inicio: undefined,
+        sector: undefined,
+        cargo: undefined,
+        area: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+      },
+      Residencium: {
+        id: undefined,
+        tipo: undefined,
+        data_inicio: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+      },
+      Contum: {
+        id: undefined,
+        nome: undefined,
+        iban: undefined,
+        salario: undefined,
+        emprego_id: undefined,
+        pessoa_id: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+      },
+      User: {
+        id: undefined,
+        email: undefined,
+      },
+    },
+    Proponente: {
+      id: undefined,
+      solicitacao: undefined,
+      reembolsar: undefined,
+      satisfeitos: undefined,
+      insatisfeitos: undefined,
+      estado: false,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+      Emprestimos: [],
+    },
+    Reclamacaos: {
+      id: undefined,
+      assunto: undefined,
+      conteudo: undefined,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+    },
+    Saque: {
+      id: undefined,
+      taxa: undefined,
+      valor: undefined,
+      estado: true,
+      pendencia: true,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+    },
+  });
+
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  const fetchData = async () => {
+    if (session?.user.email) {
+      const user: UserInfo = await buscarUser(session?.user?.email);
+      const { data, total } = await buscarGuardiao(user.id);
+      setGuardInfo(data); // como também podia testar com o push
+      setTotal(total);
+      setUser(user);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const handler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGuard(e.target.value);
   };
@@ -53,17 +245,22 @@ const Conteudo = ({
 
     if (!guardiao) {
       console.log("Guardião não encontrado!");
-      return redirect("/dashboard/credito/decima/solidario");
+      router.push("/dashboard/credito/decima/solidario");
+      return;
     }
 
     if (guardiao.email === user.email) {
       console.log("Convide outro guardião");
-      return redirect("/dashboard/credito/decima/solidario");
+      router.push("/dashboard/credito/decima/solidario");
+
+      return;
     }
 
     if (!guardiao.Pessoa) {
       console.log("Guardião sem personalidade");
-      return redirect("/dashboard/credito/decima/solidario");
+      router.push("/dashboard/credito/decima/solidario");
+
+      return;
     }
 
     setInvite(false);
@@ -82,17 +279,23 @@ const Conteudo = ({
 
     if (!familiar) {
       console.log("Sem relação familiar ");
-      return redirect("/dashboard/credito/decima/solidario");
+      router.push("/dashboard/credito/decima/solidario");
+
+      return;
     }
 
     if (taxa < 5) {
       console.log("Aumente mais a taxa");
-      return redirect("/dashboard/credito/decima/solidario");
+      router.push("/dashboard/credito/decima/solidario");
+
+      return;
     }
 
     const resp = await convidarSolidario(solidario);
     if (!resp) {
-      return redirect("/dashboard/credito/decima/solidario");
+      router.push("/dashboard/credito/decima/solidario");
+
+      return;
     }
     setGuard("");
     setParentesco(false);
@@ -102,7 +305,9 @@ const Conteudo = ({
 
   async function getNextPage() {
     if (total < 50) {
-      return redirect("/dashboard/credito/decima/solidario");
+      router.push("/dashboard/credito/decima/solidario");
+
+      return;
     }
 
     const proposta = await fetch(`${url}/api/devedor/solidario`, {
@@ -114,21 +319,20 @@ const Conteudo = ({
     });
 
     if (!proposta.ok) {
-      return redirect("/dashboard/credito/decima/solidario");
-    }
+      router.push("/dashboard/credito/decima/solidario");
 
-    return redirect("/dashboard/credito/decima/solicitar");
+      return;
+    }
+    router.push("/dashboard/credito/decima/solicitar");
+
+    return;
   }
 
   useEffect(() => {
-    console.log("Proximo", somaTaxa);
-    if (somaTaxa > 50) {
-      setTotal(somaTaxa);
+    //console.log("Proximo", total);
+    if (total > 50) {
+      setTotal(total);
       setProximo(true);
-    }
-
-    if (taxa < 0) {
-      setTaxa(0);
     }
   }, [taxa]);
 
@@ -142,7 +346,7 @@ const Conteudo = ({
         </section>
         <button
           onClick={() => {
-            redirect("/ferramenta/usuario");
+            router.push("/ferramenta/usuario");
           }}
           className="px-4 py-2 bg-blue-500 text-white rounded"
         >
@@ -189,7 +393,7 @@ const Conteudo = ({
                 src="/img/guardiao.png"
                 className={global.imagemGuardiao}
                 width={50}
-                height={-50}
+                height={0}//verificar o formato
                 alt=""
               />
 
@@ -216,7 +420,7 @@ const Conteudo = ({
                     <Image
                       src="/img/reduzir.png"
                       onClick={() => {
-                        setTaxa(taxa - 1);
+                        if (taxa > 0) setTaxa(taxa - 1);
                       }}
                       className={global.footerImagem}
                       width={25}
@@ -236,14 +440,16 @@ const Conteudo = ({
                       alt=""
                     />
 
-                    <Image
-                      src="/img/convite.png"
-                      onClick={onConvidar}
-                      className={global.footerImagem}
-                      width={30}
-                      height={30}
-                      alt=""
-                    />
+                    {parentesco && familiar !== "" && (
+                      <Image
+                        src="/img/convite.png"
+                        onClick={onConvidar}
+                        className={global.footerImagem}
+                        width={30}
+                        height={30}
+                        alt=""
+                      />
+                    )}
                   </div>
                 </div>
               </div>

@@ -1,18 +1,24 @@
 "use client";
 
 import { clientAPI } from "@/app/lib/definitions";
-import { ContaVinculadaProps, DepositoProps } from "@/services/user.service";
-import { redirect } from "next/navigation";
+import { ContaVinculadaProps } from "@/services/user.service";
+import { useParams } from "next/navigation";
+
 import { useEffect, useState } from "react";
 
 const url = clientAPI;
-export default function Conteudo({ emprestimoId }: { emprestimoId: string }) {
+export default function Conteudo() {
+  const params = useParams();
+  const id = params.id;
+  const emprestimoId = Number(id)
+  
   const [depositos, setDepositos] = useState<ContaVinculadaProps[]>([]);
   const [solidarios, setSolidarios] = useState<any[]>([]);
   const [step, setStep] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(1);
+ 
 
   const handleAcao = async (acao: string, id: number) => {
     switch (acao) {
@@ -21,14 +27,14 @@ export default function Conteudo({ emprestimoId }: { emprestimoId: string }) {
           method: "PUT",
         });
         alert("Valores reembolsados");
-        window.location.reload();
+        fetchData()
         break;
       case "reter":
         await fetch(`${url}/api/proponente/garantias/${id}`, {
           method: "GET",
         });
         alert("Valores Retidos");
-        window.location.reload();
+        fetchData()
         break;
       case "baixar":
         window.open(
@@ -56,7 +62,7 @@ export default function Conteudo({ emprestimoId }: { emprestimoId: string }) {
     }
 
     const search = await res.json();
-    console.log("vinculados", search.data);
+    //console.log("vinculados", search.data);
     setDepositos(search.data.vinculadaData);
     setTotalPages(search.totalPages.vinculos);
     setPage(search.totalPages.aval.vinculos);

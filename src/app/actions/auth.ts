@@ -1,5 +1,5 @@
 "use server";
-import { createSession } from "@/app/lib/session";
+
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 import { NegociarEmprestimoProps } from "@/services/user.service";
@@ -14,6 +14,7 @@ export async function buscarUser(email: any) {
   }
   return response.json();
 }
+
 
 export async function buscarUserQuery(query: any) {
   if (!query || typeof query !== "string") {
@@ -225,7 +226,7 @@ export async function carregarConta(formData: FormData) {
   //  await new Promise((res) => setTimeout(res, 2000)); // simula delay
 }
 
-export async function vincluarConta(formData: FormData) {
+export async function vincularConta(formData: FormData) {
   const userId = formData.get("user_id");
 
   formData.append("tipo", "DEPOSITO");
@@ -266,9 +267,69 @@ export async function vincluarConta(formData: FormData) {
   return redirect("/dashboard/emprestimo/solicitar");
 }
 
+export async function submitDetalhes(formData:FormData){
+  
+  const dataSend = {
+    nome: formData.get("nome"),
+    iban: formData.get("iban"),
+    salario: formData.get("salario"),
+    emprego_id: formData.get("empregoId"),
+    pessoa_id: formData.get("pessoaId"),
+  };
+
+  const pessoaData = await buscarPessoa(dataSend.pessoa_id)
+
+  formData.append("tipo", "DECLARACAO_TRABALHO");
+  formData.append("titulo", "Documentos financeiros");
+  formData.append("user_id", `${formData.get("userId")}`);
+  const files = formData.getAll("scanner") as File[];
+
+  if (!files || files.length === 0) {
+    return redirect("/ferramenta/detalhes");
+  }
+  const result = await fetch(`${process.env.CLIENT_URL}/api/upload`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!result.ok) {
+    console.log("Erro ao anexar documentos", result.statusText);
+    return redirect("/ferramenta/detalhes");
+  }
+
+  if (pessoaData.Contum) {
+    await fetch(
+      `${process.env.CLIENT_URL}/api/pessoa/conta/${pessoaData.Contum.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(dataSend),
+      }
+    );
+
+    return redirect("/ferramenta/detalhes");
+  } else {
+    await fetch(`${process.env.CLIENT_URL}/api/pessoa/conta`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(dataSend),
+    });
+
+    return redirect("/ferramenta/detalhes");
+  }
+
+
+}
+
+
 // PARTE REZERVADA PARA VINCULAR DÉBITO
 
-export async function vincluarDebito(formData: FormData) {
+
+export async function vincularDebito(formData: FormData) {
   const userId = formData.get("user_id");
   const returnUrl = formData.get("returnUrl");
 

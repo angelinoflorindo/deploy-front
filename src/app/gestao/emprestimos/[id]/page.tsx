@@ -4,8 +4,7 @@ import Footer from "@/components/footer";
 import Conteudo from "./conteudo";
 import styles from "@/modules/Login.module.css";
 
-const Garantia = async (context: { params: { id: string } }) => {
-  const {id} = await context.params
+const Garantia =  () => {
 
   return (
     <div className={styles.container}>
@@ -14,7 +13,7 @@ const Garantia = async (context: { params: { id: string } }) => {
         <Header />
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
-          <Conteudo emprestimoId={id} />
+          <Conteudo />
         </main>
         {/* Rodapé Fixo */} <Footer />
       </div>

@@ -1,31 +1,27 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "@/modules/Login.module.css";
-import { InvestidorProps } from "@/services/user.service";
+import { InvestidorProps, UserInfo } from "@/services/user.service";
 import { redirect } from "next/navigation";
 import { clientAPI } from "@/app/lib/definitions";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { buscarUser } from "@/app/actions/auth";
 
 const url = clientAPI;
-const Conteudo = ({
-  investidor,
-  userId,
-}: {
-  investidor: InvestidorProps;
-  userId: number;
-}) => {
+const Conteudo = () => {
+  const [userId, setUserID] = useState(0);
   const [data, setData] = useState<InvestidorProps>({
     id: "",
     maior_risco: false,
     maior_seguranca: false,
-    estado: false,
+    estado: true,
     saque_antecipado: false,
     fundo_protegido: false,
     partilhar_emprestimo: false,
     user_id: "",
     createdAt: "",
     updatedAt: "",
-    User:{
+    User: {
       id: "",
       primeiro_nome: "",
       segundo_nome: "",
@@ -35,13 +31,46 @@ const Conteudo = ({
       telemovel: "",
       genero: "",
     },
-    Diversificacaos:[]
+    Diversificacaos: [],
   });
+  
+
+  const [investidor, setInvestidor] = useState<InvestidorProps>({
+    id: "",
+    user_id: "",
+    updatedAt: "",
+    createdAt: "",
+    saque_antecipado: false,
+    estado: true,
+    fundo_protegido: false,
+    maior_risco: false,
+    maior_seguranca: false,
+    partilhar_emprestimo: false,
+    Diversificacaos:[],
+    User: {
+      id: "",
+      bilhete: "",
+      email: "",
+      genero: "",
+      password: "",
+      primeiro_nome: "",
+      segundo_nome: "",
+      telemovel: "",
+    },
+  });
+
+  const { data: session, status } = useSession();
+
+  const fetchData = async () => {
+    const userData: UserInfo = await buscarUser(session?.user?.email);
+    setUserID(userData.id);
+    setInvestidor(userData.Investidor);
+  };
+
+  
   useEffect(() => {
-    if (investidor) {
-      setData(investidor);
-    }
-  }, [investidor]);
+    fetchData();
+  }, []);
 
   const handler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;

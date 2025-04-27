@@ -4,7 +4,7 @@ import styles from "@/modules/Login.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { redirect } from "next/navigation";
+import {useRouter } from "next/navigation";
 
 export default function Auth() {
   // const router = useRouter()
@@ -13,7 +13,7 @@ export default function Auth() {
     password: "",
   });
 
-  //  const router = useRouter();
+   const router = useRouter();
 
   // Manipula mudanças nos inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,9 +35,9 @@ export default function Auth() {
 
     if (res?.error) {
       console.log("Erro na autenticação:", res.error);
-      redirect('/')
+      router.push('/')
     } else {
-      redirect("/dashboard");
+      router.push("/dashboard");
     }
   }
   return (
