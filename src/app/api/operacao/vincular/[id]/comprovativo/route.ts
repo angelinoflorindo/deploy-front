@@ -10,6 +10,8 @@ import { setupAssociations } from "@/lib/associations";
 import Deposito from "@/models/Deposito";
 import Documento from "@/models/Documento";
 
+
+// mantentdo informaçoes atuais 
 export async function GET(
   req: NextRequest,
   context: { params: { id: string } }
