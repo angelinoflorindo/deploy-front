@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
@@ -10,15 +12,12 @@ import User from "@/models/User";
 import DebitoVinculado from "@/models/DebitoVinculado";
 import Devedor from "@/models/Devedor";
 
-
-
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ id: number }>}
+  context: { params: { id: string } }
 ) {
-  const id =  (await params).id
-  
-  const uuid = await converterString(id);
+  const {id} =  await  context.params;
+  const uuid = Number(id);
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (!token || (token.role !== "ADMIN" && token.role != "ANALISTA")) {
@@ -34,7 +33,9 @@ export async function GET(
       where: { id: uuid },
     });
 
-    const devedor = await Devedor.findOne({ where: { id: vinculo?.devedor_id } });
+    const devedor = await Devedor.findOne({
+      where: { id: vinculo?.devedor_id },
+    });
     const usuario = await User.findOne({ where: { id: devedor?.user_id } });
 
     const infovinculo = {

@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
 import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
@@ -12,8 +13,8 @@ export async function PUT(
   req: NextRequest,
   context: { params: { id: number } }
 ) {
-  const { id } = await context.params;
-  const uuid = await converterString(id);
+  const { id } = context.params;
+  const uuid = Number(id);
 
   try {
     await sequelize.authenticate();
@@ -39,26 +40,25 @@ export async function PUT(
       where: { user_id: usuario?.id },
     });
     carteira!.saldo = carteira!.saldo + vinculo.valor_retido;
-    vinculo.estado = false; 
+    vinculo.estado = false;
     vinculo.save();
     carteira?.save();
-    return NextResponse.json(
-      { message: "Serviço efectuado" },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: "Serviço efectuado" }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }
 }
-
 
 // Manter os valores retidos por mais tempo
 export async function GET(
   req: NextRequest,
   context: { params: { id: number } }
 ) {
-  const { id } = await context.params;
-  const uuid = await converterString(id);
+  
+  
+  const { id } =  context.params;
+  const uuid = Number(id);
+
   try {
     await sequelize.authenticate();
     await sequelize.sync();
@@ -89,7 +89,7 @@ export async function GET(
         { status: 403 }
       );
     }
-    
+
     carteira!.saldo = carteira!.saldo - vinculo.valor_retido;
     vinculo.estado = true;
     vinculo.save();

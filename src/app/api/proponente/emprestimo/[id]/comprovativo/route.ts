@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
@@ -12,9 +13,9 @@ import User from "@/models/User";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const { id } = params;
+  const { id } = await context.params;
   
   const uuid = await converterString(id);
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });

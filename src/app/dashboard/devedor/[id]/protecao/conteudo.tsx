@@ -1,5 +1,5 @@
 "use client";
-import React, { useActionState, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import global from "@/modules/global.module.css";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,32 +7,34 @@ import { EmprestimoDef, UserInfo } from "@/services/user.service";
 import { SubmitButton } from "@/components/submitButton";
 import { diversificarEmprestimo } from "@/app/actions/auth";
 import { CreditoDef } from "@/services/Credito.service";
+import { useForm, useFormState } from "react-hook-form";
 
 const Conteudo = ({
   formData,
   userData,
-  saldo
+  saldo,
 }: {
   formData: CreditoDef;
   userData: UserInfo;
-  saldo:any;
+  saldo: any;
 }) => {
-  const [state, formAction] = useActionState(diversificarEmprestimo, null);
+  const { register, handleSubmit, control } = useForm<FormData>();
+  const { isDirty, isValid } = useFormState({ control });
   const [taxa, setTaxa] = useState(0);
-  
 
   useEffect(() => {
     if (taxa < 0) {
       setTaxa(0);
     }
-
   }, [taxa]);
   return (
     <div>
       <div className="py-2">
         <h2 className="font-bold  py-2">Quantia disponível</h2>
         <small>Avalie quanto podes aplicar neste pedido</small>
-        {saldo > 0 ?  (<>{saldo},00kz</>) : (
+        {saldo > 0 ? (
+          <>{saldo},00kz</>
+        ) : (
           <>
             <h3 className="text-blue-500 font-bold">
               {" "}
@@ -46,7 +48,7 @@ const Conteudo = ({
         <small>
           Decida quanto do valor total <br /> Pretende investir
         </small>
-        <form action={formAction}>
+        <form onSubmit={handleSubmit(diversificarEmprestimo)}>
           <div className="flex flex-row justify-between items-center">
             <input
               type="text"

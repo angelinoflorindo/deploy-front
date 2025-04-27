@@ -30,7 +30,7 @@ const Conteudo = ({
     segundo_nome: "",
     telemovel: "",
     email: "",
-    pessoa: { id: "" },
+    Pessoa: { id: "" },
     user_id: "",
   });
 
@@ -60,7 +60,7 @@ const Conteudo = ({
       return redirect("/dashboard/credito/consumo/solidario");
     }
 
-    if (!guardiao.pessoa) {
+    if (!guardiao.Pessoa) {
       console.log("Guardião sem personalidade");
       return redirect("/dashboard/credito/consumo/solidario");
     }
@@ -73,7 +73,7 @@ const Conteudo = ({
       tipo: "CREDITO",
       parentesco: familiar,
       taxa: taxa,
-      pessoa_id: guardData.pessoa.id,
+      Pessoa_id: guardData.Pessoa.id,
       user_id: user.id,
       estado:false
     };
@@ -97,7 +97,7 @@ const Conteudo = ({
     setGuardData({
       id: "",
       email: "",
-      pessoa: { id: "" },
+      Pessoa: { id: "" },
       primeiro_nome: "",
       segundo_nome: "",
       telemovel: "",
@@ -127,12 +127,12 @@ const Conteudo = ({
     }
   }, [taxa]);
 
-  if (!user.pessoa)
+  if (!user.Pessoa)
     return (
       <div>
         <section className="shadow-md py-5 px-5 ">
           <h1 className="text-green-500">Termina de registrar o perfil! </h1>
-          <span>(*) Informações pessoais</span> <br />
+          <span>(*) Informações Pessoais</span> <br />
           <span>(*) Informações profissionais</span>
         </section>
         <button
@@ -177,8 +177,8 @@ const Conteudo = ({
             <br />
             {guardInfo.map((event: SolidarioProps) => (
               <li key={event.id}>
-                {event.pessoa.user.primeiro_nome}{" "}
-                {event.pessoa.user.segundo_nome}
+                {event.Pessoa.User.primeiro_nome}{" "}
+                {event.Pessoa.User.segundo_nome}
               </li>
             ))}
           </div>

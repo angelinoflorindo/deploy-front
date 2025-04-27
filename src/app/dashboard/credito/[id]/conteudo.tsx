@@ -3,11 +3,12 @@ import Image from "next/image";
 import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
 import { SubmitButton } from "@/components/submitButton";
-import { useActionState, useEffect, useState } from "react";
 import { pagarCreditos, reembolsarFundos } from "@/app/actions/auth";
 import { EmprestimoValidado } from "@/services/Emprestimo.service";
 import { InvestidorProps } from "@/services/user.service";
 import { CreditoProps, CreditoUserProps } from "@/services/Credito.service";
+import { useEffect, useState } from "react";
+import { useForm, useFormState } from "react-hook-form";
 
 const Conteudo = ({
   creditoData,
@@ -22,7 +23,9 @@ const Conteudo = ({
   prestacao: any;
   montante: any;
 }) => {
-  const [state, formAction] = useActionState(pagarCreditos, null);
+  const { register, handleSubmit, control } = useForm<FormData>();
+  const { isDirty, isValid } = useFormState({ control });
+
   const [valor, setValor] = useState("");
 
   const handleValor = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +60,7 @@ const Conteudo = ({
         </div>
       </header>
       <form
-        action={formAction}
+        onSubmit={handleSubmit(pagarCreditos)}
         className="flex flex-col justify-center items-center"
       >
         <div className="flex justify-between  w-[100%]">
@@ -134,6 +137,11 @@ const Conteudo = ({
           onChange={handleValor}
           className={styles.input}
         />
+
+        <div>
+          {isDirty && <p>Formuário está vazio</p>}
+          {!isValid && <p>Formulário contém campos invalidos</p>}
+        </div>
 
         <SubmitButton />
       </form>

@@ -2,15 +2,17 @@
 import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
 import { SubmitButton } from "@/components/submitButton";
-import { useActionState, useState } from "react";
+import { useState } from "react";
 import { UserInfo } from "@/services/user.service";
 import { solicitarCredito } from "@/app/actions/auth";
+import { useForm, useFormState } from "react-hook-form";
 
 const Conteudo = ({ user }: { user: UserInfo }) => {
   const [valor, setValor] = useState<any>(0);
   const [prazo, setPrazo] = useState<any>(0);
   const [guardiao, setGuardiao] = useState(false);
-  const [state, formAction] = useActionState(solicitarCredito, null);
+  const { register, handleSubmit, control } = useForm<FormData>();
+  const { isDirty, isValid } = useFormState({ control });
 
   const valorHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValor(e.target.value);
@@ -51,10 +53,9 @@ const Conteudo = ({ user }: { user: UserInfo }) => {
             : "Sem guardiãos | clicar duas vezes!"}
         </h3>
         <form
-          action={formAction}
+          onSubmit={handleSubmit(solicitarCredito)}
           className="flex flex-col  justify-center itmes-center"
         >
-          
           <input
             type="text"
             name="tipo"

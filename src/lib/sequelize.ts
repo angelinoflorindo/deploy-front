@@ -80,21 +80,5 @@ config();
   ],
   logging:false,
 
-  //models:[path.resolve(__dirname, '..', 'models')],
 
 });
-/*
-(async () => {
-  try {
-    sequelize.addModels([User])
-    await sequelize.authenticate();
-    console.log("Connection stablished successfully");
-
-    await sequelize.sync({ alter: true });
-  } catch (error) {
-    console.log("unable to connect to the database ", error);
-  }
-})();
-*/
-
-//export default sequelize;

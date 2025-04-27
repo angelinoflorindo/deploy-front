@@ -5,11 +5,12 @@ import styles from "@/modules/Login.module.css";
 import { UserInfo } from "@/services/user.service";
 import { sacarFundos } from "@/app/actions/auth";
 import { SubmitButton } from "@/components/submitButton";
-import { useActionState } from "react";
 import { redirect } from "next/navigation";
+import { useForm, useFormState } from "react-hook-form";
 
 const Conteudo = ({ user }: { user: UserInfo }) => {
-  const [state, formAction] = useActionState(sacarFundos, null);
+    const { register, handleSubmit, control } = useForm<FormData>();
+    const { isDirty, isValid } = useFormState({ control });
 
   //console.log(user)
   if(user.Carteira === null || user.Carteira === undefined){
@@ -50,7 +51,7 @@ const Conteudo = ({ user }: { user: UserInfo }) => {
         </div>
       </header>
       <form
-        action={formAction}
+        onSubmit={handleSubmit(sacarFundos)}
         className="flex flex-col justify-center items-center"
       >
         <input

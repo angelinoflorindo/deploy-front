@@ -1,30 +1,30 @@
 "use client";
-import React, { useActionState, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import global from "@/modules/global.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import { EmprestimoDef, UserInfo } from "@/services/user.service";
 import { SubmitButton } from "@/components/submitButton";
 import { diversificarEmprestimo } from "@/app/actions/auth";
+import { useForm, useFormState } from "react-hook-form";
 
 const Conteudo = ({
   formData,
   userData,
-  saldo
+  saldo,
 }: {
   formData: EmprestimoDef;
   userData: UserInfo;
-  saldo:any;
+  saldo: any;
 }) => {
-  const [state, formAction] = useActionState(diversificarEmprestimo, null);
+  const { register, handleSubmit, control } = useForm<FormData>();
+  const { isDirty, isValid } = useFormState({ control });
   const [taxa, setTaxa] = useState(0);
-  
 
   useEffect(() => {
     if (taxa < 0) {
       setTaxa(0);
     }
-
   }, [taxa]);
   return (
     <div>
@@ -33,9 +33,16 @@ const Conteudo = ({
         <small>Avalie quanto podes aplicar neste pedido</small>
         {formData.Diversificacaos.length > 0 ? (
           <div className="flex justify-center items-center shadow-md p-2 h-20 w-[50%]">
-            <b>{(formData.taxaDiversificada > 100 || formData.taxaDiversificada === 100 ) ? (
-              <><small className="font-bold">Esgotado</small></>
-            ): (<>{saldo},00kz</>) }</b>
+            <b>
+              {formData.taxaDiversificada > 100 ||
+              formData.taxaDiversificada === 100 ? (
+                <>
+                  <small className="font-bold">Esgotado</small>
+                </>
+              ) : (
+                <>{saldo},00kz</>
+              )}
+            </b>
           </div>
         ) : (
           <>
@@ -51,7 +58,7 @@ const Conteudo = ({
         <small>
           Decida quanto do valor total <br /> Pretende investir
         </small>
-        <form action={formAction}>
+        <form onSubmit={handleSubmit(diversificarEmprestimo)}>
           <div className="flex flex-row justify-between items-center">
             <input
               type="text"

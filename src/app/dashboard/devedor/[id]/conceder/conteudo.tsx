@@ -4,9 +4,10 @@ import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
 import { EmprestimoDef, UserInfo } from "@/services/user.service";
 import { SubmitButton } from "@/components/submitButton";
-import { useActionState, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CreditoDef } from "@/services/Credito.service";
 import { concederCredito } from "@/app/actions/auth";
+import { useForm, useFormState } from "react-hook-form";
 
 const Conteudo = ({
   creditoData,
@@ -16,15 +17,16 @@ const Conteudo = ({
 
   userData: UserInfo;
 }) => {
-  const [state, formAction] = useActionState(concederCredito, null);
-  const [valor, setValor] = useState('');
+  const { register, handleSubmit, control } = useForm<FormData>();
+  const { isDirty, isValid } = useFormState({ control });
+
+  const [valor, setValor] = useState("");
 
   const handleValor = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValor(e.target.value);
   };
 
   useEffect(() => {
-
     setValor(creditoData.valor);
   }, []);
 
@@ -52,10 +54,10 @@ const Conteudo = ({
         </div>
       </header>
       <form
-        action={formAction}
+        onSubmit={handleSubmit(concederCredito)}
         className="flex flex-col justify-center items-center"
       >
-          <input
+        <input
           type="text"
           name="creditoId"
           readOnly={true}
@@ -69,7 +71,7 @@ const Conteudo = ({
           hidden={true}
           value={userData.id}
         />
-           <input
+        <input
           type="text"
           name="investidorId"
           readOnly={true}
@@ -84,7 +86,7 @@ const Conteudo = ({
           hidden={true}
           value={creditoData.Devedor.User.id}
         />
-           <input
+        <input
           type="text"
           name="devedorId"
           readOnly={true}

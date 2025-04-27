@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
 import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
@@ -11,8 +12,9 @@ export async function GET(
   context: { params: { id: string } }
 ) {
   //const { searchParams } = new URL(req.url);
-  const { id } = await context.params;
-  const uuid = await converterString(id);
+  
+  const { id } =  context.params;
+  const uuid = Number(id);
   try {
     await sequelize.authenticate();
     await sequelize.sync();

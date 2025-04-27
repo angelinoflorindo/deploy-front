@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
 import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
@@ -10,42 +11,40 @@ import { NegociarEmprestimoProps } from "@/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
 import { fn, col, literal } from "sequelize";
 
-
-
 // Confirmar se o emprestimo tem no mínimo uma negociação
 
 export async function GET(
   req: NextRequest,
   context: { params: { id: number } }
 ) {
-  const { id } = await context.params;
-  const uuid = await converterString(id);
+  const { id } = context.params;
+  const uuid = Number(id);
   try {
     await sequelize.authenticate();
     await sequelize.sync();
     setupAssociations();
 
-    const emprestimo = await Diversificacao.findOne({ where: { emprestimo_id: uuid, protencao:true } });
+    const emprestimo = await Diversificacao.findOne({
+      where: { emprestimo_id: uuid, protencao: true },
+    });
     //console.log('testando', emprestimo)
-    return NextResponse.json({ emprestimo}, { status: 200 });
+    return NextResponse.json({ emprestimo }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }
-  
 }
-
-
-
 
 // PUT - confirmar  a proposta do primeiro investidor
 export async function PUT(
   req: NextRequest,
   context: { params: { id: number } }
 ) {
-  const { id } = await context.params;
+  const { id } =  context.params;
+  const emprestimoId = Number(id)
+
   const body: NegociarEmprestimoProps = await req.json();
 
-  const emprestimoId = await converterString(id);
+
   const investidorId = await converterString(body.investidor_id);
 
   try {
@@ -105,8 +104,9 @@ export async function PATCH(
   req: NextRequest,
   context: { params: { id: string } }
 ) {
-  const { id } = await context.params;
-  const investidorId = await converterString(id);
+  const { id } =  context.params;
+  const investidorId = Number(id);
+  
   const body = await req.json();
   const emprestimoId = body.emprestimoId;
 

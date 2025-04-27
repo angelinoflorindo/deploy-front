@@ -25,6 +25,17 @@ const Conteudo = ({
     user_id: "",
     createdAt: "",
     updatedAt: "",
+    User:{
+      id: "",
+      primeiro_nome: "",
+      segundo_nome: "",
+      password: "",
+      email: "",
+      bilhete: "",
+      telemovel: "",
+      genero: "",
+    },
+    Diversificacaos:[]
   });
   useEffect(() => {
     if (investidor) {

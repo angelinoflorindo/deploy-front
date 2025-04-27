@@ -2,10 +2,11 @@
 import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
 import { SubmitButton } from "@/components/submitButton";
-import { useActionState, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { EmprestimoDef, UserInfo } from "@/services/user.service";
 import { negocearEmprestimo } from "@/app/actions/auth";
 import Link from "next/link";
+import { useForm, useFormState } from "react-hook-form";
 
 const Conteudo = ({
   user,
@@ -18,7 +19,8 @@ const Conteudo = ({
   const [prazo, setPrazo] = useState("");
   const [juro, setJuro] = useState<any>(0);
   const [prestacao, setPrestacao] = useState<any>(0);
-  const [state, formAction] = useActionState(negocearEmprestimo, null);
+  const { register, handleSubmit, control } = useForm<FormData>();
+  const { isDirty, isValid } = useFormState({ control });
 
   const valorHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValor(e.target.value);
@@ -47,7 +49,7 @@ const Conteudo = ({
       setPrestacao(formData.prestacao);
     }
     if (formData.prazo) {
-      setPrazo(formData.prazo.split('T')[0]);
+      setPrazo(formData.prazo.split("T")[0]);
     }
   }, []);
   return (
@@ -76,7 +78,7 @@ const Conteudo = ({
       <div className="flex py-2 flex-col justify-center itmes-center">
         <h3 className="text-blue-500">Reajustar os termos</h3>
         <form
-          action={formAction}
+          onSubmit={handleSubmit(negocearEmprestimo)}
           className="flex flex-col  justify-center itmes-center"
         >
           <input
@@ -135,7 +137,7 @@ const Conteudo = ({
               Voltar
             </Link>
 
-            <SubmitButton  />
+            <SubmitButton />
           </div>
         </form>
       </div>

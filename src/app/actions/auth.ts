@@ -181,7 +181,7 @@ export async function uploadDocumento(data: FormData) {
 
   return res;
 }
-export async function carregarConta(_prevState: any, formData: FormData) {
+export async function carregarConta(formData: FormData) {
   const userId = formData.get("user_id");
 
   // Aqui você insere o pagamento no banco de dados
@@ -225,7 +225,7 @@ export async function carregarConta(_prevState: any, formData: FormData) {
   //  await new Promise((res) => setTimeout(res, 2000)); // simula delay
 }
 
-export async function vincluarConta(_prevState: any, formData: FormData) {
+export async function vincluarConta(formData: FormData) {
   const userId = formData.get("user_id");
 
   formData.append("tipo", "DEPOSITO");
@@ -268,7 +268,7 @@ export async function vincluarConta(_prevState: any, formData: FormData) {
 
 // PARTE REZERVADA PARA VINCULAR DÉBITO
 
-export async function vincluarDebito(_prevState: any, formData: FormData) {
+export async function vincluarDebito(formData: FormData) {
   const userId = formData.get("user_id");
   const returnUrl = formData.get("returnUrl");
 
@@ -413,10 +413,7 @@ export async function buscarEmprestimoValidadoByEmail(email: any) {
   return res.json();
 }
 
-export async function diversificarEmprestimo(
-  _prevState: any,
-  formData: FormData
-) {
+export async function diversificarEmprestimo(formData: FormData) {
   const taxa = await converterString(formData.get("taxa"));
   if (taxa === 0) {
     return redirect(
@@ -450,7 +447,7 @@ export async function diversificarEmprestimo(
 
 // Configurar a rota de reembolsar fundos!
 
-export async function reembolsarFundos(_prevState: any, formData: FormData) {
+export async function reembolsarFundos(formData: FormData) {
   const response = await fetch(
     `${process.env.CLIENT_URL}/api/operacao/reembolsar`,
     {
@@ -480,7 +477,7 @@ export async function reembolsarFundos(_prevState: any, formData: FormData) {
 }
 
 // garantir pagamento de créditos
-export async function pagarCreditos(_prevState: any, formData: FormData) {
+export async function pagarCreditos(formData: FormData) {
   const response = await fetch(`${process.env.CLIENT_URL}/api/operacao/pagar`, {
     method: "POST",
     headers: {
@@ -507,7 +504,7 @@ export async function pagarCreditos(_prevState: any, formData: FormData) {
 }
 
 // Transferir creditos
-export async function concederCredito(_prevState: any, formData: FormData) {
+export async function concederCredito(formData: FormData) {
   const response = await fetch(
     `${process.env.CLIENT_URL}/api/operacao/investir/credito`,
     {
@@ -535,7 +532,7 @@ export async function concederCredito(_prevState: any, formData: FormData) {
 
 // Transferir emprestimos ao proponente
 
-export async function concederEmprestimo(_prevState: any, formData: FormData) {
+export async function concederEmprestimo(formData: FormData) {
   const response = await fetch(
     `${process.env.CLIENT_URL}/api/operacao/investir/emprestimo`,
     {
@@ -562,7 +559,7 @@ export async function concederEmprestimo(_prevState: any, formData: FormData) {
   return redirect("/dashboard");
 }
 
-export async function sacarFundos(_prevState: any, formData: FormData) {
+export async function sacarFundos(formData: FormData) {
   const fundos = await fetch(`${process.env.CLIENT_URL}/api/operacao/sacar`, {
     method: "POST",
     headers: {
@@ -581,7 +578,7 @@ export async function sacarFundos(_prevState: any, formData: FormData) {
   return redirect("/ferramenta");
 }
 
-export async function submitCredito(_prevState: any, formData: FormData) {
+export async function submitCredito(formData: FormData) {
   const fundos = await fetch(`${process.env.CLIENT_URL}/api/operacao/sacar`, {
     method: "POST",
     headers: {
@@ -601,7 +598,7 @@ export async function submitCredito(_prevState: any, formData: FormData) {
 }
 
 // REZERVADO PARA SOLICITAÇÃO DE CRÉDITOS
-export async function solicitarCredito(_prevState: any, formData: FormData) {
+export async function solicitarCredito(formData: FormData) {
   const info = {
     user_id: formData.get("user_id"),
     valor: await converterString(formData.get("valor")),
@@ -658,7 +655,7 @@ export async function solicitarCredito(_prevState: any, formData: FormData) {
   return redirect("/dashboard");
 }
 
-export async function submitEmprestimo(_prevState: any, formData: FormData) {
+export async function submitEmprestimo(formData: FormData) {
   const fundos = await fetch(
     `${process.env.CLIENT_URL}/api/proponente/emprestimo`,
     {
@@ -684,7 +681,7 @@ export async function submitEmprestimo(_prevState: any, formData: FormData) {
   return redirect("/dashboard");
 }
 
-export async function negocearEmprestimo(_prevState: any, formData: FormData) {
+export async function negocearEmprestimo(formData: FormData) {
   const emprestimoId = await converterString(formData.get("emprestimo_id"));
 
   const fundos = await fetch(
@@ -711,7 +708,7 @@ export async function negocearEmprestimo(_prevState: any, formData: FormData) {
   return redirect(`/dashboard/proponente/${emprestimoId}`);
 }
 
-export async function efectuarReclamacao(_prevState: any, formData: FormData) {
+export async function efectuarReclamacao(formData: FormData) {
   const res = await fetch(`${process.env.CLIENT_URL}/api/usuario/reclamacao`, {
     method: "POST",
     headers: {

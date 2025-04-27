@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
 import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";

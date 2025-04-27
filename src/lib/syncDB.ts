@@ -1,6 +1,6 @@
 // lib/syncDb.ts
 import User from '@/models/User';
-import sequelize from './sequelize';
+import {sequelize} from './sequelize';
 
 const syncDb = async () => {
   try {
@@ -12,4 +12,4 @@ const syncDb = async () => {
   }
 };
 
-syncDb();
+export default syncDb();

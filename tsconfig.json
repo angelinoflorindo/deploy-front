@@ -32,7 +32,7 @@
     "**/*.tsx",
     "types",
     ".next/types/**/*.ts"
-  ],
+, "next.config.js"  ],
   "exclude": ["node_modules"],
   "types": ["next-auth"]
 }

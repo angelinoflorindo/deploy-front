@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
 import Investidor from "@/models/Investidor";
@@ -18,8 +19,3 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function verificarEstado(key: any) {
-  console.log("imprimir status", key);
-  if (key === "on" || key == true) return true;
-  return false;
-}

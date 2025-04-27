@@ -3,10 +3,11 @@ import Image from "next/image";
 import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
 import { SubmitButton } from "@/components/submitButton";
-import { useActionState, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { reembolsarFundos } from "@/app/actions/auth";
-import { EmprestimoValidado} from "@/services/Emprestimo.service";
+import { EmprestimoValidado } from "@/services/Emprestimo.service";
 import { InvestidorProps } from "@/services/user.service";
+import { useForm, useFormState } from "react-hook-form";
 
 const Conteudo = ({
   emprestimoData,
@@ -14,16 +15,18 @@ const Conteudo = ({
   saldo,
   prestacao,
   montante,
-  limite
+  limite,
 }: {
   emprestimoData: EmprestimoValidado;
   userData: InvestidorProps;
   saldo: any;
-  prestacao:any;
-  montante:any;
-  limite:any
+  prestacao: any;
+  montante: any;
+  limite: any;
 }) => {
-  const [state, formAction] = useActionState(reembolsarFundos, null);
+  const { register, handleSubmit, control } = useForm<FormData>();
+  const { isDirty, isValid } = useFormState({ control });
+
   const [valor, setValor] = useState("");
 
   const handleValor = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,11 +61,20 @@ const Conteudo = ({
         </div>
       </header>
       <form
-        action={formAction}
+        onSubmit={handleSubmit(reembolsarFundos)}
         className="flex flex-col justify-center items-center"
       >
-        <div className="flex justify-between  w-[100%]"> <span> <b>Prestação</b>: {prestacao}/ {limite} </span> <span><b>Totalidade</b>: {montante},00kz</span></div>
-        
+        <div className="flex justify-between  w-[100%]">
+          {" "}
+          <span>
+            {" "}
+            <b>Prestação</b>: {prestacao}/ {limite}{" "}
+          </span>{" "}
+          <span>
+            <b>Totalidade</b>: {montante},00kz
+          </span>
+        </div>
+
         <input
           type="text"
           name="investidorId"
@@ -70,7 +82,7 @@ const Conteudo = ({
           hidden={true}
           value={userData.id}
         />
-        
+
         <input
           type="text"
           name="investUserId"

@@ -4,8 +4,9 @@ import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
 import { EmprestimoDef, UserInfo } from "@/services/user.service";
 import { SubmitButton } from "@/components/submitButton";
-import { useActionState, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { concederEmprestimo } from "@/app/actions/auth";
+import { useForm, useFormState } from "react-hook-form";
 
 const Conteudo = ({
   emprestimoData,
@@ -16,7 +17,8 @@ const Conteudo = ({
   saldo: any;
   userData: UserInfo;
 }) => {
-  const [state, formAction] = useActionState(concederEmprestimo, null);
+  const { register, handleSubmit, control } = useForm<FormData>();
+  const { isDirty, isValid } = useFormState({ control });
   const [valor, setValor] = useState('');
 
   const handleValor = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +60,7 @@ const Conteudo = ({
         </div>
       </header>
       <form
-        action={formAction}
+        onSubmit={handleSubmit(concederEmprestimo)}
         className="flex flex-col justify-center items-center"
       >
           <input

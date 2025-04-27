@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { converterString, hashPassword } from "@/app/actions/auth";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";

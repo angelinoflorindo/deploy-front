@@ -1,7 +1,8 @@
+export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
 import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
-import Credito from "@/models/Credito"; 
+import Credito from "@/models/Credito";
 import CreditoSolidario from "@/models/CreditoSolidario";
 import Solidario from "@/models/Solidario";
 import User from "@/models/User";
@@ -10,41 +11,69 @@ import { fn, col, literal } from "sequelize";
 import DebitoVinculado from "@/models/DebitoVinculado";
 import Devedor from "@/models/Devedor";
 
-
 // Buscar os dados dos Creditos aprovados
 export async function GET(
   req: NextRequest,
   context: { params: { id: number } }
 ) {
-  const { id } = await context.params;
-  const uuid = await converterString(id);
-  
+  const { id } = context.params;
+  const uuid = Number(id);
 
   try {
     await sequelize.authenticate();
     await sequelize.sync();
     setupAssociations();
-  
-   
+
     const credito = await Credito.findOne({
-      where: { id: uuid, progresso:'CONCLUIDO', estado:true, pendencia:true },
+      where: {
+        id: uuid,
+        progresso: "CONCLUIDO",
+        estado: true,
+        pendencia: true,
+      },
       attributes: [
-        "id", "juro", "prestacao", "valor","tipo", "prazo","progresso", "devedor_id",
-        "created_at", "updated_at",
-        [fn("COUNT", literal("DISTINCT CreditoSolidarios.id")), "totalGuardiaos"],
-        [fn("COALESCE", fn("SUM", col("CreditoSolidarios.Solidario.taxa")), 0), "totalTaxa"],
+        "id",
+        "juro",
+        "prestacao",
+        "valor",
+        "tipo",
+        "prazo",
+        "progresso",
+        "devedor_id",
+        "created_at",
+        "updated_at",
+        [
+          fn("COUNT", literal("DISTINCT CreditoSolidarios.id")),
+          "totalGuardiaos",
+        ],
+        [
+          fn("COALESCE", fn("SUM", col("CreditoSolidarios.Solidario.taxa")), 0),
+          "totalTaxa",
+        ],
       ],
       include: [
         {
           model: CreditoSolidario,
-          include: [{ model: Solidario, where:{estado:true}, attributes: ['parentesco', 'taxa', 'tipo'] }],
+          include: [
+            {
+              model: Solidario,
+              where: { estado: true },
+              attributes: ["parentesco", "taxa", "tipo"],
+            },
+          ],
         },
         {
           model: Devedor,
           include: [
             {
               model: User,
-              attributes: ["id", "primeiro_nome", "segundo_nome", "email", "telemovel"],
+              attributes: [
+                "id",
+                "primeiro_nome",
+                "segundo_nome",
+                "email",
+                "telemovel",
+              ],
             },
             {
               model: DebitoVinculado,
@@ -54,15 +83,17 @@ export async function GET(
           ],
         },
       ],
-      group: ["Credito.id", "Devedor.id", "Devedor->User.id", "Devedor->DebitoVinculados.id"],
+      group: [
+        "Credito.id",
+        "Devedor.id",
+        "Devedor->User.id",
+        "Devedor->DebitoVinculados.id",
+      ],
       raw: false,
     });
-  
+
     //console.log("validar", credito)
-    return NextResponse.json(credito, {status:200});
-  
-  
-    
+    return NextResponse.json(credito, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }
@@ -73,8 +104,8 @@ export async function PUT(
   req: NextRequest,
   context: { params: { id: number } }
 ) {
-  const { id } = await context.params;
-  const uuid = await converterString(id);
+  const { id } = context.params;
+  const uuid = Number(id);
 
   try {
     await sequelize.authenticate();

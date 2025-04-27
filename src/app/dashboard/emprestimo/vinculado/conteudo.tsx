@@ -4,10 +4,11 @@ import styles from "@/modules/Login.module.css";
 import { UserInfo } from "@/services/user.service";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { useActionState } from "react";
+import { useForm, useFormState } from "react-hook-form";
 
 const Conteudo = ({ user }: { user: UserInfo }) => {
-  const [state, formAction] = useActionState(vincluarConta, null);
+  const { register, handleSubmit, control } = useForm<FormData>();
+  const { isDirty, isValid } = useFormState({ control });
 
   return (
     <div>
@@ -16,7 +17,7 @@ const Conteudo = ({ user }: { user: UserInfo }) => {
         Faça o depósito de uma quantia <br /> Que será retida durante o
         empréstimo
       </p>
-      <form action={formAction} className="shadow-md p-5">
+      <form onSubmit={handleSubmit(vincluarConta)} className="shadow-md p-5">
         <h2>Detalhe</h2>
 
         <input

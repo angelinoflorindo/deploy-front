@@ -2,9 +2,10 @@
 import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
 import { SubmitButton } from "@/components/submitButton";
-import { useActionState, useState } from "react";
+import { useState } from "react";
 import { UserInfo } from "@/services/user.service";
 import { submitEmprestimo } from "@/app/actions/auth";
+import { useForm, useFormState } from "react-hook-form";
 
 const Conteudo = ({ user }: { user: UserInfo }) => {
   const [valor, setValor] = useState<any>(0);
@@ -12,7 +13,8 @@ const Conteudo = ({ user }: { user: UserInfo }) => {
   const [guardiao, setGuardiao] = useState(false);
   const [juro, setJuro] = useState<any>(0);
   const [prestacao, setPrestacao] = useState<any>(0);
-  const [state, formAction] = useActionState(submitEmprestimo, null);
+  const { register, handleSubmit, control } = useForm<FormData>();
+  const { isDirty, isValid } = useFormState({ control });
 
   const valorHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValor(e.target.value);
@@ -53,12 +55,15 @@ const Conteudo = ({ user }: { user: UserInfo }) => {
       </header>
 
       <div className="flex py-2 flex-col justify-center itmes-center">
-        <h3 className="text-blue-500" >{guardiao? 'Guardiãos convidados':'Sem guardiãos | clicar duas vezes!'}</h3>
+        <h3 className="text-blue-500">
+          {guardiao
+            ? "Guardiãos convidados"
+            : "Sem guardiãos | clicar duas vezes!"}
+        </h3>
         <form
-          action={formAction}
+          onSubmit={handleSubmit(submitEmprestimo)}
           className="flex flex-col  justify-center itmes-center"
         >
-          
           <input
             type="checkbox"
             checked={guardiao}
@@ -111,8 +116,12 @@ const Conteudo = ({ user }: { user: UserInfo }) => {
             <button
               type="button"
               className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
-            onDoubleClick={()=>{setGuardiao(false)}}
-            onClick={()=>{setGuardiao(true)}}
+              onDoubleClick={() => {
+                setGuardiao(false);
+              }}
+              onClick={() => {
+                setGuardiao(true);
+              }}
             >
               Guardião
             </button>

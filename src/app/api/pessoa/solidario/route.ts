@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
 import Pessoa from "@/models/Pessoa";

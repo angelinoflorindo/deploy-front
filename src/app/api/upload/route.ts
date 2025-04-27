@@ -1,4 +1,4 @@
-// app/api/upload/route.ts
+export const dynamic = 'force-dynamic';
 import { writeFile } from "fs/promises";
 import path from "path";
 import fs from "fs";
