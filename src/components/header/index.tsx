@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { clientAPI } from "@/app/lib/definitions";
 import { redirect } from "next/navigation";
 
-const url = clientAPI;
+const url = clientAPI // tirei o ponto e virgula
 const Header = () => {
   const { data: session, status } = useSession();
   const [perfil, setPerfil] = useState("");
@@ -20,6 +20,8 @@ const Header = () => {
       .then((res) => {
         if (!res.ok) {
           console.log("Erro ao buscar os dados");
+          console.log('status', res.status)
+          console.error(res.statusText)
           return redirect("/");
         }
         return res.json();
