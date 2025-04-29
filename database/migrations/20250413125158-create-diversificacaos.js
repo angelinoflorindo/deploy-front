@@ -1,13 +1,10 @@
 'use strict';
 
-import { DataTypes } from 'sequelize';
-
-/** @type {import('sequelize-cli').Migration} */
-export default {
+module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('credoras', {
+    await queryInterface.createTable('diversificacaos', {
       investidor_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: Sequelize.INTEGER.UNSIGNED,
         primaryKey: true,
         allowNull: false,
         references: {
@@ -17,40 +14,43 @@ export default {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      credito_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+      emprestimo_id: {
+        type: Sequelize.INTEGER,
         primaryKey: true,
         allowNull: false,
         references: {
-          model: 'creditos', // Nome da tabela referenciada
+          model: 'emprestimos', // Nome da tabela referenciada
           key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      corrente: {
-        type: DataTypes.BOOLEAN,
+      taxa: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        defaultValue: true,
+      },
+      protencao: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
       },
       estado: {
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.BOOLEAN,
         defaultValue: true,
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
       },
     });
   },
 
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable('diversificacaos');
   },
 };

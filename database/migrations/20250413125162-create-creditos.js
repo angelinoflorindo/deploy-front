@@ -1,62 +1,54 @@
 'use strict';
 
-import { DataTypes } from 'sequelize';
-
-/** @type {import('sequelize-cli').Migration} */
-export default {
+module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('creditos', {
       id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: Sequelize.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
       },
-      tipo: {
-        type: DataTypes.ENUM('30_DIAS', '60_DIAS', '90_DIAS'),
-        allowNull: false,
-      },
-
-      tipo: {
-        type: DataTypes.STRING,
+      tipo_credito: {
+        type: Sequelize.ENUM('30_DIAS', '60_DIAS', '90_DIAS'),
         allowNull: false,
       },
       valor: {
-        type: DataTypes.BIGINT,
+        type: Sequelize.BIGINT,
         allowNull: false,
       },
       prestacao: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       juro: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       prazo: {
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         allowNull: false,
       },
       estado: {
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.BOOLEAN,
         defaultValue: true,
         allowNull: false,
       },
       pendencia: {
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.BOOLEAN,
         defaultValue: true,
         allowNull: false,
       },
       progresso: {
-        type: DataTypes.ENUM('PENDENTE', 'CONCLUIDO', 'CANCELADO'),
+        type: Sequelize.ENUM('PENDENTE', 'CONCLUIDO', 'CANCELADO'),
         allowNull: false,
         defaultValue: 'PENDENTE',
       },
       devedor_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
-          model: 'pessoas', // presumindo que devedor seja uma Pessoa
+          model: 'pessoas', // Presumindo que devedor seja uma Pessoa
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -64,18 +56,18 @@ export default {
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
       },
     });
   },
 
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable('creditos');
   },
 };

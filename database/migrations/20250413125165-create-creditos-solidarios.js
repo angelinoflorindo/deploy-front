@@ -1,32 +1,29 @@
 'use strict';
 
-import { DataTypes } from 'sequelize';
-
-/** @type {import('sequelize-cli').Migration} */
-export default {
+module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('emprestimos_solidarios', {
+    await queryInterface.createTable('creditos_solidarios', {
       id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: Sequelize.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
       },
-      emprestimo_id: {
-        type: DataTypes.INTEGER,
+      credito_id: {
+        type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
-          model: 'emprestimos', // Nome da tabela referenciada
+          model: 'creditos', // Certifique-se de que a tabela 'creditos' exista
           key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
       solidario_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
-          model: 'solidarios', // Nome da tabela referenciada
+          model: 'solidarios', // Certifique-se de que a tabela 'solidarios' exista
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -34,18 +31,18 @@ export default {
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
       },
     });
   },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('emprestimos_solidarios');
+  async down(queryInterface) {
+    await queryInterface.dropTable('creditos_solidarios');
   },
 };
