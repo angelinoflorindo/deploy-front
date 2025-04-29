@@ -1,51 +1,48 @@
 'use strict';
 
-import { DataTypes } from 'sequelize';
-
-/** @type {import('sequelize-cli').Migration} */
-export default {
+module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('empregos', {
       id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: Sequelize.INTEGER.UNSIGNED,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
       },
       data_inicio: {
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         allowNull: false,
       },
       sector: {
-        type: DataTypes.ENUM('PUBLICO', 'PRIVADO'),
+        type: Sequelize.ENUM('PUBLICO', 'PRIVADO'),
         allowNull: false,
       },
       cargo: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       area: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       estado: {
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.BOOLEAN,
         defaultValue: true,
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
       },
     });
   },
 
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable('empregos');
-  },
+  }
 };

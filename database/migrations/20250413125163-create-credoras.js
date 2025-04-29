@@ -1,13 +1,10 @@
 'use strict';
 
-import { DataTypes } from 'sequelize';
-
-/** @type {import('sequelize-cli').Migration} */
-export default {
+module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('diversificacaos', {
+    await queryInterface.createTable('credoras', {
       investidor_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: Sequelize.INTEGER.UNSIGNED,
         primaryKey: true,
         allowNull: false,
         references: {
@@ -17,43 +14,40 @@ export default {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      emprestimo_id: {
-        type: DataTypes.INTEGER,
+      credito_id: {
+        type: Sequelize.INTEGER.UNSIGNED,
         primaryKey: true,
         allowNull: false,
         references: {
-          model: 'emprestimos', // Nome da tabela referenciada
+          model: 'creditos', // Nome da tabela referenciada
           key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      taxa: {
-        type: DataTypes.INTEGER,
+      corrente: {
+        type: Sequelize.BOOLEAN,
         allowNull: false,
-      },
-      protencao: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
+        defaultValue: true,
       },
       estado: {
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.BOOLEAN,
         defaultValue: true,
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
       },
     });
   },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('diversificacaos');
+  async down(queryInterface) {
+    await queryInterface.dropTable('credoras');
   },
 };

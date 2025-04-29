@@ -1,42 +1,39 @@
 'use strict';
 
-import { DataTypes } from 'sequelize';
-
-/** @type {import('sequelize-cli').Migration} */
-export default {
+module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('carteiras', {
       id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: Sequelize.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
       },
       saldo: {
-        type: DataTypes.BIGINT,
+        type: Sequelize.BIGINT,
         allowNull: false,
       },
       estado: {
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.BOOLEAN,
         defaultValue: true,
         allowNull: false,
       },
       numero: {
-        type: DataTypes.BIGINT,
+        type: Sequelize.BIGINT,
         unique: true,
         allowNull: false,
       },
       codigo: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         unique: true,
         allowNull: false,
       },
       user_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: Sequelize.INTEGER.UNSIGNED,
         unique: true,
         allowNull: false,
         references: {
-          model: 'users', // relacionamento com a tabela User
+          model: 'users',
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -44,18 +41,18 @@ export default {
       },
       created_at: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updated_at: {
         allowNull: false,
-        type: DataTypes.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
       },
     });
   },
 
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable('carteiras');
-  },
+  }
 };
