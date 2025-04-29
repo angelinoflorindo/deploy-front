@@ -11,7 +11,7 @@
     "migrate": "dotenv -- sequelize-cli db:migrate",
     "migrate:rollback": "dotenv -- sequelize-cli  db:migrate:undo",
     "migrate:rollbaclAll": "dotenv -- sequelize-cli db:migrate:undo:all",
-    "deploy":"git pull && npm install && npx sequelize-cli db:migrate deploy && next build && pm2 restart deploy-next"
+    "deploy":"git pull && npm install && npx sequelize-cli db:migrate && next build && pm2 restart deploy-next"
   },
   "dependencies": {
     "@prisma/client": "^6.6.0",
