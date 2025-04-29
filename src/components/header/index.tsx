@@ -1,28 +1,28 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { getServerSession } from "next-auth";
 import { UserInfo } from "@/services/user.service";
 import { buscarUser } from "@/app/actions/auth";
 import DashDropDown from "../dashdropDown";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { clientAPI } from "@/app/lib/definitions";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const url = clientAPI // tirei o ponto e virgula
 const Header = () => {
   const { data: session, status } = useSession();
   const [perfil, setPerfil] = useState("");
   const nome = session?.user.name;
+  const router = useRouter()
   useEffect(() => {
     fetch(`${url}/api/usuario?email=${session?.user.email}`)
       .then((res) => {
         if (!res.ok) {
           console.log("Erro ao buscar os dados");
           console.log('status', res.status)
-          console.error(res.statusText)
-          return redirect("/");
+          console.log(res.statusText)
+          return router.push("/");
         }
         return res.json();
       })
