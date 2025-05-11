@@ -2,13 +2,11 @@
 import React, { useEffect, useState } from "react";
 import styles from "@/modules/Login.module.css";
 import { signOut } from "next-auth/react";
-import { clientAPI } from "@/app/lib/definitions";
 import { ConjugueProps, PessoaProps, UserInfo } from "@/services/user.service";
 import { redirect, useRouter, useParams } from "next/navigation";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
-const userApi = clientAPI;
 const Page = () => {
   const params = useParams();
   const router = useRouter();
@@ -59,7 +57,7 @@ const Page = () => {
 
   }
   useEffect(() => {
-    fetch(`${userApi}/api/pessoa/${id}`)
+    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa/${id}`)
       .then((res) => {
         if (!res.ok) {
           console.log("Erro ao buscar os dados");

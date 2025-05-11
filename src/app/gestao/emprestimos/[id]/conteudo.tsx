@@ -1,12 +1,10 @@
 "use client";
 
-import { clientAPI } from "@/app/lib/definitions";
 import { ContaVinculadaProps } from "@/services/user.service";
 import { useParams } from "next/navigation";
 
 import { useEffect, useState } from "react";
 
-const url = clientAPI;
 export default function Conteudo() {
   const params = useParams();
   const id = params.id;
@@ -23,14 +21,14 @@ export default function Conteudo() {
   const handleAcao = async (acao: string, id: number) => {
     switch (acao) {
       case "reembolsar":
-        await fetch(`${url}/api/proponente/garantias/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/proponente/garantias/${id}`, {
           method: "PUT",
         });
         alert("Valores reembolsados");
         fetchData()
         break;
       case "reter":
-        await fetch(`${url}/api/proponente/garantias/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/proponente/garantias/${id}`, {
           method: "GET",
         });
         alert("Valores Retidos");
@@ -38,7 +36,7 @@ export default function Conteudo() {
         break;
       case "baixar":
         window.open(
-          `${url}/api/proponente/emprestimo/${id}/comprovativo`,
+          `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/proponente/emprestimo/${id}/comprovativo`,
           "_blank"
         );
         break;
@@ -52,7 +50,7 @@ export default function Conteudo() {
 
   const fetchData = async () => {
     const res = await fetch(
-      `${url}/api/proponente/garantias?page=${page}&status=${true}&id=${emprestimoId}`
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/proponente/garantias?page=${page}&status=${true}&id=${emprestimoId}`
     );
 
     if (!res.ok) {

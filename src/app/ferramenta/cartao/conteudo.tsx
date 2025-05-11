@@ -3,13 +3,11 @@ import Image from "next/image";
 import global from "@/modules/global.module.css";
 import Link from "next/link";
 import { CarteiraProps, UserInfo, UserProps } from "@/services/user.service";
-import { clientAPI } from "@/app/lib/definitions";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { buscarUser } from "@/app/actions/auth";
 
-const url = clientAPI;
 const Conteudo = ( ) => {
   const [carteira, setCarteira] = useState<CarteiraProps>({  id: undefined,
     codigo: undefined,
@@ -32,7 +30,7 @@ const Conteudo = ( ) => {
 
   async function gerarCartao() {
     //Gerar Cartão digital
-    const cartaoDigital = await fetch(`${url}/api/usuario/carteira`, {
+    const cartaoDigital = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario/carteira`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",

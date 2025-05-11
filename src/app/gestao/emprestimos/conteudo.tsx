@@ -1,11 +1,9 @@
 "use client";
 
-import { clientAPI } from "@/app/lib/definitions";
 import { DepositoProps, EmprestimoProps } from "@/services/user.service";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const url = clientAPI;
 export default function Conteudo() {
   const [depositos, setDepositos] = useState<EmprestimoProps[]>([]);
   const [page, setPage] = useState(1);
@@ -14,19 +12,19 @@ export default function Conteudo() {
   const handleAcao = async (acao: string, id: number) => {
     switch (acao) {
       case "aprovar":
-        await fetch(`${url}/api/proponente/emprestimo/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/proponente/emprestimo/${id}`, {
           method: "PUT",
         });
         alert("Pedido aprovado");
         fetchData()
         break;
       case "rejeitar":
-        await fetch(`${url}/api/proponente/emprestimo/${id}`);
+        await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/proponente/emprestimo/${id}`);
         alert("Pedido Rejeitado");
         fetchData()
         break;
       case "eliminar":
-        await fetch(`${url}/api/proponente/emprestimo/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/proponente/emprestimo/${id}`, {
           method: "DELETE",
         });
         alert("Pedido eliminado");
@@ -44,7 +42,7 @@ export default function Conteudo() {
 
   const fetchData = async () => {
     const res = await fetch(
-      `${url}/api/proponente/emprestimo?page=${page}&status=true&limit=5`
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/proponente/emprestimo?page=${page}&status=true&limit=5`
     );
 
     if (!res.ok) {

@@ -1,10 +1,8 @@
 "use client";
 
-import { clientAPI } from "@/app/lib/definitions";
 import {  DocumentoProps } from "@/services/user.service";
 import { useEffect, useState } from "react";
 
-const url = clientAPI;
 export default function Conteudo() {
   const [arquivos, setArquivos] = useState<DocumentoProps[]>([]);
   const [page, setPage] = useState(1);
@@ -13,7 +11,7 @@ export default function Conteudo() {
   const handleAcao = async (acao: string, id: number) => {
     switch (acao) {
       case "arquivar":
-        await fetch(`${url}/api/operacao/arquivar/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/operacao/arquivar/${id}`, {
           method: "DELETE",
         });
         alert("Documento arquivado");
@@ -21,7 +19,7 @@ export default function Conteudo() {
         break;
       case "baixar":
         window.open(
-          `${url}/api/operacao/arquivar/${id}/comprovativo`,
+          `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/operacao/arquivar/${id}/comprovativo`,
           "_blank"
         );
         break;
@@ -35,7 +33,7 @@ export default function Conteudo() {
 
   const fetchData = async () => {
     const res = await fetch(
-      `${url}/api/operacao/arquivar?page=${page}&status=${true}&limit=5`
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/operacao/arquivar?page=${page}&status=${true}&limit=5`
     );
 
     if (!res.ok) {

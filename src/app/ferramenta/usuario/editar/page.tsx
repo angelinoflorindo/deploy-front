@@ -13,10 +13,8 @@ import {
 } from "@/services/user.service";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { clientAPI } from "@/app/lib/definitions";
 import { SubmitButton } from "@/components/submitButton";
 
-const userApi = clientAPI;
 export default function EditarUsuario() {
   const [step, setStep] = useState(1);
   const [genero, setGenero] = useState("");
@@ -224,7 +222,7 @@ export default function EditarUsuario() {
   }
 
   useEffect(() => {
-    fetch(`${userApi}/api/usuario?email=${session?.user?.email}`)
+    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario?email=${session?.user?.email}`)
       .then((res) => {
         if (!res.ok) {
           console.log("Erro ao buscar os dados");
