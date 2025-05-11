@@ -1,6 +1,5 @@
 "use client";
 
-import { clientAPI } from "@/app/lib/definitions";
 import { EmprestimoDef, UserInfo } from "@/services/user.service";
 import Link from "next/link";
 import Image from "next/image";
