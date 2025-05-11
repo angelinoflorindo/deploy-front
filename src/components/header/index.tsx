@@ -6,17 +6,15 @@ import { buscarUser } from "@/app/actions/auth";
 import DashDropDown from "../dashdropDown";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { clientAPI } from "@/app/lib/definitions";
 import { useRouter } from "next/navigation";
 
-const url = clientAPI // tirei o ponto e virgula
 const Header = () => {
   const { data: session, status } = useSession();
   const [perfil, setPerfil] = useState("");
   const nome = session?.user.name;
   const router = useRouter()
   useEffect(() => {
-    fetch(`${url}/api/usuario?email=${session?.user.email}`)
+    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario?email=${session?.user.email}`)
       .then((res) => {
         if (!res.ok) {
           console.log("Erro ao buscar os dados");
