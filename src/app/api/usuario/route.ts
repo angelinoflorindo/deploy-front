@@ -18,6 +18,7 @@ import {setupAssociations} from '@/lib/associations'
 import Proponente from "@/models/Proponente";
 import Papel from "@/models/Papel";
 import Emprestimo from "@/models/Emprestimo";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -85,8 +86,11 @@ export async function GET(req: NextRequest) {
 
 // registrar usuários 
 
-export async function POST(req: NextRequest) {
-  const data = await req.json();
+export async function POST(req: NextApiRequest, res:NextApiResponse) {
+  
+
+  
+  const data = await req.body;
 
   await sequelize.authenticate()
   await sequelize.sync()

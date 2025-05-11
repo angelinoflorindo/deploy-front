@@ -1,15 +1,12 @@
 "use client";
 import React from "react";
 import styles from "@/modules/Login.module.css";
-import Header from "@/components/header";
 import { hashPassword } from "@/app/actions/auth";
 import { useState } from "react";
 import { useRouter} from "next/navigation";
 import { signIn } from "next-auth/react";
-import { clientAPI } from "@/app/lib/definitions";
 import { SubmitButton } from "@/components/submitButton";
 
-const url = clientAPI;
 const RegisterForm = () => {
   const [step, setStep] = useState(1);
   const [gender, setGender] = useState("");
@@ -57,7 +54,7 @@ const RegisterForm = () => {
        return
     }
 
-    const resp = await fetch(`${url}/api/usuario`, {
+    const resp = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
