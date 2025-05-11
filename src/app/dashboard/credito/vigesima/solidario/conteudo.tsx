@@ -12,11 +12,9 @@ import {
 } from "@/app/actions/auth";
 import {  useRouter } from "next/navigation";
 import { Guardiao, SolidarioProps, UserInfo } from "@/services/user.service";
-import { SubmitButton } from "@/components/submitButton";
-import { clientAPI } from "@/app/lib/definitions";
+import { SubmitButton } from "@/components/submitButton"; 
 import { useSession } from "next-auth/react";
-
-const url = clientAPI;
+ 
 const Conteudo = () => {
   const [guard, setGuard] = useState("");
   const [familiar, setFamiliar] = useState("");
@@ -304,7 +302,7 @@ const Conteudo = () => {
       return 
     }
 
-    const proposta = await fetch(`${url}/api/devedor/solidario`, {
+    const proposta = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/devedor/solidario`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",

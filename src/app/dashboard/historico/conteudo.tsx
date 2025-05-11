@@ -8,8 +8,7 @@ import Link from "next/link";
 import {
   NegociarEmprestimoProps,
   SolidarioFace,
-} from "@/services/user.service";
-import { clientAPI } from "@/app/lib/definitions";
+} from "@/services/user.service"; 
 import {
   aceitarSolidario,
   buscarPropostaInvestidor,
@@ -17,8 +16,7 @@ import {
   rejeitarSolidario,
 } from "@/app/actions/auth";
 import { useSession } from "next-auth/react";
-
-const url = clientAPI;
+ 
 const Conteudo = () => {
   const { data: session, status } = useSession();
   const [pessoa, setPessoa] = useState("");
