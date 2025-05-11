@@ -15,11 +15,13 @@ export const options = {
 }
 
 if(process.env.NODE_ENV === 'production'){
+ if(process.env.DB_SSL === 'true'){
     options.dialectOptions = {
         ssl:{
             rejectUnauthorized:true
         }
     }
+ }
 }
 
 export default {

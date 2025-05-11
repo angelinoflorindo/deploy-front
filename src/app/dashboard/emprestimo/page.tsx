@@ -228,7 +228,7 @@ const Emprestimo = () => {
     },
   });
 
- const [diverseData, setDiverseData] = useState<DiversificacaoProps[]>([])
+  const [diverseData, setDiverseData] = useState<DiversificacaoProps[]>([]);
   let multipleIncome: any = [];
 
   const fetchData = async () => {
@@ -238,7 +238,7 @@ const Emprestimo = () => {
     );
 
     if (result.Proponente) {
-      setDiverseData(result.Proponente.Emprestimos[0].Diversificacaos)
+      setDiverseData(result.Proponente.Emprestimos[0].Diversificacaos);
 
       if (result.Proponente.Emprestimos[0].Diversificacaos.length > 0) {
         diverseData.forEach((data, index) => {
@@ -326,7 +326,7 @@ const Emprestimo = () => {
               {/*BUSANDO OS EMPRESTIMOS POR INVESTIDORES*/}
               {emprestimo.Proponente ? (
                 <div>
-                  {diverseData.length > 1 ? (
+                  {diverseData && diverseData.length > 1 ? (
                     <div>
                       {diverseData.map((data, index) => (
                         <Link
@@ -355,34 +355,7 @@ const Emprestimo = () => {
                       ))}
                     </div>
                   ) : (
-                    <div>
-                      <Link
-                        key={
-                          emprestimo.Proponente.Emprestimos[0]
-                            .Diversificacaos[0].investidor_id
-                        }
-                        href={`/dashboard/emprestimo/${emprestimo.Proponente.Emprestimos[0].Diversificacaos[0].investidor_id}`}
-                        className="flex flex-col px-4 py-2 h-20 shadow-md w-[100%]"
-                      >
-                        <span className="flex flex-row justify-between">
-                          <p className="font-bold"> Emprestimo até</p>{" "}
-                          {
-                            emprestimo.Proponente.Emprestimos[0].prazo.split(
-                              "T"
-                            )[0]
-                          }
-                        </span>
-                        <div className="flex flex-row justify-between">
-                          <span className="py-1">
-                            <b> Prestação:</b>
-                            {emprestimo.Proponente.Emprestimos[0].prestacao}
-                          </span>
-                          <span className="flex flex-row justify-between">
-                            <b>Valor:</b> {multipleIncome[0].content},00kz
-                          </span>
-                        </div>
-                      </Link>
-                    </div>
+                    <div className="text-blue font-bold"> Sem emprestimos </div>
                   )}
                 </div>
               ) : (

@@ -18,6 +18,7 @@ import {setupAssociations} from '@/lib/associations'
 import Proponente from "@/models/Proponente";
 import Papel from "@/models/Papel";
 import Emprestimo from "@/models/Emprestimo";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -28,90 +29,98 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(users);
   }
 
+  await sequelize.authenticate()
+  await sequelize.sync()
+  setupAssociations()
+  const userInfo = await User.findOne({
+    where: { email: email },
+    attributes: { exclude: ["password"] },
+    include: [
+      {model:Proponente, include:[{model:Emprestimo, attributes:['id']}]},
+      { model: Investidor },
+      { model: Devedor },
+      { model: Deposito },
+      { model: Saque },
+      { model: Carteira },
+      { model: Reclamacao },
+      { model: Documento },
+      {model:Papel, 
+        attributes:['id', 'perfil']
+      },
+      {
+        model: Pessoa,
+        include: [
+          {
+            model: Emprego,
+          },
+          { model: Residencia },
+          { model: Conjugue },
+          { model: Conta },
+        ],
+      },
+    ],
+  });
+
+  if (!userInfo) {
+    return NextResponse.json(
+      { message: "Usuário não existe" },
+      { status: 404 }
+    );
+  }
+
+  return NextResponse.json(userInfo, { status: 200 });
+
+  // procurando o problema
+  /*
   try {
         
-    await sequelize.authenticate()
-    await sequelize.sync()
-    setupAssociations()
-    const userInfo = await User.findOne({
-      where: { email: email },
-      attributes: { exclude: ["password"] },
-      include: [
-        {model:Proponente, include:[{model:Emprestimo, attributes:['id']}]},
-        { model: Investidor },
-        { model: Devedor },
-        { model: Deposito },
-        { model: Saque },
-        { model: Carteira },
-        { model: Reclamacao },
-        { model: Documento },
-        {model:Papel, 
-          attributes:['id', 'perfil']
-        },
-        {
-          model: Pessoa,
-          include: [
-            {
-              model: Emprego,
-            },
-            { model: Residencia },
-            { model: Conjugue },
-            { model: Conta },
-          ],
-        },
-      ],
-    });
-
-    if (!userInfo) {
-      return NextResponse.json(
-        { message: "Usuário não existe" },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(userInfo, { status: 200 });
-  } catch (error) {
+     } catch (error) {
     return NextResponse.json(
       { message: "Erro ao buscar usuário", error },
       { status: 500 }
     );
   }
+    */
 }
 
 
 // registrar usuários 
 
-export async function POST(req: NextRequest) {
-  const data = await req.json();
+export async function POST(req: NextApiRequest, res:NextApiResponse) {
+  
+
+  
+  const data = await req.body;
+
+  await sequelize.authenticate()
+  await sequelize.sync()
+  setupAssociations()
+
+
+  const user = await findOrCreateUser({ 
+    primeiro_nome: data.primeiro_nome,
+    password: data.password,
+    genero: data.genero,
+    email: data.email,
+    bilhete: data.bilhete,
+    segundo_nome: data.segundo_nome,
+    telemovel: data.telemovel,
+  });
+
+  return NextResponse.json({email:user.email, id:user.id});
+
 
  
-  
+  /*
   try {
-    await sequelize.authenticate()
-    await sequelize.sync()
-    setupAssociations()
-  
-  
-    const user = await findOrCreateUser({ 
-      primeiro_nome: data.primeiro_nome,
-      password: data.password,
-      genero: data.genero,
-      email: data.email,
-      bilhete: data.bilhete,
-      segundo_nome: data.segundo_nome,
-      telemovel: data.telemovel,
-    });
-  
-    return NextResponse.json({email:user.email, id:user.id});
-  
-  
+   
   } catch (error) {
     //console.error(error); // Ajuda a depurar
     return NextResponse.json(
       { isSqlError:true, message: "Erro ao criar usuário", error },
       { status: 500 }
     );
-  }
+  }*/
 }
 
 async function findOrCreateUser(data: any) {

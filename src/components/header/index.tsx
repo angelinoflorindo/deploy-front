@@ -1,34 +1,36 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { getServerSession } from "next-auth";
 import { UserInfo } from "@/services/user.service";
-import { buscarUser } from "@/app/actions/auth";
 import DashDropDown from "../dashdropDown";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { clientAPI } from "@/app/lib/definitions";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-const url = clientAPI;
 const Header = () => {
   const { data: session, status } = useSession();
   const [perfil, setPerfil] = useState("");
   const nome = session?.user.name;
+  const router = useRouter()
   useEffect(() => {
-    fetch(`${url}/api/usuario?email=${session?.user.email}`)
+    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario?email=${session?.user.email}`)
       .then((res) => {
         if (!res.ok) {
-          console.log("Erro ao buscar os dados");
-          return redirect("/");
+          console.log('status', res.status)
+          console.log(res.statusText)
+          throw new Error("Erro na requisição")
         }
         return res.json();
       })
       .then((user: UserInfo) => {
-       // console.log("user", user);
-        if (user.Papel) {
+        console.log("user", user);
+        if (user?.Papel) {
           setPerfil(user.Papel.perfil);
         }
+      })
+      .catch((err) => {
+        console.error("Erro ao carregar usuário:", err);
+        router.push("/");
       });
   }, []);
 

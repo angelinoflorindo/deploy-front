@@ -102,7 +102,7 @@ const Credito = async () => {
           <h2 className="text-xl font-bold mb-2">Efectuar pagamentos</h2>
           <section>
             {/*BUSANDO OS EMPRESTIMOS POR INVESTIDORES*/}
-            {credito.Devedor && credito.Devedor.Creditos.length>0 ? (
+            {credito ? (
               <div>
                 <Link
                   key={credito.Devedor.Creditos[0].id}
