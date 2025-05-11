@@ -2,7 +2,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { UserInfo } from "@/services/user.service";
-import { buscarUser } from "@/app/actions/auth";
 import DashDropDown from "../dashdropDown";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -17,18 +16,21 @@ const Header = () => {
     fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario?email=${session?.user.email}`)
       .then((res) => {
         if (!res.ok) {
-          console.log("Erro ao buscar os dados");
           console.log('status', res.status)
           console.log(res.statusText)
-          return router.push("/");
+          throw new Error("Erro na requisição")
         }
         return res.json();
       })
       .then((user: UserInfo) => {
-       // console.log("user", user);
-        if (user.Papel) {
+        console.log("user", user);
+        if (user?.Papel) {
           setPerfil(user.Papel.perfil);
         }
+      })
+      .catch((err) => {
+        console.error("Erro ao carregar usuário:", err);
+        router.push("/");
       });
   }, []);
 
