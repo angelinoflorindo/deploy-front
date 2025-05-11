@@ -86,11 +86,8 @@ export async function GET(req: NextRequest) {
 
 // registrar usuários 
 
-export async function POST(req: NextApiRequest, res:NextApiResponse) {
-  
-
-  
-  const data = await req.body;
+export async function POST(req: NextRequest,) {
+  const data = await req.json();
 
   await sequelize.authenticate()
   await sequelize.sync()
