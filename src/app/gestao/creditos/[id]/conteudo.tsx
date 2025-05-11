@@ -1,11 +1,9 @@
 "use client";
 
-import { clientAPI } from "@/app/lib/definitions";
 import { DebitoVinculadoProps } from "@/services/Credito.service";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const url = clientAPI;
 export default function Conteudo() {
   const params = useParams();
   const id = params.id;
@@ -21,14 +19,14 @@ export default function Conteudo() {
   const handleAcao = async (acao: string, id: number) => {
     switch (acao) {
       case "pagar":
-        await fetch(`${url}/api/devedor/garantias/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/devedor/garantias/${id}`, {
           method: "PUT",
         }); 
         alert("Pagamento realizado!");
         window.location.reload();
         break;
       case "reter":
-        await fetch(`${url}/api/devedor/garantias/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/devedor/garantias/${id}`, {
           method: "GET",
         });
         alert("Valores Retidos");
@@ -36,7 +34,7 @@ export default function Conteudo() {
         break;
       case "baixar":
         window.open(
-          `${url}/api/devedor/credito/${id}/comprovativo`,
+          `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/devedor/credito/${id}/comprovativo`,
           "_blank"
         );
         break;
@@ -50,7 +48,7 @@ export default function Conteudo() {
 
   const fetchData = async () => {
     const res = await fetch(
-      `${url}/api/devedor/garantias?page=${page}&status=${true}&limit=5&id=${creditoId}`
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/devedor/garantias?page=${page}&status=${true}&limit=5&id=${creditoId}`
     );
 
     if (!res.ok) {

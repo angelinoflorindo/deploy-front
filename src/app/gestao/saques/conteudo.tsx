@@ -1,11 +1,9 @@
 
 "use client";
 
-import { clientAPI } from "@/app/lib/definitions";
 import { SaqueProps } from "@/services/user.service";
 import { useEffect, useState } from "react";
 
-const url = clientAPI;
 export default function Conteudo() {
   const [depositos, setDepositos] = useState<SaqueProps[]>([]);
   const [page, setPage] = useState(1);
@@ -14,21 +12,21 @@ export default function Conteudo() {
   const handleAcao = async (acao: string, id: number) => {
     switch (acao) {
       case "aprovar":
-        await fetch(`${url}/api/operacao/sacar/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/operacao/sacar/${id}`, {
           method: "PUT",
         });
         alert("Pedido aprovado");
         window.location.reload()
         break
       case "reverter":
-        await fetch(`${url}/api/operacao/sacar/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/operacao/sacar/${id}`, {
           method: "GET",
         });
         alert("Pedido Revertido");
         window.location.reload()
         break
       case "eliminar":
-        await fetch(`${url}/api/operacao/sacar/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/operacao/sacar/${id}`, {
           method: "DELETE",
         });
         alert("Pedido eliminado");
@@ -44,7 +42,7 @@ export default function Conteudo() {
 
   const fetchData = async () => {
     const res = await fetch(
-      `${url}/api/operacao/sacar?page=${page}&limit=5&status=${true}`
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/operacao/sacar?page=${page}&limit=5&status=${true}`
     );
 
     if (!res.ok) {

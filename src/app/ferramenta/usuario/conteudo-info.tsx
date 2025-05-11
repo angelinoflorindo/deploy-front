@@ -3,18 +3,16 @@ import React, { useEffect, useState } from "react";
 import styles from "@/modules/Login.module.css";
 import global from "@/modules/global.module.css";
 import { useSession } from "next-auth/react";
-import { clientAPI } from "@/app/lib/definitions";
 import { UserInfo } from "@/services/user.service";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-const userApi = clientAPI;
 const ConteudoInfo = () => {
   const { data: session, status } = useSession();
   const [user, setUser] = useState<UserInfo | null>(null);
   if (!session?.user?.email) return redirect("/");
   useEffect(() => {
-    fetch(`${userApi}/api/usuario?email=${session?.user?.email}`)
+    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario?email=${session?.user?.email}`)
       .then((res) => {
         if (!res.ok) {
           console.log("Erro ao buscar os dados");

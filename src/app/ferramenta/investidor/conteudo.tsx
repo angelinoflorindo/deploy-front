@@ -3,11 +3,9 @@ import React, { useEffect, useState } from "react";
 import styles from "@/modules/Login.module.css";
 import { InvestidorProps, UserInfo } from "@/services/user.service";
 import { redirect } from "next/navigation";
-import { clientAPI } from "@/app/lib/definitions";
 import { signOut, useSession } from "next-auth/react";
 import { buscarUser } from "@/app/actions/auth";
 
-const url = clientAPI;
 const Conteudo = () => {
   const [userId, setUserID] = useState(0);
   const [data, setData] = useState<InvestidorProps>({
@@ -92,7 +90,7 @@ const Conteudo = () => {
     };
 
     if (investidor) {
-      const res = await fetch(`${url}/api/pessoa/investidor/${investidor.id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa/investidor/${investidor.id}`, {
         method: "PUT",
         headers: {
           "Content-type": "application/json",
@@ -104,7 +102,7 @@ const Conteudo = () => {
       return redirect("/ferramenta");
     }
 
-    const res = await fetch(`${url}/api/pessoa/investidor`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa/investidor`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",

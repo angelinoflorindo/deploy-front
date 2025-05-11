@@ -1,11 +1,9 @@
 
 "use client";
 
-import { clientAPI } from "@/app/lib/definitions";
 import {  ReclamacaoProps } from "@/services/user.service";
 import { useEffect, useState } from "react";
 
-const url = clientAPI;
 export default function Conteudo() {
   const [depositos, setDepositos] = useState<ReclamacaoProps[]>([]);
   const [page, setPage] = useState(1);
@@ -14,7 +12,7 @@ export default function Conteudo() {
   const handleAcao = async (acao: string, id: number) => {
     switch (acao) {
       case "eliminar":
-        await fetch(`${url}/api/usuario/reclamacao/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario/reclamacao/${id}`, {
           method: "DELETE",
         });
         alert("Reclamação eliminada");
@@ -30,7 +28,7 @@ export default function Conteudo() {
 
   const fetchData = async () => {
     const res = await fetch(
-      `${url}/api/usuario/reclamacao?page=${page}&limit=5`
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario/reclamacao?page=${page}&limit=5`
     );
 
     if (!res.ok) {

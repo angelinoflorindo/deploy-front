@@ -1,13 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import global from "@/modules/Login.module.css";
-import { clientAPI } from "@/app/lib/definitions";
 import { buscarUser, efectuarReclamacao } from "@/app/actions/auth";
 import { SubmitButton } from "@/components/submitButton";
 import { useSession } from "next-auth/react";
 import { UserInfo } from "@/services/user.service";
 
-const url = clientAPI;
 const Conteudo = () => {
   const [userId, setUserID] = useState(0)
 

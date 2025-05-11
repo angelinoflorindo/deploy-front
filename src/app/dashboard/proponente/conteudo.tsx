@@ -1,6 +1,5 @@
 "use client";
 
-import { clientAPI } from "@/app/lib/definitions";
 import {
   EmprestimoDef,
   UserInfo,
@@ -17,7 +16,6 @@ import {  useRouter } from "next/navigation";
 import { CreditoDef } from "@/services/Credito.service";
 import { useSession } from "next-auth/react";
 
-const url = clientAPI;
 export default function Conteudo() {
   const { data: session, status } = useSession();
   const [user, setUser] = useState<UserInfo>({

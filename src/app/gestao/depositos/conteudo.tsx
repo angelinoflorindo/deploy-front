@@ -1,11 +1,9 @@
 
 "use client";
 
-import { clientAPI } from "@/app/lib/definitions";
 import { DepositoProps } from "@/services/user.service";
 import { useEffect, useState } from "react";
 
-const url = clientAPI;
 export default function Conteudo() {
   const [depositos, setDepositos] = useState<DepositoProps[]>([]);
   const [page, setPage] = useState(1);
@@ -14,28 +12,28 @@ export default function Conteudo() {
   const handleAcao = async (acao: string, id: number) => {
     switch (acao) {
       case "aprovar":
-        await fetch(`${url}/api/operacao/depositar/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/operacao/depositar/${id}`, {
           method: "PUT",
         });
         alert("Depósito aprovado");
        fetchData()
         break
       case "reverter":
-        await fetch(`${url}/api/operacao/depositar/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/operacao/depositar/${id}`, {
           method: "GET",
         });
         alert("Depósito Revertido");
         fetchData()
         break
       case "eliminar":
-        await fetch(`${url}/api/operacao/depositar/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/operacao/depositar/${id}`, {
           method: "DELETE",
         });
         alert("Depósito eliminado");
         fetchData()
         break
       case "baixar":
-        window.open(`${url}/api/operacao/depositar/${id}/comprovativo`, "_blank");
+        window.open(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/operacao/depositar/${id}/comprovativo`, "_blank");
         break;
       default:
         break;
@@ -47,7 +45,7 @@ export default function Conteudo() {
 
   const fetchData = async () => {
     const res = await fetch(
-      `${url}/api/operacao/depositar?page=${page}&status=${true}&limit=5`
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/operacao/depositar?page=${page}&status=${true}&limit=5`
     );
 
     if (!res.ok) {
