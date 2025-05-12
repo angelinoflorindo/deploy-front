@@ -4,15 +4,16 @@ import styles from "@/modules/Login.module.css";
 import global from "@/modules/global.module.css";
 import { useSession } from "next-auth/react";
 import { UserInfo } from "@/services/user.service";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import Link from "next/link";
 
 const ConteudoInfo = () => {
   const { data: session, status } = useSession();
   const [user, setUser] = useState<UserInfo | null>(null);
-  if (!session?.user?.email) return redirect("/");
+    const router = useRouter()
+  if(!session?.user?.email)  router.push('/')
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario?email=${session?.user?.email}`)
+    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa?email=${session?.user?.email}`)
       .then((res) => {
         if (!res.ok) {
           console.log("Erro ao buscar os dados");
@@ -28,7 +29,6 @@ const ConteudoInfo = () => {
 
   return (
     <div>
-      <h1 className="font-bold text-center">Minha conta </h1>
 
       <section className="shadow-md p-5">
         <div className="flex flex-col   py-2">
@@ -56,7 +56,7 @@ const ConteudoInfo = () => {
               <h2> Informações do Conjugue</h2>
 
               {user?.Pessoa.Conjugue == null ||
-              user?.Pessoa.estado_civil === "CASADO" ? (
+              user?.Pessoa.estado_civil == "CASADO" ? (
                 <div className="flex flex-col" >
                   <b className="text-red-500">Sem informação</b>
                   <Link href={`/ferramenta/usuario/${user.Pessoa.id}`} className={global.voltar}>+ registrar</Link>
