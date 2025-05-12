@@ -22,8 +22,8 @@ const Header = () => {
         return res.json();
       })
       .then((user: UserInfo) => {
-        console.log("user", user)
         if (user.Papel != null || user.Papel != undefined) {
+        console.log("perfil atribuido")
           setPerfil(user.Papel.perfil);
         }
       })
@@ -48,7 +48,7 @@ const Header = () => {
       </div>
 
       <div id="right">
-        {perfil === "ADMIN" || perfil === "ANALISTA" ? (
+        {(perfil == "ADMIN" || perfil == "ANALISTA") ? (
           // Para fins de testes definir ADMIN como padrão
           <DashDropDown userRole={perfil} />
         ) : (

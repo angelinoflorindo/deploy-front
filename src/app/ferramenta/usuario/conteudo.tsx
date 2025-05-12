@@ -28,7 +28,6 @@ export default function Conteudo() {
 
   return (
     <div>
-      <h1 className="font-bold text-center">Minha conta </h1>
       <section className="shadow-md p-5">
         <div className="flex flex-row justify-between  py-2">
           <div className="flex flex-col  ">
