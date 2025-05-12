@@ -31,7 +31,6 @@ import Credora from "@/models/Credora";
 export function setupAssociations() {
   User.hasOne(Pessoa, { foreignKey: "user_id" });
   User.hasMany(Documento, { foreignKey: "user_id" });
-  User.hasOne(Devedor, { foreignKey: "user_id" });
   User.hasOne(Investidor, { foreignKey: "user_id" });
   User.hasMany(Reclamacao, { foreignKey: "user_id" });
   User.hasOne(Proponente, { foreignKey: "user_id" });
@@ -39,13 +38,10 @@ export function setupAssociations() {
   User.hasMany(Saque, { foreignKey: "user_id" });
   User.hasMany(Deposito, { foreignKey: "user_id" });
   User.hasOne(Carteira, { foreignKey: "user_id" });
-  User.hasOne(Papel, { as:"Papel",foreignKey: "user_id"});
+  User.hasOne(Papel, {  foreignKey: "user_id"});
   User.hasMany(Solidario, { foreignKey: "user_id" });
-  // Define o relacionamento
-  Papel.belongsTo(User, { foreignKey: "user_id"});
 
-
-  Carteira.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
+//  Carteira.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
 
   // Relacionamento
   Conjugue.belongsTo(Pessoa, { foreignKey: "pessoa_id", onDelete: "CASCADE" });
@@ -69,13 +65,13 @@ export function setupAssociations() {
   Emprego.hasMany(Pessoa, { foreignKey: "emprego_id" });
 
   Proponente.hasMany(Emprestimo, { foreignKey: "proponente_id" });
-  Emprestimo.belongsTo(Proponente, { foreignKey: "proponente_id" });
+ // Emprestimo.belongsTo(Proponente, { foreignKey: "proponente_id" });
 
   Proponente.hasMany(Movel, { foreignKey: "proponente_id" });
   Proponente.hasMany(Reembolso, { foreignKey: "proponente_id" });
 
   // Relacionamento
-  Investidor.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
+ // Investidor.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
 
   Movel.belongsTo(Proponente, {
     foreignKey: "proponente_id",
@@ -89,7 +85,7 @@ export function setupAssociations() {
   Devedor.hasMany(Pagamento, { foreignKey: "devedor_id" });
 
   // Define os relacionamentos
-  Pessoa.belongsTo(User, { foreignKey: "user_id" });
+ // Pessoa.belongsTo(User, { foreignKey: "user_id" });
   Pessoa.belongsTo(Emprego, { foreignKey: "emprego_id" });
   Pessoa.belongsTo(Residencia, { foreignKey: "residencia_id" });
   Pessoa.hasOne(Conjugue, { foreignKey: "pessoa_id" });
