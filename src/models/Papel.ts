@@ -9,6 +9,7 @@ import {
   ForeignKey,
   CreatedAt,
   UpdatedAt,
+  BelongsTo,
 } from "sequelize-typescript";
 import User from "./User";
 
@@ -45,4 +46,7 @@ export default class Papel extends Model {
   @UpdatedAt
   @Column({ field: "updated_at", type: DataType.DATE })
   updatedAt!: Date;
+
+  @BelongsTo(()=>User, {as:"User"})
+  user!:User
 }

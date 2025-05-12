@@ -10,8 +10,10 @@ import {
   Default,
   CreatedAt,
   UpdatedAt,
+  HasOne,
 } from "sequelize-typescript";
-
+import Papel from "./Papel";
+ 
 @Table({
   tableName: "users",
   createdAt: "created_at",
@@ -59,4 +61,7 @@ export default class User extends Model {
   @UpdatedAt
   @Column({ field: "updated_at", type: DataType.DATE })
   updatedAt!: Date;
+
+  @HasOne(()=>Papel,  {as:"Papel", })
+  papel!:Papel
 }
