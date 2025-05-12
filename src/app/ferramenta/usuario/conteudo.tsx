@@ -48,7 +48,7 @@ export default function Conteudo() {
         </div>
         <hr className={styles.divider} />
        <h2>Informações complementares</h2>
-       {userInfo?.Pessoa === null ? (
+       {userInfo?.Pessoa == null ? (
              <b className="text-red-500">Sem informação</b>
        ):(
          <div className="flex flex-col">
