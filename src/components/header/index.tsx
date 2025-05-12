@@ -13,7 +13,7 @@ const Header = () => {
   const nome = session?.user.name;
   const router = useRouter()
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario?email=${session?.user.email}`)
+    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario/perfil?email=${session?.user.email}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error("Erro na requisição")
@@ -22,7 +22,8 @@ const Header = () => {
         return res.json();
       })
       .then((user: UserInfo) => {
-        if (user?.Papel) {
+        console.log("user", user)
+        if (user.Papel !== null ) {
           setPerfil(user.Papel.perfil);
         }
       })
