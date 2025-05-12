@@ -22,8 +22,10 @@ const Header = () => {
         return res.json();
       })
       .then((user: UserInfo) => {
+        
+         console.log("verificar o papel", user.Papel)
+         console.log("verificar o perfil", user.Papel.perfil)
         if (user.Papel) {
-         console.log("perfil atribuido")
           setPerfil(user.Papel.perfil);
         }
       })

@@ -12,7 +12,7 @@ import {
   UserProps,
 } from "@/services/user.service";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { SubmitButton } from "@/components/submitButton";
 
 export default function EditarUsuario() {
@@ -23,6 +23,7 @@ export default function EditarUsuario() {
   const [area, setArea] = useState("");
   const [sector, setSector] = useState("");
   const { data: session, status } = useSession();
+  const router = useRouter()
   const [userData, setUserData] = useState<UserProps>({
     id: "",
     primeiro_nome: "",
@@ -218,7 +219,7 @@ export default function EditarUsuario() {
       return;
     }
   
-      return signOut({callbackUrl:"/"})
+   router.push('/ferramenta/usuario') 
   }
 
   useEffect(() => {
