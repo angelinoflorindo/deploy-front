@@ -222,7 +222,7 @@ export default function EditarUsuario() {
   }
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario?email=${session?.user?.email}`)
+    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa?email=${session?.user?.email}`)
       .then((res) => {
         if (!res.ok) {
           console.log("Erro ao buscar os dados");
