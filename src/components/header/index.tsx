@@ -23,7 +23,7 @@ const Header = () => {
       })
       .then((user: UserInfo) => {
         console.log("user", user)
-        if (user.Papel !== null ) {
+        if (user.Papel != null || user.Papel != undefined) {
           setPerfil(user.Papel.perfil);
         }
       })
