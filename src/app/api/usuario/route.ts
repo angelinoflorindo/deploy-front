@@ -31,31 +31,7 @@ export async function GET(req: NextRequest) {
     const userInfo = await User.findOne({
       where: { email: email },
       attributes: { exclude: ["password"] },
-      include: [
-        {
-          model: Proponente,
-          include: [{ model: Emprestimo, attributes: ["id"] }],
-        },
-        { model: Investidor },
-        { model: Devedor },
-        { model: Deposito },
-        { model: Saque },
-        { model: Carteira },
-        { model: Reclamacao },
-        { model: Documento },
-        { model: Papel, attributes: ["id", "perfil"] },
-        {
-          model: Pessoa,
-          include: [
-            {
-              model: Emprego,
-            },
-            { model: Residencia },
-            { model: Conjugue },
-            { model: Conta },
-          ],
-        },
-      ],
+  
     });
 
     if (!userInfo) {
