@@ -22,13 +22,13 @@ const Header = () => {
         return res.json();
       })
       .then((user: UserInfo) => {
-        console.log("user", user)
+        //console.log("user", user)
         if (user.Papel != null || user.Papel != undefined) {
           setPerfil(user.Papel.perfil);
         }
       })
       .catch((err) => {
-        console.error("Erro ao carregar usuário:", err);
+       // console.error("Erro ao carregar usuário:", err);
         router.push("/");
       });
   }, []);
