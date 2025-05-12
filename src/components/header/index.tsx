@@ -22,7 +22,7 @@ const Header = () => {
         return res.json();
       })
       .then((user: UserInfo) => {
-        //console.log("user", user)
+        console.log("user", user)
         if (user.Papel != null || user.Papel != undefined) {
           setPerfil(user.Papel.perfil);
         }
