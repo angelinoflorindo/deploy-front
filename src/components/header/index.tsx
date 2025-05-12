@@ -22,8 +22,8 @@ const Header = () => {
         return res.json();
       })
       .then((user: UserInfo) => {
-        if (user.Papel != null && user.Papel.perfil != null) {
-        console.log("perfil atribuido")
+        if (user.Papel) {
+         console.log("perfil atribuido")
           setPerfil(user.Papel.perfil);
         }
       })
