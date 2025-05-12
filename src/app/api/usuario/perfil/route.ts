@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get("email");
     
-    setupAssociations();
+    //setupAssociations();
     await sequelize.authenticate();
     await sequelize.sync();
 
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
       where: { email: email },
       attributes: { exclude: ["password"] },
       include: [
-        { model: Papel, association:"papel", attributes: ["id", "perfil"] },
+        { model: Papel, association:"Papel", attributes: ["id", "perfil"] },
       ],
     });
     console.log("validar perfil", userInfo)
