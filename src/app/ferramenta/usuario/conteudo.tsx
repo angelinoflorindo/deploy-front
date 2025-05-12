@@ -2,36 +2,34 @@
 import styles from "@/modules/global.module.css";
 import { UserInfo } from "@/services/user.service";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Conteudo() {
   const { data: session, status } = useSession();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const router = useRouter()
   if(!session?.user?.email) return redirect('/')
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario?email=${session?.user?.email}`)
+    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa?email=${session?.user?.email}`)
       .then((res) => {
         if (!res.ok){
-          console.log("Erro ao buscar os dados");
-          return redirect('/');
+          throw Error('Erro na rquisição')
         }
         return res.json()
       })
       .then((users:UserInfo) => {
-        //console.log("information", users)
         setUserInfo(users);
-        return;
-      });
+      }).catch((error)=>{
+        console.log("Error message", error)
+        router.push('/')
+      })
   }, []);
 
   return (
     <div>
       <h1 className="font-bold text-center">Minha conta </h1>
       <section className="shadow-md p-5">
-        <span>
-          @<b>{session?.user?.name}</b>
-        </span>
         <div className="flex flex-row justify-between  py-2">
           <div className="flex flex-col  ">
             <span className="py-1">

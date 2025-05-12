@@ -6,6 +6,9 @@ import { setupAssociations } from "@/lib/associations";
 import Pessoa from "@/models/Pessoa";
 import Emprego from "@/models/Emprego";
 import Residencia from "@/models/Residencia";
+import Conjugue from "@/models/Conjugue";
+import Conta from "@/models/Conta";
+import User from "@/models/User";
 
 async function findOrCreateResidencia(info: any) {
   const [residencia] = await Residencia.findOrCreate({
@@ -45,9 +48,40 @@ async function findPessoaByUserId(userId: number) {
   return await Pessoa.findOne({ where: { user_id: userId } });
 }
 
-export async function GET() {
-  const pessoas = await Pessoa.findAll();
-  return NextResponse.json(pessoas);
+
+      
+// Rota dedicada para operações da conta do usuário 
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const email = searchParams.get("email");
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync();
+    setupAssociations();
+    const userInfo = await User.findOne({
+      where: { email: email },
+      attributes: { exclude: ["password"] },
+      include: [
+          {
+          model: Pessoa,
+          include: [
+            {
+              model: Emprego,
+            },
+            { model: Residencia },
+            { model: Conjugue },
+            { model: Conta },
+          ],
+        },
+      ],
+    });
+    return NextResponse.json(userInfo, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Erro ao buscar usuário", error },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(req: NextRequest) {

@@ -8,15 +8,9 @@ import Saque from "@/models/Saque";
 import Carteira from "@/models/Carteira";
 import Reclamacao from "@/models/Reclamacao";
 import Documento from "@/models/Documento";
-import Pessoa from "@/models/Pessoa";
-import Emprego from "@/models/Emprego";
-import Residencia from "@/models/Residencia";
-import Conjugue from "@/models/Conjugue";
-import Conta from "@/models/Conta";
 import { sequelize } from "@/lib/sequelize";
 import { setupAssociations } from "@/lib/associations";
 import Proponente from "@/models/Proponente";
-import Papel from "@/models/Papel";
 import Emprestimo from "@/models/Emprestimo";
 
 export async function GET(req: NextRequest) {
@@ -42,18 +36,6 @@ export async function GET(req: NextRequest) {
         { model: Carteira },
         { model: Reclamacao },
         { model: Documento },
-        { model: Papel, attributes: ["id", "perfil"] },
-        {
-          model: Pessoa,
-          include: [
-            {
-              model: Emprego,
-            },
-            { model: Residencia },
-            { model: Conjugue },
-            { model: Conta },
-          ],
-        },
       ],
     });
     return NextResponse.json(userInfo, { status: 200 });
