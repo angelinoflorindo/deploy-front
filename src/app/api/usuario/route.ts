@@ -23,7 +23,6 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get("email");
 
-  console.log("buscando pelo email", email)
   try {
     await sequelize.authenticate();
     await sequelize.sync();
@@ -31,17 +30,32 @@ export async function GET(req: NextRequest) {
     const userInfo = await User.findOne({
       where: { email: email },
       attributes: { exclude: ["password"] },
-  
+      include: [
+        {
+          model: Proponente,
+          include: [{ model: Emprestimo, attributes: ["id"] }],
+        },
+        { model: Investidor },
+        { model: Devedor },
+        { model: Deposito },
+        { model: Saque },
+        { model: Carteira },
+        { model: Reclamacao },
+        { model: Documento },
+        { model: Papel, attributes: ["id", "perfil"] },
+        {
+          model: Pessoa,
+          include: [
+            {
+              model: Emprego,
+            },
+            { model: Residencia },
+            { model: Conjugue },
+            { model: Conta },
+          ],
+        },
+      ],
     });
-
-    if (!userInfo) {
-      return NextResponse.json(
-        { message: "Usuário não existe" },
-        { status: 404 }
-      );
-    }
-    console.log("Usuário encontrado")
-    console.log(userInfo)
     return NextResponse.json(userInfo, { status: 200 });
   } catch (error) {
     return NextResponse.json(
