@@ -22,9 +22,9 @@ const Header = () => {
         return res.json();
       })
       .then((user: UserInfo) => {
-        
-         console.log("verificar o papel", user.Papel)
-         console.log("verificar o perfil", user.Papel.perfil)
+        console.log("user", user)
+        console.log("verificar o nome", user.primeiro_nome)
+        console.log("verificar o perfil", user.Papel.perfil)
         if (user.Papel) {
           setPerfil(user.Papel.perfil);
         }

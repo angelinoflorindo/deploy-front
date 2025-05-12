@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
         { model: Papel, attributes: ["id", "perfil"] },
       ],
     });
-
+    console.log("validar perfil", userInfo)
     return NextResponse.json(userInfo, { status: 200 });
   } catch (error) {
     return NextResponse.json(
