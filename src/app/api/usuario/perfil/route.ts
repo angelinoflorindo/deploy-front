@@ -24,8 +24,9 @@ import Emprestimo from "@/models/Emprestimo";
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get("email");
-
+  
   try {
+  
     await sequelize.authenticate();
     await sequelize.sync();
     setupAssociations();
@@ -37,8 +38,9 @@ export async function GET(req: NextRequest) {
         { model: Papel, as:"Papel", attributes: ["id", "perfil"] },
       ],
     });
-    console.log("validar perfil", userInfo)
+    //console.log("validar perfil", userInfo)
     return NextResponse.json(userInfo, { status: 200 });
+    
   } catch (error) {
     return NextResponse.json(
       { message: "Erro ao buscar usuário", error },
