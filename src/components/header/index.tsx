@@ -16,8 +16,9 @@ const Header = () => {
     fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario/perfil?email=${session?.user.email}`)
       .then((res) => {
         if (!res.ok) {
-          throw new Error("Erro na requisição")
-          
+          console.log("Erro na requisição")
+          router.push("/");
+
         }
         return res.json();
       })
@@ -27,10 +28,6 @@ const Header = () => {
           setPerfil(user.Papel.perfil);
         }
       })
-      .catch((err) => {
-       // console.error("Erro ao carregar usuário:", err);
-        router.push("/");
-      });
   }, []);
 
   return (
