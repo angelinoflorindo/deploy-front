@@ -39,8 +39,11 @@ export function setupAssociations() {
   User.hasMany(Saque, { foreignKey: "user_id" });
   User.hasMany(Deposito, { foreignKey: "user_id" });
   User.hasOne(Carteira, { foreignKey: "user_id" });
-  User.hasOne(Papel, { foreignKey: "user_id" });
+  User.hasOne(Papel, { foreignKey: "user_id", as:"Papel"});
   User.hasMany(Solidario, { foreignKey: "user_id" });
+  // Define o relacionamento
+  Papel.belongsTo(User, { foreignKey: "user_id" });
+
 
   Carteira.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
 
@@ -84,9 +87,6 @@ export function setupAssociations() {
     onDelete: "CASCADE",
   });
   Devedor.hasMany(Pagamento, { foreignKey: "devedor_id" });
-
-  // Define o relacionamento
-  Papel.belongsTo(User, { foreignKey: "user_id" });
 
   // Define os relacionamentos
   Pessoa.belongsTo(User, { foreignKey: "user_id" });
