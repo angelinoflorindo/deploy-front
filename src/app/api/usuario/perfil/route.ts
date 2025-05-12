@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
       where: { email: email },
       attributes: { exclude: ["password"] },
       include: [
-        { model: Papel, attributes: ["id", "perfil"] },
+        { model: Papel, as:"Papel", attributes: ["id", "perfil"] },
       ],
     });
     console.log("validar perfil", userInfo)
