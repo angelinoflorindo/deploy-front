@@ -41,7 +41,7 @@ export function setupAssociations() {
   User.hasOne(Papel, {as:"Papel",  foreignKey: "user_id"});
   User.hasMany(Solidario, { foreignKey: "user_id" });
 
-  //Papel.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
+  Papel.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
   //Carteira.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
 
   // Relacionamento
