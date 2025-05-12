@@ -16,14 +16,12 @@ const Header = () => {
     fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario?email=${session?.user.email}`)
       .then((res) => {
         if (!res.ok) {
-          console.log('status', res.status)
-          console.log(res.statusText)
           throw new Error("Erro na requisição")
+          
         }
         return res.json();
       })
       .then((user: UserInfo) => {
-        console.log("user", user);
         if (user?.Papel) {
           setPerfil(user.Papel.perfil);
         }

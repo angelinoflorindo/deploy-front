@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/User";
 import Investidor from "@/models/Investidor";
@@ -13,88 +13,78 @@ import Emprego from "@/models/Emprego";
 import Residencia from "@/models/Residencia";
 import Conjugue from "@/models/Conjugue";
 import Conta from "@/models/Conta";
-import {sequelize} from '@/lib/sequelize'
-import {setupAssociations} from '@/lib/associations'
+import { sequelize } from "@/lib/sequelize";
+import { setupAssociations } from "@/lib/associations";
 import Proponente from "@/models/Proponente";
 import Papel from "@/models/Papel";
 import Emprestimo from "@/models/Emprestimo";
-import { NextApiRequest, NextApiResponse } from "next";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get("email");
 
-  if (!email) {
-    const users = await User.findAll();
-    return NextResponse.json(users);
-  }
-
-  await sequelize.authenticate()
-  await sequelize.sync()
-  setupAssociations()
-  const userInfo = await User.findOne({
-    where: { email: email },
-    attributes: { exclude: ["password"] },
-    include: [
-      {model:Proponente, include:[{model:Emprestimo, attributes:['id']}]},
-      { model: Investidor },
-      { model: Devedor },
-      { model: Deposito },
-      { model: Saque },
-      { model: Carteira },
-      { model: Reclamacao },
-      { model: Documento },
-      {model:Papel, 
-        attributes:['id', 'perfil']
-      },
-      {
-        model: Pessoa,
-        include: [
-          {
-            model: Emprego,
-          },
-          { model: Residencia },
-          { model: Conjugue },
-          { model: Conta },
-        ],
-      },
-    ],
-  });
-
-  if (!userInfo) {
-    return NextResponse.json(
-      { message: "Usuário não existe" },
-      { status: 404 }
-    );
-  }
-
-  return NextResponse.json(userInfo, { status: 200 });
-
-  // procurando o problema
-  /*
+  console.log("buscando pelo email", email)
   try {
-        
-     } catch (error) {
+    await sequelize.authenticate();
+    await sequelize.sync();
+    setupAssociations();
+    const userInfo = await User.findOne({
+      where: { email: email },
+      attributes: { exclude: ["password"] },
+      include: [
+        {
+          model: Proponente,
+          include: [{ model: Emprestimo, attributes: ["id"] }],
+        },
+        { model: Investidor },
+        { model: Devedor },
+        { model: Deposito },
+        { model: Saque },
+        { model: Carteira },
+        { model: Reclamacao },
+        { model: Documento },
+        { model: Papel, attributes: ["id", "perfil"] },
+        {
+          model: Pessoa,
+          include: [
+            {
+              model: Emprego,
+            },
+            { model: Residencia },
+            { model: Conjugue },
+            { model: Conta },
+          ],
+        },
+      ],
+    });
+
+    if (!userInfo) {
+      return NextResponse.json(
+        { message: "Usuário não existe" },
+        { status: 404 }
+      );
+    }
+    console.log("Usuário encontrado")
+    console.log(userInfo)
+    return NextResponse.json(userInfo, { status: 200 });
+  } catch (error) {
     return NextResponse.json(
       { message: "Erro ao buscar usuário", error },
       { status: 500 }
     );
   }
-    */
 }
 
+// registrar usuários
 
-// registrar usuários 
-
-export async function POST(req: NextRequest,) {
+export async function POST(req: NextRequest) {
   const data = await req.json();
 
-  await sequelize.authenticate()
-  await sequelize.sync()
-  setupAssociations()
+  await sequelize.authenticate();
+  await sequelize.sync();
+  setupAssociations();
 
-
-  const user = await findOrCreateUser({ 
+  const user = await findOrCreateUser({
     primeiro_nome: data.primeiro_nome,
     password: data.password,
     genero: data.genero,
@@ -104,10 +94,8 @@ export async function POST(req: NextRequest,) {
     telemovel: data.telemovel,
   });
 
-  return NextResponse.json({email:user.email, id:user.id});
+  return NextResponse.json({ email: user.email, id: user.id });
 
-
- 
   /*
   try {
    
@@ -122,7 +110,7 @@ export async function POST(req: NextRequest,) {
 
 async function findOrCreateUser(data: any) {
   const [user] = await User.findOrCreate({
-    where: {   
+    where: {
       primeiro_nome: data.primeiro_nome,
       password: data.password,
       genero: data.genero,
@@ -131,7 +119,7 @@ async function findOrCreateUser(data: any) {
       segundo_nome: data.segundo_nome,
       telemovel: data.telemovel,
     },
-    defaults:{
+    defaults: {
       primeiro_nome: data.primeiro_nome,
       password: data.password,
       genero: data.genero,
@@ -139,7 +127,7 @@ async function findOrCreateUser(data: any) {
       bilhete: data.bilhete,
       segundo_nome: data.segundo_nome,
       telemovel: data.telemovel,
-    }
+    },
   });
   return user;
 }
