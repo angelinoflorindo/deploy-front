@@ -24,10 +24,10 @@ import Emprestimo from "@/models/Emprestimo";
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get("email");
-  
-  await sequelize.authenticate();
-    await sequelize.sync();
+    
     setupAssociations();
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const userInfo = await User.findOne({
       where: { email: email },
