@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { UserInfo } from "@/services/user.service";
+import { PerfilProps, UserInfo } from "@/services/user.service";
 import DashDropDown from "../dashdropDown";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -22,11 +22,11 @@ const Header = () => {
         }
         return res.json();
       })
-      .then((user: UserInfo) => {
-        console.log('user', user)
-        console.log("verificar o perfil", user.Papel)
-        if (user.Papel) {
-          setPerfil(user.Papel.perfil);
+      .then((data: PerfilProps) => {
+        console.log('user', data)
+
+        if (data.papel) {
+          setPerfil(data.papel.perfil);
         }
       })
   }, []);
