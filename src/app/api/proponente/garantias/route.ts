@@ -1,14 +1,10 @@
 export const dynamic = 'force-dynamic';
 import { converterString, validarEstado } from "@/app/actions/auth";
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
 import ContaVinculada from "@/models/ContaVinculada";
-import Documento from "@/models/Documento";
 import Emprestimo from "@/models/Emprestimo";
 import EmprestimoSolidario from "@/models/EmprestimoSolidario";
-import Proponente from "@/models/Proponente";
 import Solidario from "@/models/Solidario";
-import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -30,7 +26,7 @@ export async function GET(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const emprestimo = await Emprestimo.findOne({
       where: { id: emprestimoId },

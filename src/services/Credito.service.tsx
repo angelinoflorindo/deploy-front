@@ -33,9 +33,11 @@ export interface CredoraProps{
 }
 
 export interface DebitoVinculadoProps {
+  user_id: any;
   id: any;
   valor_retido: any;
   estado: any;
+  data_desbloqueio:any;
   devedor_id: any;
   createdAt: any;
   updatedAt: any;

@@ -1,15 +1,11 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
 import Carteira from "@/models/Carteira";
 import Credito from "@/models/Credito";
 import Credora from "@/models/Credora";
 import Deposito from "@/models/Deposito";
 import Devedor from "@/models/Devedor";
-import Diversificacao from "@/models/Diversificacao";
-import Investidor from "@/models/Investidor";
-import Proponente from "@/models/Proponente";
 import Saque from "@/models/Saque";
 import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
@@ -23,7 +19,7 @@ export async function GET(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const result = await User.findOne({
       where: { email: email },
@@ -73,7 +69,7 @@ export async function POST(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const carteira = await Carteira.findOne({ where: { user_id: userId } }); // carteira do  investidor
 

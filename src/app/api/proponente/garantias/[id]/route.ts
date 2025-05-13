@@ -1,12 +1,9 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
 import Carteira from "@/models/Carteira";
 import ContaVinculada from "@/models/ContaVinculada";
-import Emprestimo from "@/models/Emprestimo";
 import Proponente from "@/models/Proponente";
-import Saque from "@/models/Saque";
 import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -21,7 +18,7 @@ export async function PUT(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const vinculo = await ContaVinculada.findOne({
       where: { id: uuid, estado: true },
@@ -66,7 +63,7 @@ export async function GET(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const vinculo = await ContaVinculada.findOne({
       where: { id: uuid, estado: false },

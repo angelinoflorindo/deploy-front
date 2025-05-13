@@ -2,9 +2,7 @@ export const dynamic = 'force-dynamic';
 import {
   converterString,
 } from "@/app/actions/auth";
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
-
 import Carteira from "@/models/Carteira";
 import Reembolso from "@/models/Reembolso";
 import { NextRequest, NextResponse } from "next/server";
@@ -27,7 +25,7 @@ export async function POST(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const propCarteira = await Carteira.findOne({where:{user_id:info.propUserId}})
     const investCarteira = await Carteira.findOne({where:{user_id:info.investUserId}})

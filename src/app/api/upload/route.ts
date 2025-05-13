@@ -7,7 +7,6 @@ import { randomUUID } from "crypto";
 import { converterString } from "@/app/actions/auth";
 import Documento from "@/models/Documento";
 import { sequelize } from "@/lib/sequelize";
-import { setupAssociations } from "@/lib/associations";
 
 export async function POST(req: Request) {
   const formData = await req.formData();
@@ -65,7 +64,7 @@ export async function POST(req: Request) {
     };
     await sequelize.authenticate()
     await sequelize.sync()
-    setupAssociations()
+    //setupAssociations()
     const res = await Documento.create(documento);
     savedFiles.push(res);
   }

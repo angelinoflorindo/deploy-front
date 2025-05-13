@@ -1,16 +1,14 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
 import Deposito from "@/models/Deposito";
-import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const { searchParams } = new URL(req.url);
 
@@ -49,7 +47,7 @@ export async function DELETE(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const { searchParams } = new URL(req.url);
 
@@ -95,7 +93,7 @@ export async function POST(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
     const result = await Deposito.create({
       valor: await converterString(body.valor),
       user_id: await converterString(body.user_id),

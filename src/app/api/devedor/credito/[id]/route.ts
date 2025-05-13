@@ -1,15 +1,10 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import { converterString } from "@/app/actions/auth";
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
-import Carteira from "@/models/Carteira";
 import Credito from "@/models/Credito";
-import Emprestimo from "@/models/Emprestimo";
-import Saque from "@/models/Saque";
 import { NextRequest, NextResponse } from "next/server";
 
 /** ÁREA RESERVADA PARA GESTÃO DE EMPRSTIMOS PELO ADMIN | ANALISTA */
-
 // Aprovar o pedido de  Credito
 export async function PUT(
   req: NextRequest,
@@ -21,16 +16,13 @@ export async function PUT(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
 
-    await Credito.update({ progresso: 'CONCLUIDO' }, { where: { id: uuid } });
+    await Credito.update({ progresso: "CONCLUIDO" }, { where: { id: uuid } });
     return NextResponse.json({ message: "Pedido efectuado" }, { status: 200 });
-
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }
 }
-
 
 // Rejeitar o pedido de  Credito
 
@@ -41,16 +33,14 @@ export async function GET(
   const { id } = await context.params;
   const uuid = await converterString(id);
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    setupAssociations();
-
-   await Credito.update({progresso:'CANCELADO'}, {where:{id:uuid}})
-    return NextResponse.json({ message: "Pedido foi rejeitado" }, { status: 200 });
+    await Credito.update({ progresso: "CANCELADO" }, { where: { id: uuid } });
+    return NextResponse.json(
+      { message: "Pedido foi rejeitado" },
+      { status: 200 }
+    );
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }
-  
 }
 
 // Eliminar o pedido de  Emprestimo
@@ -63,11 +53,7 @@ export async function DELETE(
   const uuid = await converterString(id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    setupAssociations();
-
-     await Credito.update({ estado: false }, { where: { id: uuid } });
+    await Credito.update({ estado: false }, { where: { id: uuid } });
     return NextResponse.json({ message: "Pedido Elimindado" }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });

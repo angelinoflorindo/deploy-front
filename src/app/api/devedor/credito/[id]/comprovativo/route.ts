@@ -3,10 +3,8 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
-import { converterString } from "@/app/actions/auth";
 import { getToken } from "next-auth/jwt";
 import { sequelize } from "@/lib/sequelize";
-import { setupAssociations } from "@/lib/associations";
 import Documento from "@/models/Documento";
 import User from "@/models/User";
 import DebitoVinculado from "@/models/DebitoVinculado";
@@ -27,7 +25,6 @@ export async function GET(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
 
     const vinculo = await DebitoVinculado.findOne({
       where: { id: uuid },

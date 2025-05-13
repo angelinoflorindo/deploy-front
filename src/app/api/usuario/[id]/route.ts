@@ -1,12 +1,9 @@
 export const dynamic = 'force-dynamic';
 import { converterString, hashPassword } from "@/app/actions/auth";
-import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/User";
 import { sequelize } from "@/lib/sequelize";
-import { setupAssociations } from "@/lib/associations";
 import Pessoa from "@/models/Pessoa";
-import Conta from "@/models/Conta";
 
 export async function GET(
   req: NextRequest,
@@ -23,7 +20,7 @@ export async function GET(
   try{
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
   
     if (isEmail) {
       user = await User.findOne({
@@ -79,7 +76,7 @@ export async function PUT(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     let userInfo = {
       primeiro_nome: body.primeiro_nome,

@@ -2,8 +2,7 @@
 import NextAuth, { Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs"; // Para criptografar senhas
-import {sequelize} from '@/lib/sequelize'
-import {setupAssociations} from "@/lib/associations"
+import {sequelize} from '@/lib/sequelize' 
 import User from "@/models/User"
 import Papel from "@/models/Papel";
 
@@ -35,7 +34,6 @@ const handler = NextAuth({
         // Verificar se o usuário existe no banco de dados
         await sequelize.authenticate()
         await sequelize.sync()
-        setupAssociations()
         const user = await User.findOne({
           where: { email: credentials.email },
         });

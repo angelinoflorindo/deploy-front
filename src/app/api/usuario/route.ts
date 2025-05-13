@@ -9,7 +9,6 @@ import Carteira from "@/models/Carteira";
 import Reclamacao from "@/models/Reclamacao";
 import Documento from "@/models/Documento";
 import { sequelize } from "@/lib/sequelize";
-import { setupAssociations } from "@/lib/associations";
 import Proponente from "@/models/Proponente";
 import Emprestimo from "@/models/Emprestimo";
 
@@ -20,7 +19,7 @@ export async function GET(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
     const userInfo = await User.findOne({
       where: { email: email },
       attributes: { exclude: ["password"] },
@@ -54,7 +53,7 @@ export async function POST(req: NextRequest) {
 
   await sequelize.authenticate();
   await sequelize.sync();
-  setupAssociations();
+  //setupAssociations();
 
   const user = await findOrCreateUser({
     primeiro_nome: data.primeiro_nome,

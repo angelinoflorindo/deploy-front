@@ -1,6 +1,5 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
 import Credito from "@/models/Credito";
 import CreditoSolidario from "@/models/CreditoSolidario";
@@ -26,7 +25,7 @@ export async function PUT(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const user = await User.findByPk(body.user_id, {
       include: [
@@ -100,7 +99,7 @@ export async function GET(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const resp = await Solidario.findAll({
       where: { user_id: uuid, estado: false },
@@ -154,7 +153,7 @@ export async function DELETE(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     await Solidario.destroy({ where: { id: uuid } }); // posteriormente criar um atributo definido para remoção de dados
 

@@ -11,7 +11,7 @@ import {
 } from "sequelize-typescript";
 
 @Table({ tableName: "debitos_vinculado" })
-export default class DebitoVinculado extends Model {
+export default class DebitoVinculado extends Model{
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)

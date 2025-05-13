@@ -2,7 +2,6 @@ export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { sequelize } from "@/lib/sequelize";
-import { setupAssociations } from "@/lib/associations";
 import Pessoa from "@/models/Pessoa";
 import Emprego from "@/models/Emprego";
 import Residencia from "@/models/Residencia";
@@ -57,7 +56,7 @@ export async function GET(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
     const userInfo = await User.findOne({
       where: { email: email },
       attributes: { exclude: ["password"] },
@@ -91,7 +90,7 @@ export async function POST(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const existingPessoa = await findPessoaByUserId(userId);
     if (existingPessoa) {

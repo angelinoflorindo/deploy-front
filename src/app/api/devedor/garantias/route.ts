@@ -1,6 +1,5 @@
 export const dynamic = 'force-dynamic';
-import { converterString, validarEstado } from "@/app/actions/auth";
-import { setupAssociations } from "@/lib/associations";
+import { converterString, validarEstado } from "@/app/actions/auth"; 
 import { sequelize } from "@/lib/sequelize";
 import Credito from "@/models/Credito";
 import CreditoSolidario from "@/models/CreditoSolidario";
@@ -28,7 +27,7 @@ export async function GET(req: NextRequest) {
     
   await sequelize.authenticate();
   await sequelize.sync();
-  setupAssociations();
+  //setupAssociations();
 
   const credito = await Credito.findOne({
     where: { id: creditoId },

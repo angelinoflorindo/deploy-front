@@ -2,7 +2,6 @@ export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { sequelize } from "@/lib/sequelize";
-import { setupAssociations } from "@/lib/associations";
 import Pessoa from "@/models/Pessoa";
 import Conta from "@/models/Conta";
 import Emprego from "@/models/Emprego";
@@ -21,7 +20,7 @@ export async function GET(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const pessoa = await Pessoa.findOne({
       where: { id: uuid },
@@ -82,7 +81,7 @@ export async function PUT(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     await Residencia.update(infoResidencia, {where:{id:infoResidencia.id}});
     await Emprego.update(infoEmprego, {where:{id:infoEmprego.id}});

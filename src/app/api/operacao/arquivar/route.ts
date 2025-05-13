@@ -2,7 +2,6 @@ export const dynamic = 'force-dynamic';
 
 
 import { converterString } from "@/app/actions/auth";
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
 
 import Documento from "@/models/Documento";
@@ -17,7 +16,7 @@ export async function GET(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const { searchParams } = new URL(req.url);
 

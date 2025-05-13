@@ -1,6 +1,5 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
 import Diversificacao from "@/models/Diversificacao";
 import Emprestimo from "@/models/Emprestimo";
@@ -20,7 +19,7 @@ export async function GET(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const result = await Investidor.findOne({
       where: { id: investidorId },
@@ -66,7 +65,7 @@ export async function PUT(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const result = await Investidor.update(body, { where: { id: uuid } });
     return NextResponse.json(result, { status: 200 });
