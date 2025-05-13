@@ -62,6 +62,6 @@ export default class User extends Model {
   @Column({ field: "updated_at", type: DataType.DATE })
   updatedAt!: Date;
 
-  @HasOne(()=>Papel,  {as:"Papel", })
+  @HasOne(()=>Papel,  {as:"papel"})
   papel!:Papel
 }
