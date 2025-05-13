@@ -29,8 +29,8 @@ import NegocearEmprestimo from "../models/NegocearEmprestimo";
 import Credora from "@/models/Credora";
 
 export function setupAssociations() {
- /*
-  User.hasOne(Pessoa, { foreignKey: "user_id" });
+ 
+  User.hasOne(Pessoa, { foreignKey: "user_id" }); // tomado
   User.hasMany(Documento, { foreignKey: "user_id" });
   User.hasOne(Investidor, { foreignKey: "user_id" });
   User.hasMany(Reclamacao, { foreignKey: "user_id" });
@@ -212,5 +212,4 @@ export function setupAssociations() {
   
   Credito.hasMany(CreditoSolidario, { foreignKey: "credito_id" });
   CreditoSolidario.belongsTo(Credito, { foreignKey: "credito_id" });
-*/
 }
