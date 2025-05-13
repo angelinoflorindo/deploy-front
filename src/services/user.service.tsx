@@ -9,21 +9,32 @@ export interface UserInfo {
   bilhete: any;
   telemovel: any;
   email: any;
-  Documentos: DocumentoProps
+  Documentos: DocumentoProps;
   Pessoa: PessoaDef;
-  Investidor:InvestidorProps,
-  Devedor:DevedorProps
-  Depositos:DepositoProps,
-  Reclamacaos:ReclamacaoProps,
-  Saque:SaqueProps,
-  Carteira:CarteiraProps,
-  Proponente:ProponenteProps,
-  Papel:{
-    id:any,
-    perfil:any
-  }
+  Investidor: InvestidorProps;
+  Devedor: DevedorProps;
+  Depositos: DepositoProps;
+  Reclamacaos: ReclamacaoProps;
+  Saque: SaqueProps;
+  Carteira: CarteiraProps;
+  Proponente: ProponenteProps;
+  Papel: {
+    id: any;
+    perfil: any;
+  };
+}
 
-
+export interface PerfilInfo {
+  id: any;
+  estado: any;
+  perfil: any;
+  user_id: any;
+  createdAt: any;
+  updatedAt: any;
+}
+export interface PerfilProps {
+  user: UserInfo;
+  papel: PerfilInfo;
 }
 
 export interface UserProps {
@@ -87,207 +98,196 @@ export interface ContaProps {
   updatedAt: any;
 }
 
-
-export interface InvestidorProps{
-  id:any;
-  maior_risco:boolean;
-  maior_seguranca:boolean;
-  saque_antecipado:boolean,
-  fundo_protegido:boolean,
-  partilhar_emprestimo:boolean;
-  estado:boolean;
-  user_id:any;
+export interface InvestidorProps {
+  id: any;
+  maior_risco: boolean;
+  maior_seguranca: boolean;
+  saque_antecipado: boolean;
+  fundo_protegido: boolean;
+  partilhar_emprestimo: boolean;
+  estado: boolean;
+  user_id: any;
   createdAt: any;
   updatedAt: any;
-  User:UserProps,
-  Diversificacaos: DiversificacaoProps[]
+  User: UserProps;
+  Diversificacaos: DiversificacaoProps[];
 }
 
-
-
-export interface ProponenteProps{
-  id:any;
-  solicitacao:any;
-  reembolsar:any;
-  satisfeitos:any,
-  insatisfeitos:any,
-  estado:boolean;
-  user_id:any;
+export interface ProponenteProps {
+  id: any;
+  solicitacao: any;
+  reembolsar: any;
+  satisfeitos: any;
+  insatisfeitos: any;
+  estado: boolean;
+  user_id: any;
   createdAt: any;
   updatedAt: any;
-  User:UserProps,
-  Emprestimos:any[]
+  User: UserProps;
+  Emprestimos: any[];
 }
 
-
-export interface DepositoProps{
-  id:any,
-  valor:any,
-  user_id:any;
-  pendencia:any,
-  estado:any,
-  createdAt: any;
-  updatedAt: any;
-
-}
-
-export interface SaqueProps{
-  id:any,
-  taxa:any;
-  valor:any,
-  estado:any,
-  pendencia:any,
-  user_id:any;
+export interface DepositoProps {
+  id: any;
+  valor: any;
+  user_id: any;
+  pendencia: any;
+  estado: any;
   createdAt: any;
   updatedAt: any;
 }
 
-
-
-export interface EmprestimoProps{
-  id:any,
-  valor:any,
-  estado:any,
-  juro:any,
-  prestacao:any,
-  prazo:any,
-  progresso:any,
-  proponente_id:any,
-  pendencia:any,
-  user_id:any;
-  createdAt: any;
-  updatedAt: any;
-  Proponente:ProponenteProps
-}
-
-
-export interface EmprestimoDef{
-  id:any,
-  valor:any,
-  estado:any,
-  juro:any,
-  prestacao:any,
-  prazo:any,
-  progresso:any,
-  proponente_id:any,
-  pendencia:any,
-  user_id:any;
-  createdAt: any;
-  updatedAt: any;
-  totalGuardiaos:any
-  totalTaxa:string
-  taxaDiversificada:any
-  EmprestimoSolidarios:any[],
-  Diversificacaos:any[],
-  Proponente:{
-    id:any,
-    User:UserProps,
-    ContaVinculadas:ContaVinculadaProps[]
-  }
-}
-export interface CarteiraProps{
-  id:any,
-  codigo:any;
-  numero:any,
-  saldo:any;
-  user_id:any;
+export interface SaqueProps {
+  id: any;
+  taxa: any;
+  valor: any;
+  estado: any;
+  pendencia: any;
+  user_id: any;
   createdAt: any;
   updatedAt: any;
 }
 
-export interface ReclamacaoProps{
-  id:any,
-  assunto:any,
-  conteudo:any;
-  user_id:any;
+export interface EmprestimoProps {
+  id: any;
+  valor: any;
+  estado: any;
+  juro: any;
+  prestacao: any;
+  prazo: any;
+  progresso: any;
+  proponente_id: any;
+  pendencia: any;
+  user_id: any;
+  createdAt: any;
+  updatedAt: any;
+  Proponente: ProponenteProps;
+}
+
+export interface EmprestimoDef {
+  id: any;
+  valor: any;
+  estado: any;
+  juro: any;
+  prestacao: any;
+  prazo: any;
+  progresso: any;
+  proponente_id: any;
+  pendencia: any;
+  user_id: any;
+  createdAt: any;
+  updatedAt: any;
+  totalGuardiaos: any;
+  totalTaxa: string;
+  taxaDiversificada: any;
+  EmprestimoSolidarios: any[];
+  Diversificacaos: any[];
+  Proponente: {
+    id: any;
+    User: UserProps;
+    ContaVinculadas: ContaVinculadaProps[];
+  };
+}
+export interface CarteiraProps {
+  id: any;
+  codigo: any;
+  numero: any;
+  saldo: any;
+  user_id: any;
   createdAt: any;
   updatedAt: any;
 }
 
-export interface DocumentoProps{
-  id:any,
-  tipo:any,
-  titulo:any;
-  nome_salvado:any,
-  nome_original:any,
-  extensao:any,
-  user_id:any;
-  createdAt: any;
-  updatedAt: any;
-  User:UserProps
-}
-
-
-export interface NegociarEmprestimoProps{
-  emprestimo_id:any,
-  investidor_id:any,
-  valor:any,
-  juro:any,
-  prestacao:any,
-  prazo:any,
-  pendencia:any,
-  estado:any,
-  Investidor:{
-    id:any,
-    user_id:any,
-    User:{
-      id:any
-      primeiro_nome:any
-      segundo_nome:any
-    }
-  }
-  extensao:any,
-  user_id:any;
+export interface ReclamacaoProps {
+  id: any;
+  assunto: any;
+  conteudo: any;
+  user_id: any;
   createdAt: any;
   updatedAt: any;
 }
 
-export interface ContaVinculadaProps{
-  id:any,
-  valor_retido:any,
-  estado:any,
-  proponente_id:any;
+export interface DocumentoProps {
+  id: any;
+  tipo: any;
+  titulo: any;
+  nome_salvado: any;
+  nome_original: any;
+  extensao: any;
+  user_id: any;
   createdAt: any;
-  updatedAt: any
+  updatedAt: any;
+  User: UserProps;
 }
 
-
-export interface DevedorProps{
-  id:any;
-  solicitacao:any;
-  adimplencia:any;
-  inadimplencia:any;
-  estado:boolean;
-  user_id:any;
+export interface NegociarEmprestimoProps {
+  emprestimo_id: any;
+  investidor_id: any;
+  valor: any;
+  juro: any;
+  prestacao: any;
+  prazo: any;
+  pendencia: any;
+  estado: any;
+  Investidor: {
+    id: any;
+    user_id: any;
+    User: {
+      id: any;
+      primeiro_nome: any;
+      segundo_nome: any;
+    };
+  };
+  extensao: any;
+  user_id: any;
   createdAt: any;
   updatedAt: any;
 }
 
-export interface SolidarioFace{
+export interface ContaVinculadaProps {
+  id: any;
+  valor_retido: any;
+  estado: any;
+  proponente_id: any;
+  createdAt: any;
+  updatedAt: any;
+}
+
+export interface DevedorProps {
+  id: any;
+  solicitacao: any;
+  adimplencia: any;
+  inadimplencia: any;
+  estado: boolean;
+  user_id: any;
+  createdAt: any;
+  updatedAt: any;
+}
+
+export interface SolidarioFace {
   id: any;
   tipo: any;
   parentesco: any;
   taxa: any;
   pessoa_id: any;
-  user_id:any;
+  user_id: any;
   createdAt: any;
   updatedAt: any;
-  User:UserProps
-  
+  User: UserProps;
 }
 
-export interface SolidarioProps{
+export interface SolidarioProps {
   id: any;
   tipo: any;
   parentesco: any;
   taxa: any;
   pessoa_id: any;
-  user_id:any;
+  user_id: any;
   createdAt: any;
   updatedAt: any;
-  Pessoa:{
-    User:UserProps
-  }
+  Pessoa: {
+    User: UserProps;
+  };
 }
 // More definitions
 export interface PessoaDef {
@@ -305,9 +305,8 @@ export interface PessoaDef {
   Emprego: EmpregoProps;
   Residencium: ResidenciaProps;
   Contum: ContaProps;
-  User:{id:any, email:any}
+  User: { id: any; email: any };
 }
-
 
 export interface Guardiao {
   id: any;
@@ -315,6 +314,6 @@ export interface Guardiao {
   segundo_nome: any;
   telemovel: any;
   email: any;
-  user_id:any;
+  user_id: any;
   Pessoa: { id: any };
 }
