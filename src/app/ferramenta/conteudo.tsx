@@ -10,8 +10,6 @@ const Conteudo = () => {
 
     return (
         <div className={global.grid} >
-            <h1 className="font-bold text-center">Ferramentas </h1>
-
             <section className={global.sectionLink}>
                 <Link href="/ferramenta/usuario" className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md" >
                     <Image src="/img/minhaconta.png" className={global.imagens} alt="imagem" width={40} height={40} />

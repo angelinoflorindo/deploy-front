@@ -9,10 +9,14 @@ import {
   ForeignKey,
   CreatedAt,
   UpdatedAt,
+  BelongsTo,
+  HasOne,
 } from "sequelize-typescript";
 import User from "./User";
 import Emprego from "./Emprego";
 import Residencia from "./Residencia";
+import Conjugue from "./Conjugue";
+import Conta from "./Conta";
 
 @Table({ tableName: "pessoas" })
 export default class Pessoa extends Model {
@@ -53,6 +57,21 @@ export default class Pessoa extends Model {
   @ForeignKey(() => Residencia)
   @Column(DataType.INTEGER)
   residencia_id!: number;
+
+  @BelongsTo(()=>User)
+  user!:User
+
+  @BelongsTo(()=>Emprego)
+  emprego!:Emprego
+
+  @BelongsTo(()=>Residencia, {as:"Residencia"})
+  residencia!:Residencia
+
+  @HasOne(()=> Conjugue, {as:'Conjugue'})
+  conjugue!:Conjugue
+
+  @HasOne(()=>Conta, {as:"Conta"})
+  conta!:Conta
 
   @CreatedAt
   @Column({ field: "created_at", type: DataType.DATE })

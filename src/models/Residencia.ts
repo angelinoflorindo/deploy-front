@@ -8,7 +8,9 @@ import {
   AutoIncrement,
   CreatedAt,
   UpdatedAt,
+  HasMany,
 } from "sequelize-typescript";
+import Pessoa from "./Pessoa";
 
 @Table({ tableName: "residencias" })
 export default class Residencia extends Model {
@@ -25,6 +27,9 @@ export default class Residencia extends Model {
 
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   estado!: boolean;
+
+  @HasMany(() => Pessoa, { as: "Pessoa" })
+  pessoa!: Pessoa;
 
   @CreatedAt
   @Column({ field: "created_at", type: DataType.DATE })

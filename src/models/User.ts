@@ -11,7 +11,10 @@ import {
   CreatedAt,
   UpdatedAt,
   HasOne,
+  HasMany,
 } from "sequelize-typescript";
+import Pessoa from "./Pessoa";
+import Deposito from "./Deposito";
  
 @Table({
   tableName: "users",
@@ -61,5 +64,10 @@ export default class User extends Model {
   @Column({ field: "updated_at", type: DataType.DATE })
   updatedAt!: Date;
 
+  @HasOne(()=>Pessoa, {as:"Pessoa"})
+  pessoa!:Pessoa
+
+  @HasMany(()=>Deposito)
+  deposito!:Deposito[]
   
 }
