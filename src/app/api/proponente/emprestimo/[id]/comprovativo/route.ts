@@ -5,7 +5,6 @@ import path from "path";
 import { converterString } from "@/app/actions/auth";
 import { getToken } from "next-auth/jwt";
 import { sequelize } from "@/lib/sequelize";
-import { setupAssociations } from "@/lib/associations";
 import Documento from "@/models/Documento";
 import ContaVinculada from "@/models/ContaVinculada";
 import Proponente from "@/models/Proponente";
@@ -29,7 +28,7 @@ export async function GET(
    
   await sequelize.authenticate();
   await sequelize.sync();
-  setupAssociations();
+  //setupAssociations();
 
   const vinculo = await ContaVinculada.findOne({
     where: { id: uuid },

@@ -1,18 +1,12 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
-import ContaVinculada from "@/models/ContaVinculada";
-import Diversificacao from "@/models/Diversificacao";
 import Emprestimo from "@/models/Emprestimo";
-import EmprestimoSolidario from "@/models/EmprestimoSolidario";
 import Investidor from "@/models/Investidor";
 import NegocearEmprestimos from "@/models/NegocearEmprestimo";
 import Proponente from "@/models/Proponente";
-import Solidario from "@/models/Solidario";
 import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
-import { fn, col, literal } from "sequelize";
 
 // Buscar os dados da negociação pelo investidor-emprestimo
 
@@ -31,7 +25,7 @@ export async function GET(
 
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
   
     const user = await User.findOne({
       where: { email: email },

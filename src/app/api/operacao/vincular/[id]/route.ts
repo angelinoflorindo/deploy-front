@@ -1,6 +1,5 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
 import Carteira from "@/models/Carteira";
 import Deposito from "@/models/Deposito";
@@ -17,7 +16,7 @@ export async function PUT(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const deposito = await Deposito.findOne({ where: { id: id } });
     const carteira = await Carteira.findOne({
@@ -51,7 +50,7 @@ export async function GET(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const deposito = await Deposito.findOne({ where: { id: id } });
     if (deposito?.pendencia) {
@@ -97,7 +96,7 @@ export async function DELETE(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
      await Deposito.update({ estado: false }, { where: { id: uuid } });
     return NextResponse.json({ message: "Depósito Elimindado" }, { status: 200 });

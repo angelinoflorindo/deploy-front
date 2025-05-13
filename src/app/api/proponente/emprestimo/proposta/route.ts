@@ -2,7 +2,6 @@ export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { sequelize } from "@/lib/sequelize";
-import { setupAssociations } from "@/lib/associations";
 import Diversificacao from "@/models/Diversificacao";
 
 //  investidor -  Permite registrar a taxa de diversificação
@@ -19,7 +18,7 @@ export async function POST(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const [result, created] = await sequelize.transaction(async (t) => {
       return await Diversificacao.findOrCreate({

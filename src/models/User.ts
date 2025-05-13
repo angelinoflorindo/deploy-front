@@ -12,7 +12,6 @@ import {
   UpdatedAt,
   HasOne,
 } from "sequelize-typescript";
-import Papel from "./Papel";
  
 @Table({
   tableName: "users",
@@ -62,6 +61,5 @@ export default class User extends Model {
   @Column({ field: "updated_at", type: DataType.DATE })
   updatedAt!: Date;
 
-  @HasOne(()=>Papel,  {as:"papel"})
-  papel!:Papel
+  
 }

@@ -1,5 +1,4 @@
 export const dynamic = 'force-dynamic';
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
 import Pessoa from "@/models/Pessoa";
 import Solidario from "@/models/Solidario";
@@ -17,7 +16,7 @@ export async function GET(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const user = await User.findOne({
       where: { email: email },
@@ -48,7 +47,7 @@ export async function POST(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const result = await Solidario.create(body);
     return NextResponse.json(result);

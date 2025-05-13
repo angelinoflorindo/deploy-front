@@ -3,10 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { converterString } from "@/app/actions/auth";
-import { getServerSession } from "next-auth";
 import { getToken } from "next-auth/jwt";
 import { sequelize } from "@/lib/sequelize";
-import { setupAssociations } from "@/lib/associations";
 import Deposito from "@/models/Deposito";
 import Documento from "@/models/Documento";
 
@@ -26,7 +24,7 @@ export async function GET(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const deposito = await Deposito.findOne({ where: { id: uuid } });
     const infoDeposito = {

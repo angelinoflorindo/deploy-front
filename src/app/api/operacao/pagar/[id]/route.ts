@@ -1,11 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
-import Carteira from "@/models/Carteira";
-import Deposito from "@/models/Deposito";
 import Pagamento from "@/models/Pagamento";
-import Reembolso from "@/models/Reembolso";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -31,7 +27,7 @@ export async function GET(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const result = await Pagamento.findOne({ where: {devedor_id: id, estado:true}});
 

@@ -2,7 +2,6 @@ export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { sequelize } from "@/lib/sequelize";
-import { setupAssociations } from "@/lib/associations";
 import NegocearEmprestimos from "@/models/NegocearEmprestimo";
 import User from "@/models/User";
 import Investidor from "@/models/Investidor";
@@ -26,7 +25,7 @@ export async function POST(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const emprestimoNegociado = await NegocearEmprestimos.findOne({
       where: {
@@ -88,7 +87,7 @@ export async function GET(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const user = await User.findOne({
       where: { email: email },

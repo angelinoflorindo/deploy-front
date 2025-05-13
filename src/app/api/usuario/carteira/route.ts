@@ -4,7 +4,6 @@ import {
   gerarCodigoCartao,
   gerarNumeroCartao,
 } from "@/app/actions/ramdom";
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
 import Carteira from "@/models/Carteira";
 import { NextRequest, NextResponse } from "next/server";
@@ -16,7 +15,7 @@ export async function POST(req: NextRequest) {
 
   await sequelize.authenticate();
   await sequelize.sync();
-  setupAssociations();
+  //setupAssociations();
 
   const [result] = await Carteira.findOrCreate({
     where: {

@@ -1,9 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
 import Deposito from "@/models/Deposito";
-import Proponente from "@/models/Proponente";
 import ContaVinculada from "@/models/ContaVinculada";
 import { NextRequest, NextResponse } from "next/server";
 import Devedor from "@/models/Devedor";
@@ -13,7 +11,7 @@ export async function GET(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const { searchParams } = new URL(req.url);
 
@@ -58,7 +56,7 @@ export async function POST(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const info = {
       solicitacao: 0,
@@ -109,7 +107,7 @@ export async function DELETE(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const { searchParams } = new URL(req.url);
 

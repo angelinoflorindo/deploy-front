@@ -2,7 +2,6 @@ export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { sequelize } from "@/lib/sequelize";
-import { setupAssociations } from "@/lib/associations";
 import Reclamacao from "@/models/Reclamacao";
 
 export  async function  GET(req: NextRequest) {
@@ -10,7 +9,7 @@ export  async function  GET(req: NextRequest) {
     
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const { searchParams } = new URL(req.url);
   
@@ -53,7 +52,7 @@ export async function POST(req: NextRequest) {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations();
 
     const resp = await Reclamacao.create({
       assunto: body.assunto,

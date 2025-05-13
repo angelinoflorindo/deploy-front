@@ -1,15 +1,11 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
-import ContaVinculada from "@/models/ContaVinculada";
 import Diversificacao from "@/models/Diversificacao";
 import Emprestimo from "@/models/Emprestimo";
-import EmprestimoSolidario from "@/models/EmprestimoSolidario";
 import NegocearEmprestimos from "@/models/NegocearEmprestimo";
 import { NegociarEmprestimoProps } from "@/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
-import { fn, col, literal } from "sequelize";
 
 // Confirmar se o emprestimo tem no mínimo uma negociação
 
@@ -20,9 +16,10 @@ export async function GET(
   const { id } = context.params;
   const uuid = Number(id);
   try {
+   ////setupAssociations()();
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    
 
     const emprestimo = await Diversificacao.findOne({
       where: { emprestimo_id: uuid, protencao: true },
@@ -50,7 +47,7 @@ export async function PUT(
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    //setupAssociations()();
 
     const result = await sequelize.transaction(async (t) => {
       const negociacao = await NegocearEmprestimos.update(
@@ -111,9 +108,10 @@ export async function PATCH(
   const emprestimoId = body.emprestimoId;
 
   try {
+    ////setupAssociations()();
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    
 
     await NegocearEmprestimos.update(
       { estado: false, pendencia: false },

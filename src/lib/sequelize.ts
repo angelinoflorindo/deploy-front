@@ -1,7 +1,7 @@
 // lib/sequelize.ts
 //import { Sequelize } from "sequelize";
 import { Sequelize } from "sequelize-typescript";
-import path from 'path'
+import path from "path";
 import User from "@/models/User";
 import Pessoa from "@/models/Pessoa";
 import Documento from "../models/Documento";
@@ -31,14 +31,11 @@ import DebitoVinculado from "../models/DebitoVinculado";
 import NegocearEmprestimo from "../models/NegocearEmprestimo";
 import Credora from "../models/Credora";
 
+import { config } from "dotenv";
 
-import {config} from 'dotenv'
+config();
 
-
-config(); 
-
-
- export const sequelize = new Sequelize({
+export const sequelize = new Sequelize({
   dialect: "mysql",
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
@@ -46,8 +43,6 @@ config();
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   dialectModule: require("mysql2"),
-  //benchmark: true,
- 
   models: [
     User,
     Pessoa,
@@ -76,9 +71,6 @@ config();
     ContaVinculada,
     DebitoVinculado,
     NegocearEmprestimo,
-    Credora
+    Credora,
   ],
-  logging:false,
-
-
 });

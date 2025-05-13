@@ -1,6 +1,4 @@
 export const dynamic = 'force-dynamic';
-import { converterString } from "@/app/actions/auth";
-import { setupAssociations } from "@/lib/associations";
 import { sequelize } from "@/lib/sequelize";
 import Credito from "@/models/Credito";
 import CreditoSolidario from "@/models/CreditoSolidario";
@@ -20,9 +18,10 @@ export async function GET(
   const uuid = Number(id);
 
   try {
+   //setupAssociations();
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    
 
     const credito = await Credito.findOne({
       where: {
@@ -108,9 +107,10 @@ export async function PUT(
   const uuid = Number(id);
 
   try {
+    //setupAssociations();
     await sequelize.authenticate();
     await sequelize.sync();
-    setupAssociations();
+    
 
     await Credito.update({ pendencia: false }, { where: { id: uuid } });
     return NextResponse.json({ message: "Pedido efectuado" }, { status: 200 });
