@@ -1,4 +1,5 @@
 "use client";
+import Loading from "@/app/loading";
 import styles from "@/modules/global.module.css";
 import { UserInfo } from "@/services/user.service";
 import { useSession } from "next-auth/react";
@@ -8,23 +9,31 @@ import { useEffect, useState } from "react";
 export default function Conteudo() {
   const { data: session, status } = useSession();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-  const router = useRouter()
-  if(!session?.user?.email) router.push('/')
+  const router = useRouter();
 
-  useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa?email=${session?.user?.email}`)
+  if(!session?.user.email) return Loading
+  const fetchData = () => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa?email=${session?.user?.email}`
+    )
       .then((res) => {
-        if (!res.ok){
-          throw Error('Erro na rquisição')
+        if (!res.ok) {
+          throw Error("Erro na requisição");
         }
-        return res.json()
+        return res.json();
       })
-      .then((users:UserInfo) => {
+      .then((users: UserInfo) => {
         setUserInfo(users);
-      }).catch((error)=>{
-        console.log("Error message", error)
-        router.push('/')
       })
+      .catch((error) => {
+        console.log("Error message", error);
+        router.push("/");
+      });
+  };
+  useEffect(() => {
+    if(session?.user.email){
+      fetchData()
+    }
   }, []);
 
   return (
@@ -47,30 +56,29 @@ export default function Conteudo() {
           </div>
         </div>
         <hr className={styles.divider} />
-       <h2>Informações complementares</h2>
-       {userInfo?.Pessoa == null ? (
-             <b className="text-red-500">Sem informação</b>
-       ):(
-         <div className="flex flex-col">
-         <span className="py-1">
-           Estado civil:             
-           <b>{userInfo?.Pessoa.estado_civil}</b>
-
-         </span>
-         <span className="py-1">
-           Data nascimento:
-           <b>{userInfo?.Pessoa.data_nascimento.split("T")[0]}</b>
-         </span>
-         <span className="py-1">
-           Resindente em:
-           <b>{userInfo?.Pessoa.provincia}</b>
-         </span>
-         <span className="py-1">
-           Município:
-           <b>{userInfo?.Pessoa.municipio}</b>
-         </span>
-       </div>
-       )}
+        <h2>Informações complementares</h2>
+        {userInfo?.Pessoa == null ? (
+          <b className="text-red-500">Sem informação</b>
+        ) : (
+          <div className="flex flex-col">
+            <span className="py-1">
+              Estado civil:
+              <b>{userInfo?.Pessoa.estado_civil}</b>
+            </span>
+            <span className="py-1">
+              Data nascimento:
+              <b>{userInfo?.Pessoa.data_nascimento.split("T")[0]}</b>
+            </span>
+            <span className="py-1">
+              Resindente em:
+              <b>{userInfo?.Pessoa.provincia}</b>
+            </span>
+            <span className="py-1">
+              Município:
+              <b>{userInfo?.Pessoa.municipio}</b>
+            </span>
+          </div>
+        )}
       </section>
     </div>
   );

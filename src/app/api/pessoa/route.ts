@@ -56,9 +56,6 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get("email");
   try {
-    //await sequelize.authenticate();
-    //await sequelize.sync();
-    //setupAssociations();
     setUserAssociation()
     setPessoaAssociation()
     const userInfo = await User.findOne({
