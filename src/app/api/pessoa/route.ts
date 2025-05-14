@@ -8,6 +8,8 @@ import {Conjugue} from "@/models/Conjugue";
 import {Conta} from "@/models/Conta";
 import {User} from "@/models/User";
 import { sequelize } from "@/lib/sequelize";
+import { setPessoaAssociation } from "@/lib/pessoa.association";
+import { setUserAssociation } from "@/lib/user.associations";
 
 async function findOrCreateResidencia(info: any) {
   const [residencia] = await Residencia.findOrCreate({
@@ -57,6 +59,8 @@ export async function GET(req: NextRequest) {
     //await sequelize.authenticate();
     //await sequelize.sync();
     //setupAssociations();
+    setUserAssociation()
+    setPessoaAssociation()
     const userInfo = await User.findOne({
       where: { email: email },
       attributes: { exclude: ["password"] },
