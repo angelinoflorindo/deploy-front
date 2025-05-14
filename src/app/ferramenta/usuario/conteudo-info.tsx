@@ -48,7 +48,7 @@ const ConteudoInfo = ({users}:{users:UserInfo}) => {
                 </span>
                 <span className="py-1">
                   Tempo de residência:
-                  <b>{user?.Pessoa.Residencium.data_inicio.split("T")[0]}</b>
+                  <b>{user?.Pessoa.Residencium.data_inicio}</b>
                 </span>
               </div>
 
@@ -73,7 +73,7 @@ const ConteudoInfo = ({users}:{users:UserInfo}) => {
                   </span>
                   <span className="py-1">
                     Data nascimento :
-                    <b>{user?.Pessoa.Conjugue.data_nascimento.split("T")[0]}</b>
+                    <b>{user?.Pessoa.Conjugue.data_nascimento}</b>
                   </span>
                   <span className="py-1">
                     Número de dependentes:
