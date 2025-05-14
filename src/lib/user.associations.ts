@@ -10,7 +10,7 @@ import { User } from "@/models/User";
 export function setUserAssociation() {
   User.hasOne(Pessoa, { foreignKey: "user_id" }); // tomado
   User.hasMany(Documento, { foreignKey: "user_id" });
-  User.hasOne(Papel, { as: "papel", foreignKey: "user_id" });
+  User.hasOne(Papel, {foreignKey: "user_id" });
   User.hasMany(Solidario, { foreignKey: "user_id" });
   User.hasOne(Devedor, { foreignKey: "user_id" });
   User.hasMany(Deposito, { foreignKey: "user_id" });
