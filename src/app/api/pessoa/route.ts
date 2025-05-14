@@ -1,12 +1,12 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import { converterString } from "@/app/actions/auth";
 import { NextRequest, NextResponse } from "next/server";
-import {Pessoa} from "@/models/Pessoa";
-import {Emprego} from "@/models/Emprego";
-import {Residencia} from "@/models/Residencia";
-import {Conjugue} from "@/models/Conjugue";
-import {Conta} from "@/models/Conta";
-import {User} from "@/models/User";
+import { Pessoa } from "@/models/Pessoa";
+import { Emprego } from "@/models/Emprego";
+import { Residencia } from "@/models/Residencia";
+import { Conjugue } from "@/models/Conjugue";
+import { Conta } from "@/models/Conta";
+import { User } from "@/models/User";
 import { sequelize } from "@/lib/sequelize";
 import { setPessoaAssociation } from "@/lib/pessoa.association";
 import { setUserAssociation } from "@/lib/user.associations";
@@ -21,7 +21,7 @@ async function findOrCreateResidencia(info: any) {
       tipo: info.tipo,
       data_inicio: info.data_inicio,
     },
-    transaction:info.t
+    transaction: info.t,
   });
   return residencia;
 }
@@ -40,7 +40,7 @@ async function findOrCreateEmprego(info: any) {
       sector: info.sector,
       data_inicio: info.data_inicio,
     },
-    transaction:info.t
+    transaction: info.t,
   });
   return emprego;
 }
@@ -49,22 +49,22 @@ async function findPessoaByUserId(userId: number) {
   return await Pessoa.findOne({ where: { user_id: userId } });
 }
 
-
-      
-// Rota dedicada para operações da conta do usuário 
+// Rota dedicada para operações da conta do usuário
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get("email");
   try {
-    setUserAssociation()
-    setPessoaAssociation()
+    setUserAssociation();
+    setPessoaAssociation();
     // verificar conexão com a db
-    
+    await sequelize.authenticate();
+    await sequelize.sync();
+
     const userInfo = await User.findOne({
       where: { email: email },
       attributes: { exclude: ["password"] },
       include: [
-          {
+        {
           model: Pessoa,
           include: [
             {
@@ -91,6 +91,8 @@ export async function POST(req: NextRequest) {
   const userId = await converterString(body.pessoa.user_id);
 
   try {
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const existingPessoa = await findPessoaByUserId(userId);
     if (existingPessoa) {
@@ -99,38 +101,40 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-   const [emprego,residencia, pessoa ] =  await sequelize.transaction(async (t) => {
-      const residencia = await findOrCreateResidencia({
-        tipo: body.residencia.tipo,
-        data_inicio: new Date(body.residencia.data_inicio),
-        t: t,
-      });
+    const [emprego, residencia, pessoa] = await sequelize.transaction(
+      async (t) => {
+        const residencia = await findOrCreateResidencia({
+          tipo: body.residencia.tipo,
+          data_inicio: new Date(body.residencia.data_inicio),
+          t: t,
+        });
 
-      const emprego = await findOrCreateEmprego({
-        area: body.emprego.area,
-        cargo: body.emprego.cargo,
-        sector: body.emprego.sector,
-        data_inicio: new Date(body.emprego.data_inicio),
-        t: t,
-      });
+        const emprego = await findOrCreateEmprego({
+          area: body.emprego.area,
+          cargo: body.emprego.cargo,
+          sector: body.emprego.sector,
+          data_inicio: new Date(body.emprego.data_inicio),
+          t: t,
+        });
 
-      const pessoa = await Pessoa.create(
-        {
-          profissao: body.pessoa.profissao,
-          data_nascimento: new Date(body.pessoa.data_nascimento),
-          estado_civil: body.pessoa.estado_civil,
-          municipio: body.pessoa.municipio,
-          nivel_instrucao: body.pessoa.nivel_instrucao,
-          provincia: body.pessoa.provincia,
-          user_id: userId,
-          emprego_id: emprego.id,
-          residencia_id: residencia.id,
-        },
-        { transaction: t }
-      );
+        const pessoa = await Pessoa.create(
+          {
+            profissao: body.pessoa.profissao,
+            data_nascimento: new Date(body.pessoa.data_nascimento),
+            estado_civil: body.pessoa.estado_civil,
+            municipio: body.pessoa.municipio,
+            nivel_instrucao: body.pessoa.nivel_instrucao,
+            provincia: body.pessoa.provincia,
+            user_id: userId,
+            emprego_id: emprego.id,
+            residencia_id: residencia.id,
+          },
+          { transaction: t }
+        );
 
-      return [emprego, residencia, pessoa]
-    });
+        return [emprego, residencia, pessoa];
+      }
+    );
 
     return NextResponse.json({
       pessoa,
