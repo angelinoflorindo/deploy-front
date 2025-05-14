@@ -12,20 +12,46 @@ const ConteudoInfo = () => {
   const [user, setUser] = useState<UserInfo | null>(null);
     const router = useRouter()
 
-  useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa?email=${session?.user?.email}`)
+ const fetchData = () => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa?email=${session?.user?.email}`
+    )
       .then((res) => {
         if (!res.ok) {
-          console.log("Erro ao buscar os dados");
-           router.push("/");
+          throw Error("Erro na requisição");
         }
         return res.json();
       })
       .then((users: UserInfo) => {
         setUser(users);
-        return;
+      })
+      .catch((error) => {
+        console.log("Error message", error);
+        router.push("/");
       });
+  };
+  useEffect(() => {
+    if (session?.user.email) {
+      fetchData();
+    }
   }, []);
+
+  if (!session?.user.email) {
+    return (
+      <div className={styles.container}>
+        <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
+          {/* Conteúdo Principal */}
+          <main className="flex-1 overflow-y-auto p-4 bg-white">
+            <div className="flex flex-col  h-[100%] justify-center items-center">
+              <hr />
+              <b>Buscando a pagina ...</b>
+              <p className="w-[80%] text-start"> Aguarde alguns segundos </p>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
