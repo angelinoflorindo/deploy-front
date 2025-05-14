@@ -53,12 +53,14 @@ async function findPessoaByUserId(userId: number) {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get("email");
-  try {
+  
+  
     setUserAssociation();
     setPessoaAssociation();
-    // verificar conexão com a db
     await sequelize.authenticate();
     await sequelize.sync();
+    // testar 1 por 1 include
+    // separar as consultas
 
     const userInfo = await User.findOne({
       where: { email: email },
@@ -78,12 +80,17 @@ export async function GET(req: NextRequest) {
       ],
     });
     return NextResponse.json(userInfo, { status: 200 });
+    
+  /*
+  try {
   } catch (error) {
     return NextResponse.json(
       { message: "Erro ao buscar usuário", error },
       { status: 500 }
     );
   }
+
+  */
 }
 
 export async function POST(req: NextRequest) {
