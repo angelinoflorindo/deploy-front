@@ -23,7 +23,7 @@ const Header = () => {
         return res.json();
       })
       .then((data: PerfilProps) => {
-        console.log('user', data)
+       // console.log('user', data)
 
         if (data.papel) {
           setPerfil(data.papel.perfil);

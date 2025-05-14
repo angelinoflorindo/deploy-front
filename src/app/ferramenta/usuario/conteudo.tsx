@@ -2,37 +2,11 @@
 import styles from "@/modules/global.module.css";
 import { UserInfo } from "@/services/user.service";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export default function Conteudo() {
+export default function Conteudo({users}:{users:UserInfo}) {
   const { data: session, status } = useSession();
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-  const router = useRouter();
-
-  const fetchData = () => {
-    fetch(
-      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa?email=${session?.user?.email}`
-    )
-      .then((res) => {
-        if (!res.ok) {
-          throw Error("Erro na requisição");
-        }
-        return res.json();
-      })
-      .then((users: UserInfo) => {
-        setUserInfo(users);
-      })
-      .catch((error) => {
-        console.log("Error message", error);
-        router.push("/");
-      });
-  };
-  useEffect(() => {
-    if (session?.user.email) {
-      fetchData();
-    }
-  }, []);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(users);
 
   if (!session?.user.email) {
     return (
