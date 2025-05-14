@@ -1,6 +1,5 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { sequelize } from "@/lib/sequelize";
 import Pagamento from "@/models/Pagamento";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -14,7 +13,6 @@ import { NextRequest, NextResponse } from "next/server";
  * Página dedicada a informações de reembolso
  */
 
-
 // Pelo devedor Consultar o registro de pagamentos  de créditos
 
 export async function GET(
@@ -25,9 +23,6 @@ export async function GET(
   const uuid = await converterString(id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const result = await Pagamento.findOne({ where: {devedor_id: id, estado:true}});
 

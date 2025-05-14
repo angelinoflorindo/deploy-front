@@ -1,13 +1,12 @@
 export const dynamic = 'force-dynamic';
 import { converterString, validarEstado } from "@/app/actions/auth";
-import { sequelize } from "@/lib/sequelize";
-import Solidario from "@/models/Solidario";
+import {Solidario} from "@/models/Solidario";
 import { NextRequest, NextResponse } from "next/server";
-import User from "@/models/User";
+import {User} from "@/models/User";
 import { Op } from "sequelize";
-import Credito from "@/models/Credito";
-import CreditoSolidario from "@/models/CreditoSolidario";
-import Devedor from "@/models/Devedor";
+import {Credito} from "@/models/Credito";
+import {CreditoSolidario} from "@/models/CreditoSolidario";
+import {Devedor} from "@/models/Devedor";
 
 /**
  *
@@ -48,9 +47,6 @@ export async function GET(req: NextRequest) {
   }
   // console.log('conditions',  where)
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
     
     const { rows: data, count: total } = await Credito.findAndCountAll({
       where,
@@ -88,9 +84,6 @@ export async function POST(req: NextRequest) {
   const userId = await converterString(body.user_id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const usuario: any = {};
     const devedor = await Devedor.findOne({ where: { user_id: userId } });

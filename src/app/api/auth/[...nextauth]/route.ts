@@ -1,10 +1,9 @@
 
 import NextAuth, { Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs"; // Para criptografar senhas
-import {sequelize} from '@/lib/sequelize' 
-import User from "@/models/User"
-import Papel from "@/models/Papel";
+import bcrypt from "bcryptjs"; 
+import {User} from "@/models/User"
+import {Papel} from "@/models/Papel";
 
 interface CustomSession extends Session {
   user: {
@@ -31,9 +30,6 @@ const handler = NextAuth({
           return null;
         }
 
-        // Verificar se o usuário existe no banco de dados
-        await sequelize.authenticate()
-        await sequelize.sync()
         const user = await User.findOne({
           where: { email: credentials.email },
         });

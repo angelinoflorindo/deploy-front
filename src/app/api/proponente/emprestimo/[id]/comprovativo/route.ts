@@ -4,11 +4,10 @@ import fs from "fs";
 import path from "path";
 import { converterString } from "@/app/actions/auth";
 import { getToken } from "next-auth/jwt";
-import { sequelize } from "@/lib/sequelize";
-import Documento from "@/models/Documento";
+import {Documento} from "@/models/Documento";
 import ContaVinculada from "@/models/ContaVinculada";
 import Proponente from "@/models/Proponente";
-import User from "@/models/User";
+import {User} from "@/models/User";
 
 export async function GET(
   req: NextRequest,
@@ -26,10 +25,6 @@ export async function GET(
   
   try {
    
-  await sequelize.authenticate();
-  await sequelize.sync();
-  //setupAssociations();
-
   const vinculo = await ContaVinculada.findOne({
     where: { id: uuid },
   });

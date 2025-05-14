@@ -1,17 +1,14 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { sequelize } from "@/lib/sequelize";
-import Deposito from "@/models/Deposito";
+import {Deposito} from "@/models/Deposito";
 import ContaVinculada from "@/models/ContaVinculada";
 import { NextRequest, NextResponse } from "next/server";
-import Devedor from "@/models/Devedor";
-import DebitoVinculado from "@/models/DebitoVinculado";
+import {Devedor} from "@/models/Devedor";
+import {DebitoVinculado} from "@/models/DebitoVinculado";
+import { sequelize } from "@/lib/sequelize";
 
 export async function GET(req: NextRequest) {
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const { searchParams } = new URL(req.url);
 
@@ -54,9 +51,6 @@ export async function POST(req: NextRequest) {
   const userId = await converterString(body.user_id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const info = {
       solicitacao: 0,
@@ -105,10 +99,6 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
-
     const { searchParams } = new URL(req.url);
 
     const page = (await converterString(searchParams.get("page"))) | 1;

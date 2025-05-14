@@ -4,9 +4,8 @@ import fs from "fs";
 import path from "path";
 import { converterString } from "@/app/actions/auth";
 import { getToken } from "next-auth/jwt";
-import { sequelize } from "@/lib/sequelize";
-import Deposito from "@/models/Deposito";
-import Documento from "@/models/Documento";
+import {Deposito} from "@/models/Deposito";
+import {Documento} from "@/models/Documento";
 
 
 // mantentdo informaçoes atuais 
@@ -22,9 +21,6 @@ export async function GET(
     return NextResponse.json("Não autorizado", { status: 403 });
   }
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const deposito = await Deposito.findOne({ where: { id: uuid } });
     const infoDeposito = {

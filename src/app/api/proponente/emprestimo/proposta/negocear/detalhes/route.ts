@@ -1,11 +1,10 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { sequelize } from "@/lib/sequelize";
 import Emprestimo from "@/models/Emprestimo";
 import Investidor from "@/models/Investidor";
 import NegocearEmprestimos from "@/models/NegocearEmprestimo";
 import Proponente from "@/models/Proponente";
-import User from "@/models/User";
+import {User} from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 // Buscar os dados da negociação pelo investidor-emprestimo
@@ -21,11 +20,6 @@ export async function GET(
   const investidorId = await converterString(searchParams.get("investidorId"));
 
   try {
-
-
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
   
     const user = await User.findOne({
       where: { email: email },

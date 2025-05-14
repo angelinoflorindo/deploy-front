@@ -13,15 +13,13 @@ import {
   HasOne,
   HasMany,
 } from "sequelize-typescript";
-import Pessoa from "./Pessoa";
-import Deposito from "./Deposito";
  
 @Table({
   tableName: "users",
   createdAt: "created_at",
   updatedAt: "updated_at",
 })
-export default class User extends Model {
+export  class User extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER.UNSIGNED)
@@ -64,10 +62,5 @@ export default class User extends Model {
   @Column({ field: "updated_at", type: DataType.DATE })
   updatedAt!: Date;
 
-  @HasOne(()=>Pessoa, {as:"Pessoa"})
-  pessoa!:Pessoa
-
-  @HasMany(()=>Deposito)
-  deposito!:Deposito[]
   
 }

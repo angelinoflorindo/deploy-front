@@ -23,9 +23,6 @@ export async function POST(req: NextRequest) {
   };
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const propCarteira = await Carteira.findOne({where:{user_id:info.propUserId}})
     const investCarteira = await Carteira.findOne({where:{user_id:info.investUserId}})

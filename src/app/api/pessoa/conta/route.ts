@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
 import { sequelize } from "@/lib/sequelize";
-import Conta from "@/models/Conta";
+import {Conta} from "@/models/Conta";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {

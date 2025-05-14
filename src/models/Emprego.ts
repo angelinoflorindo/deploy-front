@@ -10,10 +10,9 @@ import {
   UpdatedAt,
   HasMany,
 } from "sequelize-typescript";
-import Pessoa from "./Pessoa";
 
 @Table({ tableName: "empregos" })
-export default class Emprego extends Model {
+export  class Emprego extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -33,9 +32,6 @@ export default class Emprego extends Model {
 
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   estado!: boolean;
-
-  @HasMany(()=>Pessoa, {as:"Pessoa"})
-  pessoa!:Pessoa
 
   @CreatedAt
   @Column({ field: "created_at", type: DataType.DATE })

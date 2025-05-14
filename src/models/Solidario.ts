@@ -9,12 +9,13 @@ import {
   ForeignKey,
   CreatedAt,
   UpdatedAt,
+  HasMany,
 } from "sequelize-typescript";
-import User from "./User";
-import Pessoa from "./Pessoa";
+import {User} from "./User";
+import {Pessoa} from "./Pessoa";
 
 @Table({ tableName: "solidarios" })
-export default class Solidario extends Model {
+export  class Solidario extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -57,6 +58,7 @@ export default class Solidario extends Model {
     allowNull: false,
   })
   user_id!: number;
+
 
   @CreatedAt
   @Column({ field: "created_at", type: DataType.DATE })

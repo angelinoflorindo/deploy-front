@@ -4,13 +4,13 @@ import {
 } from "@/app/actions/auth";
 import { sequelize } from "@/lib/sequelize";
 import Carteira from "@/models/Carteira";
-import Deposito from "@/models/Deposito";
+import {Deposito} from "@/models/Deposito";
 import Diversificacao from "@/models/Diversificacao";
 import Emprestimo from "@/models/Emprestimo";
 import Investidor from "@/models/Investidor";
 import Proponente from "@/models/Proponente";
 import Saque from "@/models/Saque";
-import User from "@/models/User";
+import {User} from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 // proponente : buscar emprestimo validado | que ja tenha investidores
@@ -20,9 +20,6 @@ export async function GET(req: NextRequest) {
   const email = searchParams.get("email");
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const result = await User.findOne({
       where: { email: email },
@@ -80,9 +77,6 @@ export async function POST(req: NextRequest) {
   const income: any = {};
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const carteira = await Carteira.findOne({ where: { user_id: userId } }); // carteira do  investidor
 

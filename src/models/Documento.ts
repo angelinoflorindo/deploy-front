@@ -10,7 +10,7 @@ import {
   CreatedAt,
   UpdatedAt,
 } from 'sequelize-typescript';
-import User from './User';
+import {User} from './User';
 
 export enum DocumentoTipo {
   BILHETE = 'BILHETE',
@@ -24,7 +24,7 @@ export enum DocumentoTipo {
 }
 
 @Table({ tableName: 'documentos' })
-export default class Documento extends Model {
+export  class Documento extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)

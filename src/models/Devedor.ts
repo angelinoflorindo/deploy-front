@@ -8,10 +8,13 @@ import {
   AutoIncrement,
   CreatedAt,
   UpdatedAt,
+  HasMany,
+  BelongsTo,
+  ForeignKey,
 } from "sequelize-typescript";
-
+import { User } from "./User";
 @Table({ tableName: "devedores" })
-export default class Devedor extends Model {
+export class Devedor extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -29,6 +32,7 @@ export default class Devedor extends Model {
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   estado!: boolean;
 
+  @ForeignKey(() => User)
   @Column(DataType.INTEGER)
   user_id!: number;
 

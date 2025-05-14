@@ -10,7 +10,7 @@ import {
   CreatedAt,
   UpdatedAt,
 } from "sequelize-typescript";
-import Devedor from "./Devedor";
+import {Devedor} from "./Devedor";
 
 @Table({ tableName: "pagamentos" })
 export default class Pagamento extends Model {

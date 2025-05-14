@@ -1,17 +1,13 @@
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
-import User from "@/models/User";
-import { sequelize } from "@/lib/sequelize";
-import Papel from "@/models/Papel";
+import {User} from "@/models/User";
+import {Papel} from "@/models/Papel";
 
 // Rota para buscar informações limitadas
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get("email");
 
-  //setupAssociations();
-  await sequelize.authenticate();
-  await sequelize.sync();
   const user = await User.findOne({
     where: { email: email },
     attributes: { exclude: ["password"] },

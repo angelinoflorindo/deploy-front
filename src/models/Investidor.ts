@@ -11,7 +11,7 @@ import {
   CreatedAt,
   UpdatedAt,
 } from "sequelize-typescript";
-import User from "./User";
+import {User} from "./User";
 
 @Table({ tableName: "investidores" })
 export default class Investidor extends Model {

@@ -1,14 +1,13 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { sequelize } from "@/lib/sequelize";
-import Pessoa from "@/models/Pessoa";
-import Conta from "@/models/Conta";
-import Emprego from "@/models/Emprego";
-import Conjugue from "@/models/Conjugue";
-import Residencia from "@/models/Residencia";
-import Solidario from "@/models/Solidario";
-import User from "@/models/User";
+import {Pessoa} from "@/models/Pessoa";
+import {Conta} from "@/models/Conta";
+import {Emprego} from "@/models/Emprego";
+import {Conjugue} from "@/models/Conjugue";
+import {Residencia} from "@/models/Residencia";
+import {Solidario} from "@/models/Solidario";
+import {User} from "@/models/User";
 
 export async function GET(
   req: NextRequest,
@@ -18,9 +17,6 @@ export async function GET(
   const { id } = await context.params;
   const uuid = await converterString(id);
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const pessoa = await Pessoa.findOne({
       where: { id: uuid },
@@ -79,9 +75,6 @@ export async function PUT(
   };
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     await Residencia.update(infoResidencia, {where:{id:infoResidencia.id}});
     await Emprego.update(infoEmprego, {where:{id:infoEmprego.id}});

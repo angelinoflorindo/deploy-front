@@ -1,6 +1,5 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { sequelize } from "@/lib/sequelize";
 import Emprestimo from "@/models/Emprestimo";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -15,9 +14,6 @@ export async function PUT(
   const uuid = await converterString(id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     await Emprestimo.update({ progresso: 'CONCLUIDO' }, { where: { id: uuid } });
     return NextResponse.json({ message: "Pedido efectuado" }, { status: 200 });
@@ -37,9 +33,6 @@ export async function GET(
   const { id } = await context.params;
   const uuid = await converterString(id);
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
    await Emprestimo.update({progresso:'CANCELADO'}, {where:{id:uuid}})
     return NextResponse.json({ message: "Pedido foi rejeitado" }, { status: 200 });
@@ -59,9 +52,6 @@ export async function DELETE(
   const uuid = await converterString(id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
      await Emprestimo.update({ estado: false }, { where: { id: uuid } });
     return NextResponse.json({ message: "Pedido Elimindado" }, { status: 200 });

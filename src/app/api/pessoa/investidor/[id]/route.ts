@@ -1,11 +1,10 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { sequelize } from "@/lib/sequelize";
 import Diversificacao from "@/models/Diversificacao";
 import Emprestimo from "@/models/Emprestimo";
 import Investidor from "@/models/Investidor";
-import Pessoa from "@/models/Pessoa";
-import User from "@/models/User";
+import {Pessoa} from "@/models/Pessoa";
+import {User} from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 // Buscar informações do investidor, incluido os investimentos(credito e emprestimo)
@@ -17,9 +16,6 @@ export async function GET(
   const { id } = await context.params;
   const investidorId = await converterString(id);
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const result = await Investidor.findOne({
       where: { id: investidorId },
@@ -63,9 +59,6 @@ export async function PUT(
   const body = await req.json();
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const result = await Investidor.update(body, { where: { id: uuid } });
     return NextResponse.json(result, { status: 200 });

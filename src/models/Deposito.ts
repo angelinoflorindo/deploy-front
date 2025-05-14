@@ -8,10 +8,12 @@ import {
   AutoIncrement,
   CreatedAt,
   UpdatedAt,
+  ForeignKey,
 } from "sequelize-typescript";
+import { User } from "./User";
 
 @Table({ tableName: "depositos" })
-export default class Deposito extends Model {
+export class Deposito extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -26,8 +28,9 @@ export default class Deposito extends Model {
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   pendencia!: boolean;
 
+  @ForeignKey(() => User)
   @Column(DataType.INTEGER)
-  user_id!: number; 
+  user_id!: number;
 
   @CreatedAt
   @Column({ field: "created_at", type: DataType.DATE })

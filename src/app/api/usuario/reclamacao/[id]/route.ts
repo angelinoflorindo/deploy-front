@@ -1,7 +1,6 @@
 export const dynamic = 'force-dynamic';
 import { converterString, hashPassword } from "@/app/actions/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { sequelize } from "@/lib/sequelize";
 import Reclamacao from "@/models/Reclamacao";
 
 // DELETE - Remover usuário por ID
@@ -12,10 +11,6 @@ export async function DELETE(
   const { id } = await context.params;
   const uuid = await converterString(id);
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
-
     await Reclamacao.update({ estado: false }, { where: { id: uuid } });
 
     return NextResponse.json("Reclamação eliminado");

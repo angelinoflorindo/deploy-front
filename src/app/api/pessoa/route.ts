@@ -1,13 +1,13 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
 import { NextRequest, NextResponse } from "next/server";
+import {Pessoa} from "@/models/Pessoa";
+import {Emprego} from "@/models/Emprego";
+import {Residencia} from "@/models/Residencia";
+import {Conjugue} from "@/models/Conjugue";
+import {Conta} from "@/models/Conta";
+import {User} from "@/models/User";
 import { sequelize } from "@/lib/sequelize";
-import Pessoa from "@/models/Pessoa";
-import Emprego from "@/models/Emprego";
-import Residencia from "@/models/Residencia";
-import Conjugue from "@/models/Conjugue";
-import Conta from "@/models/Conta";
-import User from "@/models/User";
 
 async function findOrCreateResidencia(info: any) {
   const [residencia] = await Residencia.findOrCreate({
@@ -88,9 +88,6 @@ export async function POST(req: NextRequest) {
   const userId = await converterString(body.pessoa.user_id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const existingPessoa = await findPessoaByUserId(userId);
     if (existingPessoa) {

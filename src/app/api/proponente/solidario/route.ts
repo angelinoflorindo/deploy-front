@@ -1,10 +1,9 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { sequelize } from "@/lib/sequelize";
-import Pessoa from "@/models/Pessoa";
+import {Pessoa} from "@/models/Pessoa";
 import Proponente from "@/models/Proponente";
-import Solidario from "@/models/Solidario";
-import User from "@/models/User";
+import {Solidario} from "@/models/Solidario";
+import {User} from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -16,9 +15,6 @@ export async function GET(req: NextRequest) {
   const email = searchParams.get("email");
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const user = await User.findOne({
       where: { email: email },
@@ -51,10 +47,6 @@ export async function POST(req: NextRequest) {
   const userId = await converterString(body.user_id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
-
     const info = {
       solicitacao: 0,
       reembolsar: 0,

@@ -10,7 +10,7 @@ import {
   CreatedAt,
   UpdatedAt,
 } from "sequelize-typescript";
-import User from "./User";
+import {User} from "./User";
 
 @Table({ tableName: "reclamacoes" })
 export default class Reclamacao extends Model {

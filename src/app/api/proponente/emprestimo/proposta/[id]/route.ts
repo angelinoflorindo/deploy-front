@@ -1,13 +1,12 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { sequelize } from "@/lib/sequelize";
 import ContaVinculada from "@/models/ContaVinculada";
 import Diversificacao from "@/models/Diversificacao";
 import Emprestimo from "@/models/Emprestimo";
 import EmprestimoSolidario from "@/models/EmprestimoSolidario";
 import Proponente from "@/models/Proponente"; 
-import Solidario from "@/models/Solidario";
-import User from "@/models/User";
+import {Solidario} from "@/models/Solidario";
+import {User} from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 import { fn, col, literal } from "sequelize";
 
@@ -22,11 +21,6 @@ export async function GET(
   
 
   try {
-
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
-  
    
     const emprestimo = await Emprestimo.findOne({
       where: { id: uuid },
@@ -82,10 +76,6 @@ export async function PUT(
   const uuid = await converterString(id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
-
     await Emprestimo.update({ pendencia: false }, { where: { id: uuid } });
     return NextResponse.json({ message: "Pedido efectuado" }, { status: 200 });
   } catch (error) {

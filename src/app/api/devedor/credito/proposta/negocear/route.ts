@@ -3,7 +3,7 @@ import { converterString } from "@/app/actions/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { sequelize } from "@/lib/sequelize";
 import NegocearEmprestimos from "@/models/NegocearEmprestimo";
-import User from "@/models/User";
+import {User} from "@/models/User";
 import Investidor from "@/models/Investidor";
 import Emprestimo from "@/models/Emprestimo";
 import Proponente from "@/models/Proponente";

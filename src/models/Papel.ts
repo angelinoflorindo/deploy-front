@@ -11,10 +11,10 @@ import {
   UpdatedAt,
   BelongsTo,
 } from "sequelize-typescript";
-import User from "./User";
+import {User} from "./User";
 
 @Table({ tableName: "papel" })
-export default class Papel extends Model {
+export  class Papel extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -47,6 +47,4 @@ export default class Papel extends Model {
   @Column({ field: "updated_at", type: DataType.DATE })
   updatedAt!: Date;
 
-  @BelongsTo(()=>User, {as:"User"})
-  user!:User
 }

@@ -1,14 +1,13 @@
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
-import User from "@/models/User";
+import {User} from "@/models/User";
 import Investidor from "@/models/Investidor";
-import Devedor from "@/models/Devedor";
-import Deposito from "@/models/Deposito";
+import {Devedor} from "@/models/Devedor";
+import {Deposito} from "@/models/Deposito";
 import Saque from "@/models/Saque";
 import Carteira from "@/models/Carteira";
 import Reclamacao from "@/models/Reclamacao";
-import Documento from "@/models/Documento";
-import { sequelize } from "@/lib/sequelize";
+import {Documento} from "@/models/Documento";
 import Proponente from "@/models/Proponente";
 import Emprestimo from "@/models/Emprestimo";
 
@@ -17,9 +16,6 @@ export async function GET(req: NextRequest) {
   const email = searchParams.get("email");
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
     const userInfo = await User.findOne({
       where: { email: email },
       attributes: { exclude: ["password"] },
@@ -51,9 +47,6 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const data = await req.json();
 
-  await sequelize.authenticate();
-  await sequelize.sync();
-  //setupAssociations();
 
   const user = await findOrCreateUser({
     primeiro_nome: data.primeiro_nome,
@@ -80,6 +73,7 @@ export async function POST(req: NextRequest) {
 }
 
 async function findOrCreateUser(data: any) {
+
   const [user] = await User.findOrCreate({
     where: {
       primeiro_nome: data.primeiro_nome,
@@ -101,4 +95,5 @@ async function findOrCreateUser(data: any) {
     },
   });
   return user;
+
 }
