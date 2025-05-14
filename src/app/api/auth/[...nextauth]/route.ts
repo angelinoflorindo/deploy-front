@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs"; 
 import {User} from "@/models/User"
 import {Papel} from "@/models/Papel";
+import { sequelize } from "@/lib/sequelize";
 
 interface CustomSession extends Session {
   user: {
@@ -29,6 +30,10 @@ const handler = NextAuth({
           console.log("credencials vazias");
           return null;
         }
+
+        // verificação de authentication com db
+        await sequelize.authenticate()
+        await sequelize.sync()
 
         const user = await User.findOne({
           where: { email: credentials.email },
