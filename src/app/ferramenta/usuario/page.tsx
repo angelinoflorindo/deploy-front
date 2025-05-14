@@ -201,6 +201,7 @@ const Usuario = () => {
         return res.json();
       })
       .then((users: UserInfo) => {
+        console.log(users)
         setUser(users);
       })
       .catch((error) => {
