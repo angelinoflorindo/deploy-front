@@ -6,9 +6,8 @@ import { useSession } from "next-auth/react";
 import { UserInfo } from "@/services/user.service";
 import Link from "next/link";
 
-const ConteudoInfo = ({users}:{users:UserInfo}) => {
+const ConteudoInfo = ({ users }: { users:UserInfo }) => {
   const { data: session, status } = useSession();
-  const [user, setUser] = useState<UserInfo | null>(users)
 
   if (!session?.user.email) {
     return (
@@ -29,63 +28,65 @@ const ConteudoInfo = ({users}:{users:UserInfo}) => {
 
   return (
     <div>
-
       <section className="shadow-md p-5">
-      {user?.id ?(
-  <div className="flex flex-col   py-2">
-          <h2> Informações adicionais</h2>
-          {user?.Pessoa == null ? (
-            <b className="text-red-500"> Sem Informação</b>
-          ) : (
-            <article>
-              <div className="flex flex-col  ">
-                <span className="py-1">
-                  Nível de instrução:
-                  <b>{user?.Pessoa.nivel_instrucao}</b>
-                </span>
-                <span className="py-1">
-                  Tipo de residência:
-                  <b>{user?.Pessoa.Residencium.tipo}</b>
-                </span>
-                <span className="py-1">
-                  Tempo de residência:
-                  <b>{user?.Pessoa.Residencium.data_inicio}</b>
-                </span>
-              </div>
-
-              <hr className={styles.divider} />
-              <h2> Informações do Conjugue</h2>
-
-              {user?.Pessoa.Conjugue == null ||
-              user?.Pessoa.estado_civil == "CASADO" ? (
-                <div className="flex flex-col" >
-                  <b className="text-red-500">Sem informação</b>
-                  <Link href={`/ferramenta/usuario/${user.Pessoa.id}`} className={global.voltar}>+ registrar</Link>
-                </div>
-              ) : (
-                <div className="flex flex-col">
-                  <span className="py-1">
-                    Nome Completo:
-                    <b>{user?.Pessoa.Conjugue.nome_completo}</b>
-                  </span>
+       <div className="flex flex-col   py-2">
+            <h2> Informações adicionais</h2>
+            {users?.Pessoa == null ? (
+              <b className="text-red-500"> Sem Informação</b>
+            ) : (
+              <article>
+                <div className="flex flex-col  ">
                   <span className="py-1">
                     Nível de instrução:
-                    <b>{user?.Pessoa.Conjugue.nivel_instrucao}</b>
+                    <b>{users?.Pessoa.nivel_instrucao}</b>
                   </span>
                   <span className="py-1">
-                    Data nascimento :
-                    <b>{user?.Pessoa.Conjugue.data_nascimento}</b>
+                    Tipo de residência:
+                    <b>{users?.Pessoa.Residencium.tipo}</b>
                   </span>
                   <span className="py-1">
-                    Número de dependentes:
-                    <b>{user?.Pessoa.Conjugue.dependentes}</b>
+                    Tempo de residência:
+                    <b>{users?.Pessoa.Residencium.data_inicio}</b>
                   </span>
                 </div>
-              )}
-            </article>
-          )}
-        </div>
-      ):(<p> Carregando as informacaões... </p>)}
+
+                <hr className={styles.divider} />
+                <h2> Informações do Conjugue</h2>
+
+                {users?.Pessoa.Conjugue == null ||
+                users?.Pessoa.estado_civil == "CASADO" ? (
+                  <div className="flex flex-col">
+                    <b className="text-red-500">Sem informação</b>
+                    <Link
+                      href={`/ferramenta/usuario/${users.Pessoa.id}`}
+                      className={global.voltar}
+                    >
+                      + registrar
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="flex flex-col">
+                    <span className="py-1">
+                      Nome Completo:
+                      <b>{users?.Pessoa.Conjugue.nome_completo}</b>
+                    </span>
+                    <span className="py-1">
+                      Nível de instrução:
+                      <b>{users?.Pessoa.Conjugue.nivel_instrucao}</b>
+                    </span>
+                    <span className="py-1">
+                      Data nascimento :
+                      <b>{users?.Pessoa.Conjugue.data_nascimento}</b>
+                    </span>
+                    <span className="py-1">
+                      Número de dependentes:
+                      <b>{users?.Pessoa.Conjugue.dependentes}</b>
+                    </span>
+                  </div>
+                )}
+              </article>
+            )}
+          </div>
       </section>
     </div>
   );

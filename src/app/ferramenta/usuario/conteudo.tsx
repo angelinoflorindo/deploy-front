@@ -6,7 +6,6 @@ import { useState } from "react";
 
 export default function Conteudo({users}:{users:UserInfo}) {
   const { data: session, status } = useSession();
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(users);
 
   if (!session?.user.email) {
     return (
@@ -27,46 +26,46 @@ export default function Conteudo({users}:{users:UserInfo}) {
 
   return (
     <div>
-      {userInfo ? (
+      {users ? (
       <section className="shadow-md p-5">
         <div className="flex flex-row justify-between  py-2">
           
             <div className="flex flex-col  ">
             <span className="py-1">
-              Gênero: <b>{userInfo?.genero}</b>
+              Gênero: <b>{users?.genero}</b>
             </span>
             <span className="py-1">
-              Telemovel: <b>{userInfo?.telemovel}</b>
+              Telemovel: <b>{users?.telemovel}</b>
             </span>
             <span className="py-1">
-              Bilhete: <b>{userInfo?.bilhete}</b>
+              Bilhete: <b>{users?.bilhete}</b>
             </span>
             <span className="py-1">
-              Email: <b>{userInfo?.email}</b>
+              Email: <b>{users?.email}</b>
             </span>
           </div>
         </div>
         <hr className={styles.divider} />
         <h2>Informações complementares</h2>
-        {userInfo?.Pessoa == null ? (
+        {users?.Pessoa == null ? (
           <b className="text-red-500">Sem informação</b>
         ) : (
           <div className="flex flex-col">
             <span className="py-1">
               Estado civil:
-              <b>{userInfo?.Pessoa.estado_civil}</b>
+              <b>{users?.Pessoa.estado_civil}</b>
             </span>
             <span className="py-1">
               Data nascimento:
-              <b>{userInfo?.Pessoa.data_nascimento}</b>
+              <b>{users?.Pessoa.data_nascimento}</b>
             </span>
             <span className="py-1">
               Resindente em:
-              <b>{userInfo?.Pessoa.provincia}</b>
+              <b>{users?.Pessoa.provincia}</b>
             </span>
             <span className="py-1">
               Município:
-              <b>{userInfo?.Pessoa.municipio}</b>
+              <b>{users?.Pessoa.municipio}</b>
             </span>
           </div>
         )}
