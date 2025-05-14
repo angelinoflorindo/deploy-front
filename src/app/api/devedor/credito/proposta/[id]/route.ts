@@ -1,13 +1,12 @@
 export const dynamic = 'force-dynamic';
-import { sequelize } from "@/lib/sequelize";
-import Credito from "@/models/Credito";
-import CreditoSolidario from "@/models/CreditoSolidario";
-import Solidario from "@/models/Solidario";
-import User from "@/models/User";
+import {Credito} from "@/models/Credito";
+import {CreditoSolidario} from "@/models/CreditoSolidario";
+import {Solidario} from "@/models/Solidario";
+import {User} from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 import { fn, col, literal } from "sequelize";
-import DebitoVinculado from "@/models/DebitoVinculado";
-import Devedor from "@/models/Devedor";
+import {DebitoVinculado} from "@/models/DebitoVinculado";
+import {Devedor} from "@/models/Devedor";
 
 // Buscar os dados dos Creditos aprovados
 export async function GET(
@@ -18,10 +17,7 @@ export async function GET(
   const uuid = Number(id);
 
   try {
-   //setupAssociations();
-    await sequelize.authenticate();
-    await sequelize.sync();
-    
+
 
     const credito = await Credito.findOne({
       where: {
@@ -107,10 +103,6 @@ export async function PUT(
   const uuid = Number(id);
 
   try {
-    //setupAssociations();
-    await sequelize.authenticate();
-    await sequelize.sync();
-    
 
     await Credito.update({ pendencia: false }, { where: { id: uuid } });
     return NextResponse.json({ message: "Pedido efectuado" }, { status: 200 });

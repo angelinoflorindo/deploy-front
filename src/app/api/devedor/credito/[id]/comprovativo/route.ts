@@ -1,20 +1,20 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { getToken } from "next-auth/jwt";
-import { sequelize } from "@/lib/sequelize";
-import Documento from "@/models/Documento";
-import User from "@/models/User";
-import DebitoVinculado from "@/models/DebitoVinculado";
-import Devedor from "@/models/Devedor";
+import { Documento } from "@/models/Documento";
+import { User } from "@/models/User";
+import { DebitoVinculado } from "@/models/DebitoVinculado";
+import { Devedor } from "@/models/Devedor";
+import { setUserAssociation } from "@/lib/user.associations";
 
 export async function GET(
   req: NextRequest,
   context: { params: { id: string } }
 ) {
-  const {id} =  await  context.params; //mantendo informações actuais
+  const { id } = await context.params; //mantendo informações actuais
   const uuid = Number(id);
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
@@ -23,10 +23,8 @@ export async function GET(
   }
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-
-    const vinculo = await DebitoVinculado.findOne({
+    setUserAssociation()
+     const vinculo = await DebitoVinculado.findOne({
       where: { id: uuid },
     });
 
@@ -35,6 +33,7 @@ export async function GET(
     });
     const usuario = await User.findOne({ where: { id: devedor?.user_id } });
 
+   
     const infovinculo = {
       data: vinculo?.createdAt.getDate(),
       horas: vinculo?.createdAt.getHours(),
@@ -86,6 +85,8 @@ export async function GET(
         "Content-Disposition": `attachment; filename="${comprovativo.nome_salvado}"`,
       },
     });
+
+
   } catch (error) {
     console.error("error de download", error);
     return NextResponse.json(error, { status: 404 });

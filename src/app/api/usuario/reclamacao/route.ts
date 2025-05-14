@@ -1,16 +1,11 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { sequelize } from "@/lib/sequelize";
 import Reclamacao from "@/models/Reclamacao";
 
 export  async function  GET(req: NextRequest) {
   try {
     
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
-
     const { searchParams } = new URL(req.url);
   
     const page = await converterString(searchParams.get('page')) || 1
@@ -50,10 +45,6 @@ export async function POST(req: NextRequest) {
 
   const info = {};
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
-
     const resp = await Reclamacao.create({
       assunto: body.assunto,
       conteudo: body.conteudo,

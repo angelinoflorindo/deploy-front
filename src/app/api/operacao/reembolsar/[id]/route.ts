@@ -1,8 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { sequelize } from "@/lib/sequelize";
 import Carteira from "@/models/Carteira";
-import Deposito from "@/models/Deposito";
+import {Deposito} from "@/models/Deposito";
 import Reembolso from "@/models/Reembolso";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -27,9 +26,6 @@ export async function GET(
   const uuid = await converterString(id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const result = await Reembolso.findOne({ where: {proponente_id: id, estado:true}});
 
@@ -51,9 +47,6 @@ export async function PUT(
   const uuid = await converterString(id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const deposito = await Deposito.findOne({ where: { id: uuid } });
     const carteira = await Carteira.findOne({
@@ -89,10 +82,6 @@ export async function DELETE(
   const uuid = await converterString(id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
-
      await Deposito.update({ estado: false }, { where: { id: uuid } });
     return NextResponse.json({ message: "Depósito Elimindado" }, { status: 200 });
   } catch (error) {

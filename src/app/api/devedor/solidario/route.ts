@@ -1,7 +1,6 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { sequelize } from "@/lib/sequelize";
-import Devedor from "@/models/Devedor"; 
+import {Devedor} from "@/models/Devedor"; 
 import { NextRequest, NextResponse } from "next/server";
 
 // Registrar devedor assim que cionvidar os guardiãos
@@ -10,9 +9,6 @@ export async function POST(req: NextRequest) {
   const userId = await converterString(body.user_id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const info = {
       solicitacao: 0,

@@ -1,9 +1,8 @@
 export const dynamic = 'force-dynamic';
 import { converterString, hashPassword } from "@/app/actions/auth";
 import { NextRequest, NextResponse } from "next/server";
-import User from "@/models/User";
-import { sequelize } from "@/lib/sequelize";
-import Pessoa from "@/models/Pessoa";
+import {User} from "@/models/User";
+import {Pessoa} from "@/models/Pessoa";
 
 export async function GET(
   req: NextRequest,
@@ -18,9 +17,6 @@ export async function GET(
 
  
   try{
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
   
     if (isEmail) {
       user = await User.findOne({
@@ -74,10 +70,6 @@ export async function PUT(
   //console.log("testar userId", useid)
   //console.log("user info", body)
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
-
     let userInfo = {
       primeiro_nome: body.primeiro_nome,
       segundo_nome: body.segundo_nome,

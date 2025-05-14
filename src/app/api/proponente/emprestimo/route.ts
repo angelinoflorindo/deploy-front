@@ -4,9 +4,9 @@ import { sequelize } from "@/lib/sequelize";
 import Emprestimo from "@/models/Emprestimo";
 import EmprestimoSolidario from "@/models/EmprestimoSolidario";
 import Proponente from "@/models/Proponente";
-import Solidario from "@/models/Solidario";
+import {Solidario} from "@/models/Solidario";
 import { NextRequest, NextResponse } from "next/server";
-import User from "@/models/User";
+import {User} from "@/models/User";
 import {Op} from 'sequelize'
 
 /**

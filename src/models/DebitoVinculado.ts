@@ -8,15 +8,19 @@ import {
   AutoIncrement,
   CreatedAt,
   UpdatedAt,
+  ForeignKey,
 } from "sequelize-typescript";
+import { Devedor } from "./Devedor";
 
 @Table({ tableName: "debitos_vinculado" })
-export default class DebitoVinculado extends Model{
+export  class DebitoVinculado extends Model{
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
   id!: number;
 
+  
+    @ForeignKey(() => Devedor)
   @Column(DataType.INTEGER)
   devedor_id!: number;
 

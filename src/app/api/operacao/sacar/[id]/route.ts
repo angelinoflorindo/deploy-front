@@ -1,6 +1,5 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { sequelize } from "@/lib/sequelize";
 import Carteira from "@/models/Carteira";
 import Saque from "@/models/Saque";
 import { NextRequest, NextResponse } from "next/server";
@@ -14,9 +13,6 @@ export async function PUT(
   const uuid = await converterString(id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const saque = await Saque.findOne({ where: { id: uuid } });
     const carteira = await Carteira.findOne({
@@ -48,9 +44,6 @@ export async function GET(
   const uuid = await converterString(id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const saque = await Saque.findOne({ where: { id: id } });
     if (saque?.pendencia) {
@@ -94,9 +87,6 @@ export async function DELETE(
   const uuid = await converterString(id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
      await Saque.update({ estado: false }, { where: { id: uuid } });
     return NextResponse.json({ message: "Pedido Elimindado" }, { status: 200 });

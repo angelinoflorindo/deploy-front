@@ -2,10 +2,9 @@ export const dynamic = 'force-dynamic';
 
 
 import { converterString } from "@/app/actions/auth";
-import { sequelize } from "@/lib/sequelize";
 
-import Documento from "@/models/Documento";
-import User from "@/models/User";
+import {Documento} from "@/models/Documento";
+import {User} from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -14,9 +13,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const { searchParams } = new URL(req.url);
 

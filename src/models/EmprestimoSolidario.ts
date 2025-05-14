@@ -11,7 +11,7 @@ import {
   UpdatedAt,
 } from "sequelize-typescript";
 import Emprestimo from "./Emprestimo";
-import Solidario from "./Solidario";
+import {Solidario} from "./Solidario";
 
 @Table({ tableName: "emprestimos_solidarios" })
 export default class EmprestimoSolidario extends Model {

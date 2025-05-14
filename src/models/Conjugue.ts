@@ -8,12 +8,10 @@ import {
   AutoIncrement,
   CreatedAt,
   UpdatedAt,
-  HasOne,
 } from "sequelize-typescript";
-import Pessoa from "./Pessoa";
 
 @Table({ tableName: "conjugues" })
-export default class Conjugue extends Model {
+export  class Conjugue extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -37,8 +35,6 @@ export default class Conjugue extends Model {
   @Column({ type: DataType.INTEGER, unique: true })
   pessoa_id!: number;
 
-  @HasOne(()=>Pessoa)
-  pessoa!:Pessoa
 
   @CreatedAt
   @Column({ field: "created_at", type: DataType.DATE })

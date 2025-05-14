@@ -10,7 +10,7 @@ import {
   UpdatedAt,
 } from "sequelize-typescript";
 import Investidor from "./Investidor";
-import Credito from "./Credito";
+import {Credito} from "./Credito";
 
 @Table({ tableName: "credoras" })
 export default class Credora extends Model {

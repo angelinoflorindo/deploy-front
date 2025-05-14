@@ -18,9 +18,6 @@ export async function GET(
   const { id } = await context.params;
   const uuid = await converterString(id);
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const emprestimo = await Diversificacao.findOne({ where: { emprestimo_id: uuid, protencao:true } });
     //console.log('testando', emprestimo)
@@ -46,9 +43,6 @@ export async function PUT(
   const investidorId = await converterString(body.investidor_id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const result = await sequelize.transaction(async (t) => {
       const negociacao = await NegocearEmprestimos.update(
@@ -108,9 +102,6 @@ export async function PATCH(
   const emprestimoId = body.emprestimoId;
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     await NegocearEmprestimos.update(
       { estado: false, pendencia: false },

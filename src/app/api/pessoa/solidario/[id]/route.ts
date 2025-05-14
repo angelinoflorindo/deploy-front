@@ -1,15 +1,15 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
 import { sequelize } from "@/lib/sequelize";
-import Credito from "@/models/Credito";
-import CreditoSolidario from "@/models/CreditoSolidario";
-import Devedor from "@/models/Devedor";
+import {Credito} from "@/models/Credito";
+import {CreditoSolidario} from "@/models/CreditoSolidario";
+import {Devedor} from "@/models/Devedor";
 import Emprestimo from "@/models/Emprestimo";
 import EmprestimoSolidario from "@/models/EmprestimoSolidario";
-import Pessoa from "@/models/Pessoa";
+import {Pessoa} from "@/models/Pessoa";
 import Proponente from "@/models/Proponente";
-import Solidario from "@/models/Solidario";
-import User from "@/models/User";
+import {Solidario} from "@/models/Solidario";
+import {User} from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 // PUT - Método que permite o guardião aceitar o convite
@@ -23,9 +23,6 @@ export async function PUT(
   const dbData: any = {};
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const user = await User.findByPk(body.user_id, {
       include: [
@@ -97,9 +94,6 @@ export async function GET(
   const { id } = await context.params;
   const uuid = await converterString(id);
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     const resp = await Solidario.findAll({
       where: { user_id: uuid, estado: false },
@@ -151,9 +145,6 @@ export async function DELETE(
   const uuid = await converterString(id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
     await Solidario.destroy({ where: { id: uuid } }); // posteriormente criar um atributo definido para remoção de dados
 

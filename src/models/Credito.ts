@@ -8,7 +8,9 @@ import {
   AutoIncrement,
   CreatedAt,
   UpdatedAt,
+  ForeignKey,
 } from "sequelize-typescript";
+import { Devedor } from "./Devedor";
 
 export enum TipoCredito {
   PENDENTE = "30_DIAS",
@@ -17,7 +19,7 @@ export enum TipoCredito {
 }
 
 @Table({ tableName: "creditos" })
-export default class Credito extends Model {
+export  class Credito extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -54,8 +56,10 @@ export default class Credito extends Model {
   })
   progresso!: TipoCredito;
 
+  @ForeignKey(() => Devedor)
   @Column(DataType.INTEGER)
   devedor_id!: number;
+
 
   @CreatedAt
   @Column({ field: "created_at", type: DataType.DATE })

@@ -1,10 +1,9 @@
 export const dynamic = 'force-dynamic';
 import { converterString, validarEstado } from "@/app/actions/auth"; 
-import { sequelize } from "@/lib/sequelize";
-import Credito from "@/models/Credito";
-import CreditoSolidario from "@/models/CreditoSolidario";
-import DebitoVinculado from "@/models/DebitoVinculado";
-import Solidario from "@/models/Solidario";
+import {Credito} from "@/models/Credito";
+import {CreditoSolidario} from "@/models/CreditoSolidario";
+import {DebitoVinculado} from "@/models/DebitoVinculado";
+import {Solidario} from "@/models/Solidario";
 import { NextRequest, NextResponse } from "next/server";
 
 // ÁREA REZERVADA A LISTAGEM DE GARANTIAS DO DEVEDOR
@@ -23,11 +22,6 @@ export async function GET(req: NextRequest) {
   where.credito_id = creditoId;
 
   try {
-
-    
-  await sequelize.authenticate();
-  await sequelize.sync();
-  //setupAssociations();
 
   const credito = await Credito.findOne({
     where: { id: creditoId },

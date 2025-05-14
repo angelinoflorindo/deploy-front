@@ -1,7 +1,6 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
-import { sequelize } from "@/lib/sequelize";
-import Documento from "@/models/Documento";
+import {Documento} from "@/models/Documento";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -23,9 +22,6 @@ export async function DELETE(
   const uuid = await converterString(id);
 
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-    //setupAssociations();
 
      await Documento.update({ estado: false }, { where: { id: uuid } });
     return NextResponse.json({ message: "Documento arquivado" }, { status: 200 });

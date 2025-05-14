@@ -5,8 +5,7 @@ import fs from "fs";
 import { mkdir } from "fs/promises";
 import { randomUUID } from "crypto";
 import { converterString } from "@/app/actions/auth";
-import Documento from "@/models/Documento";
-import { sequelize } from "@/lib/sequelize";
+import {Documento} from "@/models/Documento";
 
 export async function POST(req: Request) {
   const formData = await req.formData();
@@ -62,9 +61,6 @@ export async function POST(req: Request) {
       tipo: tipo,
       user_id: userId,
     };
-    await sequelize.authenticate()
-    await sequelize.sync()
-    //setupAssociations()
     const res = await Documento.create(documento);
     savedFiles.push(res);
   }
