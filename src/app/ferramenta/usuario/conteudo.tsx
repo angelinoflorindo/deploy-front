@@ -27,9 +27,11 @@ export default function Conteudo({users}:{users:UserInfo}) {
 
   return (
     <div>
+      {userInfo ? (
       <section className="shadow-md p-5">
         <div className="flex flex-row justify-between  py-2">
-          <div className="flex flex-col  ">
+          
+            <div className="flex flex-col  ">
             <span className="py-1">
               Gênero: <b>{userInfo?.genero}</b>
             </span>
@@ -68,7 +70,10 @@ export default function Conteudo({users}:{users:UserInfo}) {
             </span>
           </div>
         )}
+        
       </section>
+      ):(<p>Carregando as informações ...</p>)}
+    
     </div>
   );
 }

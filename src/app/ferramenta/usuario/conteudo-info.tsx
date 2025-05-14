@@ -31,7 +31,8 @@ const ConteudoInfo = ({users}:{users:UserInfo}) => {
     <div>
 
       <section className="shadow-md p-5">
-        <div className="flex flex-col   py-2">
+      {user?.id ?(
+  <div className="flex flex-col   py-2">
           <h2> Informações adicionais</h2>
           {user?.Pessoa == null ? (
             <b className="text-red-500"> Sem Informação</b>
@@ -84,6 +85,7 @@ const ConteudoInfo = ({users}:{users:UserInfo}) => {
             </article>
           )}
         </div>
+      ):(<p> Carregando as informacaões... </p>)}
       </section>
     </div>
   );

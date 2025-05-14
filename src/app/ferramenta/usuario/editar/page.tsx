@@ -11,8 +11,8 @@ import {
   UserInfo,
   UserProps,
 } from "@/services/user.service";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { SubmitButton } from "@/components/submitButton";
 
 export default function EditarUsuario() {
@@ -23,7 +23,7 @@ export default function EditarUsuario() {
   const [area, setArea] = useState("");
   const [sector, setSector] = useState("");
   const { data: session, status } = useSession();
-  const router = useRouter()
+  const router = useRouter();
   const [userData, setUserData] = useState<UserProps>({
     id: "",
     primeiro_nome: "",
@@ -57,7 +57,6 @@ export default function EditarUsuario() {
     updatedAt: "",
   });
 
-
   const [ResidenciaData, setResidenciaData] = useState<ResidenciaProps>({
     id: "",
     tipo: "",
@@ -65,9 +64,6 @@ export default function EditarUsuario() {
     createdAt: "",
     updatedAt: "",
   });
-
-  const email = session?.user?.email;
-  if (!email) return redirect("/");
 
   const mudarGenero = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = event.target.value;
@@ -104,8 +100,6 @@ export default function EditarUsuario() {
     const { name, value } = e.target;
     setPessoaData((prev: PessoaProps) => ({ ...prev, [name]: value }));
   };
-
-
 
   const handleEmprego = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -175,12 +169,6 @@ export default function EditarUsuario() {
       }
     );
 
-    if (!updateUser.ok) {
-      console.log("error ao atualizar", updateUser.statusText);
-      signOut({ callbackUrl: "/" });
-      return;
-    }
-
     if (infoPessoa.id) {
       const updatePessoa = await fetch(
         `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa/${infoPessoa.id}`,
@@ -193,13 +181,11 @@ export default function EditarUsuario() {
         }
       );
 
-      if (!updatePessoa.ok) {
-        console.log("error ao atualizar", updatePessoa.statusText);
-        signOut({ callbackUrl: "/" });
+      if (!updateUser.ok || !updatePessoa.ok ) {
+        console.log("error ao atualizar");
+        router.push("/ferramenta/usuario/editar")
         return;
       }
-
-      return signOut({callbackUrl:"/"})
     }
 
     const createPessoa = await fetch(
@@ -213,21 +199,23 @@ export default function EditarUsuario() {
       }
     );
 
-    if (!createPessoa.ok) {
-      console.log("error ao registrar", createPessoa.statusText);
-      signOut({ callbackUrl: "/" });
-      return;
+    if (!createPessoa.ok || !updateUser.ok) {
+      console.log("error ao registrar ou atualizar");
+      router.push("/ferramenta/usuario/editar")
+      return
     }
-  
-   router.push('/ferramenta/usuario') 
+
+    router.push("/ferramenta/usuario");
   }
 
-  useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa?email=${session?.user?.email}`)
+  const fetchData = () => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa?email=${session?.user?.email}`
+    )
       .then((res) => {
         if (!res.ok) {
           console.log("Erro ao buscar os dados");
-          return redirect("/");
+          router.push("/");
         }
         return res.json();
       })
@@ -249,7 +237,7 @@ export default function EditarUsuario() {
           const resPessoa: PessoaProps = {
             id: users.Pessoa.id,
             municipio: users.Pessoa.municipio,
-            data_nascimento: users.Pessoa.data_nascimento.split('T')[0],
+            data_nascimento: users.Pessoa.data_nascimento.split("T")[0],
             estado_civil: users.Pessoa.estado_civil,
             nivel_instrucao: users.Pessoa.nivel_instrucao,
             profissao: users.Pessoa.profissao,
@@ -265,7 +253,7 @@ export default function EditarUsuario() {
             area: users.Pessoa.Emprego.area,
             cargo: users.Pessoa.Emprego.cargo,
             sector: users.Pessoa.Emprego.sector,
-            data_inicio: users.Pessoa.Emprego.data_inicio.split('T')[0],
+            data_inicio: users.Pessoa.Emprego.data_inicio.split("T")[0],
             createdAt: users.Pessoa.Emprego.createdAt,
             updatedAt: users.Pessoa.Emprego.updatedAt,
           };
@@ -274,7 +262,7 @@ export default function EditarUsuario() {
           const resResidencia: ResidenciaProps = {
             id: users.Pessoa.Residencium.id,
             tipo: users.Pessoa.Residencium.tipo,
-            data_inicio: users.Pessoa.Residencium.data_inicio.split('T')[0],
+            data_inicio: users.Pessoa.Residencium.data_inicio.split("T")[0],
             createdAt: users.Pessoa.Residencium.createdAt,
             updatedAt: users.Pessoa.Residencium.updatedAt,
           };
@@ -282,6 +270,12 @@ export default function EditarUsuario() {
         }
         return;
       });
+  };
+
+  useEffect(() => {
+    if (session?.user.email) {
+      fetchData();
+    }
   }, []);
 
   return (
@@ -560,7 +554,7 @@ export default function EditarUsuario() {
                   Próximo
                 </button>
               ) : (
-                <SubmitButton/>
+                <SubmitButton />
               )}
             </div>
           </form>
