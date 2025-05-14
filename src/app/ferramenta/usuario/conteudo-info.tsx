@@ -12,13 +12,12 @@ const ConteudoInfo = () => {
   const [user, setUser] = useState<UserInfo | null>(null);
     const router = useRouter()
 
-    
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa?email=${session?.user?.email}`)
       .then((res) => {
         if (!res.ok) {
           console.log("Erro ao buscar os dados");
-          return redirect("/");
+           router.push("/");
         }
         return res.json();
       })

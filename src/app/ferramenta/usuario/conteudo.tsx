@@ -1,9 +1,8 @@
 "use client";
-import Loading from "@/app/loading";
 import styles from "@/modules/global.module.css";
 import { UserInfo } from "@/services/user.service";
 import { useSession } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Conteudo() {
@@ -11,7 +10,6 @@ export default function Conteudo() {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const router = useRouter();
 
-  if(!session?.user.email) return Loading
   const fetchData = () => {
     fetch(
       `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa?email=${session?.user?.email}`
@@ -31,10 +29,27 @@ export default function Conteudo() {
       });
   };
   useEffect(() => {
-    if(session?.user.email){
-      fetchData()
+    if (session?.user.email) {
+      fetchData();
     }
   }, []);
+
+  if (!session?.user.email) {
+    return (
+      <div className={styles.container}>
+        <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
+          {/* Conteúdo Principal */}
+          <main className="flex-1 overflow-y-auto p-4 bg-white">
+            <div className="flex flex-col  h-[100%] justify-center items-center">
+              <hr />
+              <b>Buscando a pagina ...</b>
+              <p className="w-[80%] text-start"> Aguarde alguns segundos </p>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
