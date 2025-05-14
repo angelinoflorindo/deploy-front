@@ -11,7 +11,8 @@ const ConteudoInfo = () => {
   const { data: session, status } = useSession();
   const [user, setUser] = useState<UserInfo | null>(null);
     const router = useRouter()
-  if(!session?.user?.email)  router.push('/')
+
+    
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa?email=${session?.user?.email}`)
       .then((res) => {
