@@ -58,6 +58,8 @@ export async function GET(req: NextRequest) {
   try {
     setUserAssociation()
     setPessoaAssociation()
+    // verificar conexão com a db
+    
     const userInfo = await User.findOne({
       where: { email: email },
       attributes: { exclude: ["password"] },

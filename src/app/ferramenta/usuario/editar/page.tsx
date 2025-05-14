@@ -14,6 +14,7 @@ import {
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { SubmitButton } from "@/components/submitButton";
+import Loading from "@/app/loading";
 
 export default function EditarUsuario() {
   const [step, setStep] = useState(1);
@@ -277,6 +278,9 @@ export default function EditarUsuario() {
       fetchData();
     }
   }, []);
+
+  if(!session?.user.email) return Loading
+
 
   return (
     <div className={styles.container}>

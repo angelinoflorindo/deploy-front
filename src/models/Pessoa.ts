@@ -9,13 +9,10 @@ import {
   ForeignKey,
   CreatedAt,
   UpdatedAt,
-  BelongsTo,
-  HasOne,
 } from "sequelize-typescript";
 import {User} from "./User";
 import {Emprego} from "./Emprego";
 import {Residencia} from "./Residencia";
-import {Conjugue} from "./Conjugue";
 
 @Table({ tableName: "pessoas" })
 export  class Pessoa extends Model {
