@@ -18,7 +18,7 @@ export async function GET(
       where: { user_id: uuid },
     });
 
-    console.log('testando o resultado', result)
+    //console.log('testando o resultado', result)
     if (!result) {
       return NextResponse.json(
         { message: "Dados não encontrados" },

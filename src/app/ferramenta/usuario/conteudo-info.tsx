@@ -4,37 +4,11 @@ import styles from "@/modules/Login.module.css";
 import global from "@/modules/global.module.css";
 import { useSession } from "next-auth/react";
 import { UserInfo } from "@/services/user.service";
-import { redirect, useRouter } from "next/navigation";
 import Link from "next/link";
 
-const ConteudoInfo = () => {
+const ConteudoInfo = ({users}:{users:UserInfo}) => {
   const { data: session, status } = useSession();
-  const [user, setUser] = useState<UserInfo | null>(null);
-    const router = useRouter()
-
- const fetchData = () => {
-    fetch(
-      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa?email=${session?.user?.email}`
-    )
-      .then((res) => {
-        if (!res.ok) {
-          throw Error("Erro na requisição");
-        }
-        return res.json();
-      })
-      .then((users: UserInfo) => {
-        setUser(users);
-      })
-      .catch((error) => {
-        console.log("Error message", error);
-        router.push("/");
-      });
-  };
-  useEffect(() => {
-    if (session?.user.email) {
-      fetchData();
-    }
-  }, []);
+  const [user, setUser] = useState<UserInfo | null>(users)
 
   if (!session?.user.email) {
     return (

@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
     where: { user_id: user?.id },
   });
 
-  console.log("validar perfil", papel);
+ // console.log("validar perfil", papel);
   return NextResponse.json({ user: user, papel: papel }, { status: 200 });
 
 
