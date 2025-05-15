@@ -32,6 +32,8 @@ import NegocearEmprestimo from "../models/NegocearEmprestimo";
 import Credora from "../models/Credora";
 
 import { config } from "dotenv";
+import { setUserAssociation } from "./user.associations";
+import { setPessoaAssociation } from "./pessoa.association";
 
 config();
 
@@ -74,3 +76,7 @@ export const sequelize = new Sequelize({
     Credora,
   ],
 });
+
+
+setUserAssociation()
+setPessoaAssociation()

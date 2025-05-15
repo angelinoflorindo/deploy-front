@@ -7,20 +7,8 @@ import { Conjugue } from "@/models/Conjugue";
 import { Conta } from "@/models/Conta";
 import { User } from "@/models/User";
 import { sequelize } from "@/lib/sequelize";
-import { setPessoaAssociation } from "@/lib/pessoa.association";
-import { setUserAssociation } from "@/lib/user.associations";
 
-/*
-async function findOrCreateResidencia(info: any) {
-  const [residencia] = 
-  return residencia;
-}*/
-/*
-async function findOrCreateEmprego(info: any) {
-  const [emprego] = 
-  return emprego;
-}
-*/
+
 
 async function findPessoaByUserId(userId: number) {
   return await Pessoa.findOne({ where: { user_id: userId } });
@@ -31,30 +19,30 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get("email");
 
-  setUserAssociation();
-  setPessoaAssociation();
+  
   await sequelize.authenticate();
   await sequelize.sync();
-  // testar 1 por 1 include
-  // separar as consultas
-
+  
   const userInfo = await User.findOne({
     where: { email: email },
     attributes: { exclude: ["password"] },
     include: [
       {
         model: Pessoa,
+        as:"Pessoa",
         include: [
           {
             model: Emprego,
+            as:"Emprego",
           },
-          { model: Residencia },
-          { model: Conjugue },
-          { model: Conta },
+          { model: Residencia, as:"Residencia" },
+          { model: Conjugue, as:"Conjugue"},
+          { model: Conta, as:"Conta"},
         ],
       },
     ],
   });
+
   return NextResponse.json(userInfo, { status: 200 });
 
   /*
@@ -73,6 +61,8 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const userId = Number(body.pessoa.user_id);
 
+  try {
+    
   await sequelize.authenticate();
   await sequelize.sync();
 
@@ -104,8 +94,6 @@ export async function POST(req: NextRequest) {
       { transaction: t }
     );
 
-    console.log("emprego" + emprego + "residencia" + residencia);
-
     const pessoa = await Pessoa.create(
       {
         profissao: body.pessoa.profissao,
@@ -125,9 +113,6 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json({ result });
-
-  /*
-  try {
     
   } catch (error: any) {
     console.error("Erro no registro:", error);
@@ -136,5 +121,5 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-  */
+
 }
