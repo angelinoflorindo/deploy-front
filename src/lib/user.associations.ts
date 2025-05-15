@@ -7,29 +7,29 @@ import { Pessoa } from "@/models/Pessoa";
 import { Solidario } from "@/models/Solidario";
 import { User } from "@/models/User";
 
-export function setUserAssociation() {
-  User.hasOne(Pessoa, { foreignKey: "user_id" }); // tomado
-  User.hasMany(Documento, { foreignKey: "user_id" });
-  User.hasOne(Papel, {foreignKey: "user_id" });
-  User.hasMany(Solidario, { foreignKey: "user_id" });
-  User.hasOne(Devedor, { foreignKey: "user_id" });
-  User.hasMany(Deposito, { foreignKey: "user_id" });
+export function setUserAssociation():void{
+  User.hasOne(Pessoa, {  foreignKey: "user_id", as:"Pessoa"}); // tomado
+  User.hasMany(Documento, { as:"Documento", foreignKey: "user_id" });
+  User.hasOne(Papel, {as:"Papel",foreignKey: "user_id" });
+  User.hasMany(Solidario, {as:"Solidario", foreignKey: "user_id" });
+  User.hasOne(Devedor, {as:"Devedor", foreignKey: "user_id" });
+  User.hasMany(Deposito, { as:"Deposito",foreignKey: "user_id" });
   
-  Pessoa.belongsTo(User, { foreignKey: "user_id" });
-  Documento.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
-  Papel.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
-  Solidario.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
-  Devedor.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
-  Deposito.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
+  Pessoa.belongsTo(User, {as:"User",foreignKey: "user_id", });
+  Documento.belongsTo(User, {as:"User",foreignKey: "user_id",  });
+  Papel.belongsTo(User, {as:"User", foreignKey: "user_id",  });
+  Solidario.belongsTo(User, { as:"User",foreignKey: "user_id",  });
+  Devedor.belongsTo(User, {as:"User", foreignKey: "user_id",  });
+  Deposito.belongsTo(User, {as:"User",foreignKey: "user_id",  });
 
    DebitoVinculado.belongsTo(Devedor, {
     foreignKey: "devedor_id",
-    onDelete: "CASCADE",
+    as:"Devedor"
   });
 
   Devedor.hasMany(DebitoVinculado, {
+    as:"DebitoVinculado",
     foreignKey: "devedor_id",
-    onDelete: "CASCADE",
   });
   
 }

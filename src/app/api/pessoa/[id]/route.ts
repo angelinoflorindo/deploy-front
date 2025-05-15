@@ -8,8 +8,6 @@ import { Residencia } from "@/models/Residencia";
 import { Solidario } from "@/models/Solidario";
 import { User } from "@/models/User";
 import { sequelize } from "@/lib/sequelize";
-import { setPessoaAssociation } from "@/lib/pessoa.association";
-import { setUserAssociation } from "@/lib/user.associations";
 
 export async function GET(
   req: NextRequest,
@@ -19,8 +17,6 @@ export async function GET(
   const { id } = await context.params;
   const uuid =Number(id);
   try {
-    setUserAssociation()
-    setPessoaAssociation()
     await sequelize.authenticate()
     await sequelize.sync()
     const pessoa = await Pessoa.findOne({
