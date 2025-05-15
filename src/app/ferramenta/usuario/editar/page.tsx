@@ -263,11 +263,11 @@ export default function EditarUsuario() {
           setEmpregoData(resEmprego);
 
           const resResidencia: ResidenciaProps = {
-            id: users.Pessoa.Residencium.id,
-            tipo: users.Pessoa.Residencium.tipo,
-            data_inicio: users.Pessoa.Residencium.data_inicio.split("T")[0],
-            createdAt: users.Pessoa.Residencium.createdAt,
-            updatedAt: users.Pessoa.Residencium.updatedAt,
+            id: users.Pessoa.Residencia.id,
+            tipo: users.Pessoa.Residencia.tipo,
+            data_inicio: users.Pessoa.Residencia.data_inicio.split("T")[0],
+            createdAt: users.Pessoa.Residencia.createdAt,
+            updatedAt: users.Pessoa.Residencia.updatedAt,
           };
           setResidenciaData(resResidencia);
         }

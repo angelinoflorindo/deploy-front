@@ -21,11 +21,11 @@ const ConteudoInfo = ({ users }: { users: UserInfo }) => {
                 </span>
                 <span className="py-1">
                   Tipo de residência:
-                  <b>{users?.Pessoa.Residencium.tipo}</b>
+                  <b>{users?.Pessoa.Residencia.tipo}</b>
                 </span>
                 <span className="py-1">
                   Tempo de residência:
-                  <b>{users?.Pessoa.Residencium.data_inicio}</b>
+                  <b>{users?.Pessoa.Residencia.data_inicio}</b>
                 </span>
               </div>
 

@@ -303,8 +303,8 @@ export interface PessoaDef {
   data_nascimento: any;
   Conjugue: ConjugueProps;
   Emprego: EmpregoProps;
-  Residencium: ResidenciaProps;
-  Contum: ContaProps;
+  Residencia: ResidenciaProps;
+  Conta: ContaProps;
   User: { id: any; email: any };
 }
 
