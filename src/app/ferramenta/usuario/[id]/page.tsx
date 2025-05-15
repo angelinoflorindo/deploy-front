@@ -11,7 +11,6 @@ const Page = () => {
   const params = useParams();
   const router = useRouter();
   const id = params.id;
-  
   const [user, setUser] = useState<PessoaProps | null>(null);
   const [conjugueData, setConjugueData] = useState<ConjugueProps>({
     id: "",
@@ -20,6 +19,7 @@ const Page = () => {
     nivel_instrucao: "",
     data_nascimento: "",
   });
+
  
 
   const handleConjugue = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,11 +49,12 @@ const Page = () => {
     );
 
     if (!resp.ok) {
-      console.log("error ao atualizar", resp.statusText);
-      return signOut({ callbackUrl: "/" });
+      console.log("error ao atualizar");
+        return router.push(`/ferramenta/usuario/${id}`)
+      
     }
 
-    return redirect("/ferramenta/usuario")
+    return router.push("/ferramenta/usuario")
 
   }
   useEffect(() => {
@@ -61,7 +62,7 @@ const Page = () => {
       .then((res) => {
         if (!res.ok) {
           console.log("Erro ao buscar os dados");
-          return redirect("/");
+          return router.push(`/ferramenta/usuario/${id}`);
         }
         return res.json();
       })
@@ -70,8 +71,6 @@ const Page = () => {
         return;
       });
   }, []);
-
-  if (user?.estado_civil === "CASADO") return redirect("/ferramenta/usuario");
 
   return (
     <div className={styles.container}>

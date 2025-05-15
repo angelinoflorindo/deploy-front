@@ -1,28 +1,9 @@
 "use client";
 import styles from "@/modules/global.module.css";
 import { UserInfo } from "@/services/user.service";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
+
 
 export default function Conteudo({users}:{users:UserInfo}) {
-  const { data: session, status } = useSession();
-
-  if (!session?.user.email) {
-    return (
-      <div className={styles.container}>
-        <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
-          {/* Conteúdo Principal */}
-          <main className="flex-1 overflow-y-auto p-4 bg-white">
-            <div className="flex flex-col  h-[100%] justify-center items-center">
-              <hr />
-              <b>Buscando a pagina ...</b>
-              <p className="w-[80%] text-start"> Aguarde alguns segundos </p>
-            </div>
-          </main>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div>
@@ -57,7 +38,7 @@ export default function Conteudo({users}:{users:UserInfo}) {
             </span>
             <span className="py-1">
               Data nascimento:
-              <b>{users?.Pessoa.data_nascimento}</b>
+              <b>{users?.Pessoa.data_nascimento ? (users.Pessoa.data_nascimento.split("T")[0]):(users.Pessoa.data_nascimento)}</b>
             </span>
             <span className="py-1">
               Resindente em:

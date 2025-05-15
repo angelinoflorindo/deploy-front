@@ -170,6 +170,7 @@ export default function EditarUsuario() {
       }
     );
 
+
     if (infoPessoa.id) {
       const updatePessoa = await fetch(
         `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa/${infoPessoa.id}`,
@@ -184,9 +185,11 @@ export default function EditarUsuario() {
 
       if (!updateUser.ok || !updatePessoa.ok ) {
         console.log("error ao atualizar");
-        router.push("/ferramenta/usuario/editar")
-        return;
+        return router.push("/ferramenta/usuario/editar")
       }
+      
+      return  router.push("/ferramenta/usuario/")
+      
     }
 
     const createPessoa = await fetch(
@@ -202,11 +205,10 @@ export default function EditarUsuario() {
 
     if (!createPessoa.ok || !updateUser.ok) {
       console.log("error ao registrar ou atualizar");
-      router.push("/ferramenta/usuario/editar")
-      return
+     return  router.push("/ferramenta/usuario/editar")
     }
 
-    router.push("/ferramenta/usuario");
+    return router.push("/ferramenta/usuario");
   }
 
   const fetchData = () => {

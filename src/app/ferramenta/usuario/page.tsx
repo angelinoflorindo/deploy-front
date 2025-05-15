@@ -6,10 +6,12 @@ import Footer from "@/components/footer";
 import styles from "@/modules/Login.module.css";
 import Conteudo from "./conteudo";
 import ConteudoInfo from "./conteudo-info";
+import global from "@/modules/global.module.css";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { UserInfo } from "@/services/user.service";
+import Loading from "@/app/loading";
 
 const Usuario = () => {
   const [step, setStep] = useState(1);
@@ -201,7 +203,7 @@ const Usuario = () => {
         return res.json();
       })
       .then((users: UserInfo) => {
-        console.log(users)
+        console.log(users);
         setUser(users);
       })
       .catch((error) => {
@@ -214,6 +216,23 @@ const Usuario = () => {
       fetchData();
     }
   }, []);
+
+  if (!session?.user.email) {
+    return (
+      <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
+        <Loading />
+        <hr className={global.divider} />
+        <div className="w-[80%] flex justify-start">
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
+            onClick={() => signOut({ callbackUrl: "/" })}
+          >
+            ir para login{" "}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
