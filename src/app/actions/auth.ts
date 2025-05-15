@@ -15,7 +15,6 @@ export async function buscarUser(email: any) {
   return response.json();
 }
 
-
 export async function buscarUserQuery(query: any) {
   if (!query || typeof query !== "string") {
     return redirect("/dashboard");
@@ -267,8 +266,7 @@ export async function vincularConta(formData: FormData) {
   return redirect("/dashboard/emprestimo/solicitar");
 }
 
-export async function submitDetalhes(formData:FormData){
-  
+export async function submitDetalhes(formData: FormData) {
   const dataSend = {
     nome: formData.get("nome"),
     iban: formData.get("iban"),
@@ -277,7 +275,7 @@ export async function submitDetalhes(formData:FormData){
     pessoa_id: formData.get("pessoaId"),
   };
 
-  const pessoaData = await buscarPessoa(dataSend.pessoa_id)
+  const pessoaData = await buscarPessoa(dataSend.pessoa_id);
 
   formData.append("tipo", "DECLARACAO_TRABALHO");
   formData.append("titulo", "Documentos financeiros");
@@ -287,19 +285,10 @@ export async function submitDetalhes(formData:FormData){
   if (!files || files.length === 0) {
     return redirect("/ferramenta/detalhes");
   }
-  const result = await fetch(`${process.env.CLIENT_URL}/api/upload`, {
-    method: "POST",
-    body: formData,
-  });
 
-  if (!result.ok) {
-    console.log("Erro ao anexar documentos", result.statusText);
-    return redirect("/ferramenta/detalhes");
-  }
-
-  if (pessoaData.Contum) {
-    await fetch(
-      `${process.env.CLIENT_URL}/api/pessoa/conta/${pessoaData.Contum.id}`,
+  if (pessoaData.Conta) {
+    const update = await fetch(
+      `${process.env.CLIENT_URL}/api/pessoa/conta/${pessoaData.Conta.id}`,
       {
         method: "PUT",
         headers: {
@@ -309,9 +298,11 @@ export async function submitDetalhes(formData:FormData){
       }
     );
 
-    return redirect("/ferramenta/detalhes");
+    if (!update.ok) {
+      return redirect(`/ferramenta/detalhes/${pessoaData.id}`);
+    }
   } else {
-    await fetch(`${process.env.CLIENT_URL}/api/pessoa/conta`, {
+    const create = await fetch(`${process.env.CLIENT_URL}/api/pessoa/conta`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -319,15 +310,25 @@ export async function submitDetalhes(formData:FormData){
       body: JSON.stringify(dataSend),
     });
 
-    return redirect("/ferramenta/detalhes");
+    if (!create.ok) {
+      return redirect(`/ferramenta/detalhes/${pessoaData.id}`);
+    }
   }
 
+  const result = await fetch(`${process.env.CLIENT_URL}/api/upload`, {
+    method: "POST",
+    body: formData,
+  });
 
+  if (!result.ok) {
+    console.log("Erro ao anexar documentos", result.statusText);
+
+    return redirect(`/ferramenta/detalhes/${pessoaData.id}`);
+  }
+  redirect("/ferramenta/detalhes");
 }
 
-
 // PARTE REZERVADA PARA VINCULAR DÉBITO
-
 
 export async function vincularDebito(formData: FormData) {
   const userId = formData.get("user_id");
@@ -857,30 +858,36 @@ export async function calcularPrestacaoSimples(
   return result;
 }
 
-
 // funções adicionais
 
-export async function aceitarSolidario(data:any){
-  const res =  await fetch(`${process.env.CLIENT_URL}/api/pessoa/solidario/${data.solidario}`, { method: "PUT" , 
-    headers:{
-      'content-type':'application/json'
-    },
-    body:JSON.stringify({ pessoa_id:data.pessoa, user_id:data.user, tipo:data.tipo })
-  });
-  if(!res.ok){
-    return
+export async function aceitarSolidario(data: any) {
+  const res = await fetch(
+    `${process.env.CLIENT_URL}/api/pessoa/solidario/${data.solidario}`,
+    {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        pessoa_id: data.pessoa,
+        user_id: data.user,
+        tipo: data.tipo,
+      }),
+    }
+  );
+  if (!res.ok) {
+    return;
   }
-  return res.json()
-
+  return res.json();
 }
 
-
-
-export async function rejeitarSolidario(id:any){
- const res = await fetch(`${process.env.CLIENT_URL}/api/pessoa/solidario/${id}`, { method: "DELETE"});
- if(!res.ok){
-  return
-}
- return res.json()
-
+export async function rejeitarSolidario(id: any) {
+  const res = await fetch(
+    `${process.env.CLIENT_URL}/api/pessoa/solidario/${id}`,
+    { method: "DELETE" }
+  );
+  if (!res.ok) {
+    return;
+  }
+  return res.json();
 }

@@ -3,14 +3,14 @@
 import React, { useEffect, useState } from "react";
 import styles from "@/modules/Login.module.css";
 import { UserInfo } from "@/services/user.service";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { differenceInMonths, differenceInYears } from "date-fns";
 import { useSession } from "next-auth/react";
-import { buscarUser } from "@/app/actions/auth";
 
 const Conteudo = () => {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const [userData, setUserData] = useState<UserInfo>({
     id: "",
     bilhete: "",
@@ -48,7 +48,7 @@ const Conteudo = () => {
       createdAt: "",
       user_id: "",
     },
-    Investidor:{
+    Investidor: {
       id: undefined,
       maior_risco: false,
       maior_seguranca: false,
@@ -67,11 +67,11 @@ const Conteudo = () => {
         email: undefined,
         bilhete: undefined,
         telemovel: undefined,
-        genero: undefined
+        genero: undefined,
       },
-      Diversificacaos: []
+      Diversificacaos: [],
     },
-    Documentos:{
+    Documentos: {
       id: undefined,
       tipo: undefined,
       titulo: undefined,
@@ -89,14 +89,14 @@ const Conteudo = () => {
         email: undefined,
         bilhete: undefined,
         telemovel: undefined,
-        genero: undefined
+        genero: undefined,
       },
     },
-    Papel:{
+    Papel: {
       id: undefined,
-      perfil: undefined
+      perfil: undefined,
     },
-    Pessoa:{
+    Pessoa: {
       id: undefined,
       estado_civil: undefined,
       provincia: undefined,
@@ -112,7 +112,7 @@ const Conteudo = () => {
         nome_completo: undefined,
         nivel_instrucao: undefined,
         dependentes: undefined,
-        data_nascimento: undefined
+        data_nascimento: undefined,
       },
       Emprego: {
         id: undefined,
@@ -121,14 +121,14 @@ const Conteudo = () => {
         cargo: undefined,
         area: undefined,
         createdAt: undefined,
-        updatedAt: undefined
+        updatedAt: undefined,
       },
       Residencia: {
         id: undefined,
         tipo: undefined,
         data_inicio: undefined,
         createdAt: undefined,
-        updatedAt: undefined
+        updatedAt: undefined,
       },
       Conta: {
         id: undefined,
@@ -138,14 +138,14 @@ const Conteudo = () => {
         emprego_id: undefined,
         pessoa_id: undefined,
         createdAt: undefined,
-        updatedAt: undefined
+        updatedAt: undefined,
       },
       User: {
         id: undefined,
-        email: undefined
-      }
+        email: undefined,
+      },
     },
-    Proponente:{
+    Proponente: {
       id: undefined,
       solicitacao: undefined,
       reembolsar: undefined,
@@ -163,19 +163,19 @@ const Conteudo = () => {
         email: undefined,
         bilhete: undefined,
         telemovel: undefined,
-        genero: undefined
+        genero: undefined,
       },
-      Emprestimos:[]
+      Emprestimos: [],
     },
-    Reclamacaos:{
+    Reclamacaos: {
       id: undefined,
       assunto: undefined,
       conteudo: undefined,
       user_id: undefined,
       createdAt: undefined,
-      updatedAt: undefined
+      updatedAt: undefined,
     },
-    Saque:{
+    Saque: {
       id: undefined,
       taxa: undefined,
       valor: undefined,
@@ -183,20 +183,34 @@ const Conteudo = () => {
       pendencia: true,
       user_id: undefined,
       createdAt: undefined,
-      updatedAt: undefined
-    }
+      updatedAt: undefined,
+    },
   });
 
-  const fetchData = async () => {
-    const user: UserInfo = await buscarUser(session?.user.email);
-    setUserData(user);
+  const fetchData = () => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario?email=${session?.user?.email}`
+    )
+      .then((res) => {
+        if (!res.ok) {
+          console.log("Erro ao buscar os dados");
+          router.push("/");
+        }
+        return res.json();
+      })
+      .then((user: UserInfo) => {
+        console.log(user);
+        setUserData(user);
+      });
   };
 
   useEffect(() => {
-    fetchData();
+    if (session?.user.email) {
+      fetchData();
+    }
   }, []);
 
-  if (!userData.Pessoa)
+  if (!userData.Pessoa) {
     return (
       <div>
         <section className="shadow-md py-5 px-5 ">
@@ -206,7 +220,7 @@ const Conteudo = () => {
         </section>
         <button
           onClick={() => {
-            redirect("/ferramenta/usuario");
+            router.push("/ferramenta/usuario");
           }}
           className="px-4 py-2 bg-blue-500 text-white rounded"
         >
@@ -214,6 +228,7 @@ const Conteudo = () => {
         </button>
       </div>
     );
+  }
   const ContaInfo = userData.Pessoa.Conta;
   const tempo = userData.Pessoa.Emprego.data_inicio;
   const tempoActual = new Date();
@@ -275,7 +290,7 @@ const Conteudo = () => {
         <hr className={styles.divider} />
         <span>
           {" "}
-          <b>Documentos Anexados </b>
+          <b>Anexar Documentos</b>
         </span>
         <br />
         <small>1- Declaração de Trabalho</small>

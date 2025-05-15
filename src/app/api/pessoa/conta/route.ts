@@ -11,14 +11,13 @@ export async function POST(req: NextRequest) {
     nome: body.nome,
     iban: body.iban,
     salario: await converterString(body.salario),
-    emprego_id: await converterString(body.emprego_id),
-    pessoa_id: await converterString(body.pessoa_id),
+    emprego_id: Number(body.emprego_id),
+    pessoa_id: Number(body.pessoa_id),
   };
 
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    //setupAssociations();
 
     const result = await Conta.create(info);
     return NextResponse.json(result);
