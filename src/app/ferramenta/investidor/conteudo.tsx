@@ -20,7 +20,7 @@ const Conteudo = () => {
     createdAt: "",
     updatedAt: "",
   });
-
+  const [pessoa, setPessoa] = useState<any>("")
   const { data: session, status } = useSession();
 
   const fetchData = () => {
@@ -37,6 +37,7 @@ const Conteudo = () => {
       .then((user: UserInfo) => {
         setUserID(user.id);
         setData(user.Investidor);
+        setPessoa(user.Pessoa)
       });
   };
 
@@ -102,6 +103,25 @@ const Conteudo = () => {
 
     window.location.reload();
     return;
+  }
+
+    if (!pessoa || !pessoa.Conta) {
+    return (
+      <div>
+        <section className="shadow-md py-5 px-5 ">
+          <span className="text-green-500">(*) Sem Informações Pessoais</span> <br />
+          <span className="text-green-500">(*) Sem Informações Financeiras</span>
+        </section>
+        <button
+          onClick={() => {
+            router.push("/ferramenta/");
+          }}
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Voltar
+        </button>
+      </div>
+    );
   }
 
   return (

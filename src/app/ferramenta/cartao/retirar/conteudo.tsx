@@ -3,7 +3,7 @@ import Image from "next/image";
 import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
 import { UserInfo } from "@/services/user.service";
-import { buscarUser, sacarFundos } from "@/app/actions/auth";
+import {  sacarFundos } from "@/app/actions/auth";
 import { SubmitButton } from "@/components/submitButton";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -187,38 +187,46 @@ const Conteudo = () => {
     },
   });
   const router = useRouter();
-  const [isRedirecting, setIsRedirecting] = useState(false);
-  const fetchData = async () => {
-    const res: UserInfo = await buscarUser(session?.user?.email);
-    setUser(res);
+
+  const fetchData = () => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario?email=${session?.user?.email}`
+    )
+      .then((res) => {
+        if (!res.ok) {
+          console.log("Erro ao buscar os dados");
+          router.push("/");
+        }
+        return res.json();
+      })
+      .then((user: UserInfo) => {
+        setUser(user);
+      });
   };
+
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (user && user.id !== "") {
-      if (user.Carteira === null || user.Carteira === undefined) {
-        setIsRedirecting(true);
-        router.push("/ferramenta/cartao");
-      }
 
-      if (user.Pessoa === null || user.Pessoa === undefined) {
-        setIsRedirecting(true);
-        router.push("/ferramenta/usuario");
-      } else if (
-        user.Pessoa.Conta === null ||
-        user.Pessoa.Conta === undefined
-      ) {
-        setIsRedirecting(true);
-        router.push("/ferramenta/detalhes");
-      }
-    }
-  }, [user, router]); // depende de "user"
 
-  if (isRedirecting) {
-    return null; // ou loading spinner se quiser
+  if (!user.Carteira || user.Carteira == undefined) {
+    return (
+      <div>
+        <section className="shadow-md py-5 px-5 ">
+          <p className="text-green-500">Não possue carteira digital!</p>
+        </section>
+        <button
+          onClick={() => {
+            router.push("/ferramenta/cartao")
+          }}
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Voltar
+        </button>
+      </div>
+    );
   }
 
   return (

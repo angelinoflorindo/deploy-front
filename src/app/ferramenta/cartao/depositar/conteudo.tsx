@@ -6,8 +6,8 @@ import { UserInfo } from "@/services/user.service";
 import { buscarUser, carregarConta } from "@/app/actions/auth";
 import { SubmitButton } from "@/components/submitButton";
 import { useEffect, useState } from "react";
-import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const Conteudo = () => {
   const { data: session, status } = useSession();
@@ -186,18 +186,46 @@ const Conteudo = () => {
       updatedAt: undefined,
     },
   });
+  const router= useRouter()
 
-  const fetchData = async () => {
-    const res: UserInfo = await buscarUser(session?.user?.email);
-    setUser(res);
+  const fetchData = () => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario?email=${session?.user?.email}`
+    )
+      .then((res) => {
+        if (!res.ok) {
+          console.log("Erro ao buscar os dados");
+          router.push("/");
+        }
+        return res.json();
+      })
+      .then((user: UserInfo) => {
+        setUser(user);
+      });
   };
 
   useEffect(() => {
-    fetchData();
+    if (session?.user.email) {
+      fetchData();
+    }
   }, []);
 
-  if (user.Carteira === null || user.Carteira === undefined) {
-    return redirect("/ferramenta/cartao");
+  if (!user.Carteira || user.Carteira == undefined) {
+    return (
+      <div>
+        <section className="shadow-md py-5 px-5 ">
+          <p className="text-green-500">Não possue carteira digital</p>
+        </section>
+        <button
+          onClick={() => {
+            router.push("/ferramenta/cartao")
+          }}
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Voltar
+        </button>
+      </div>
+    );
   }
 
   return (

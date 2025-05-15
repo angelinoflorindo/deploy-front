@@ -1,20 +1,19 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import { converterString } from "@/app/actions/auth";
-import {Deposito} from "@/models/Deposito";
+import { sequelize } from "@/lib/sequelize";
+import { Deposito } from "@/models/Deposito";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+
+  const page = (await converterString(searchParams.get("page"))) || 1;
+  const limit = (await converterString(searchParams.get("limit"))) || 5;
+  const offset = (Number(page) - 1) * Number(limit);
+  const where: any = { estado: true };
   try {
-
-    const { searchParams } = new URL(req.url);
-
-    const page = (await converterString(searchParams.get("page"))) || 1;
-    const limit = (await converterString(searchParams.get("limit"))) || 5;
-
-    const offset = (Number(page) - 1) * Number(limit);
-    const where: any = { estado: true };
-    // para definir as condições de listagem apartir do client
-    // if (estado) where.estado = estado;
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const { rows: data, count: total } = await Deposito.findAndCountAll({
       where,
@@ -23,7 +22,6 @@ export async function GET(req: NextRequest) {
       order: [["created_at", "DESC"]],
     });
 
-    //console.log("dados de depositos", data)
     const result = {
       data,
       total,
@@ -40,18 +38,21 @@ export async function GET(req: NextRequest) {
   }
 }
 export async function DELETE(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+
+  const page = (await converterString(searchParams.get("page"))) | 1;
+  const limit = (await converterString(searchParams.get("limit"))) | 5;
+  const status = searchParams.get("status");
+  const pendencia = searchParams.get("pendencia");
+  const orderBy = searchParams.get("order") || "created_at";
+
+  const offset = (Number(page) - 1) * Number(limit);
+  const where: any = {};
+
   try {
+    await sequelize.authenticate();
+    await sequelize.sync();
 
-    const { searchParams } = new URL(req.url);
-
-    const page = (await converterString(searchParams.get("page"))) | 1;
-    const limit = (await converterString(searchParams.get("limit"))) | 5;
-    const status = searchParams.get("status");
-    const pendencia = searchParams.get("pendencia");
-    const orderBy = searchParams.get("order") || "created_at";
-
-    const offset = (Number(page) - 1) * Number(limit);
-    const where: any = {};
     // para definir as condições de listagem apartir do client
     if (status) where.estado = status;
     if (pendencia) where.pendencia = pendencia;
@@ -84,7 +85,9 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
 
   try {
-    
+    await sequelize.authenticate();
+    await sequelize.sync();
+
     const result = await Deposito.create({
       valor: await converterString(body.valor),
       user_id: await converterString(body.user_id),
