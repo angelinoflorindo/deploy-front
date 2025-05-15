@@ -48,7 +48,7 @@ module.exports = {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
-          model: 'pessoas', // Presumindo que devedor seja uma Pessoa
+          model: 'devedores',
           key: 'id',
         },
         onUpdate: 'CASCADE',

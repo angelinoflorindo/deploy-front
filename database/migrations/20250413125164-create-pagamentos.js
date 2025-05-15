@@ -35,7 +35,7 @@ module.exports = {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
-          model: 'devedores', // Certifique-se de que a tabela 'devedores' exista
+          model: 'devedores', 
           key: 'id',
         },
         onUpdate: 'CASCADE',
