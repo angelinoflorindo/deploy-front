@@ -1,5 +1,5 @@
 export const dynamic = 'force-dynamic';
-import { converterString } from "@/app/actions/auth";
+import { sequelize } from "@/lib/sequelize";
 import Diversificacao from "@/models/Diversificacao";
 import Emprestimo from "@/models/Emprestimo";
 import Investidor from "@/models/Investidor";
@@ -14,14 +14,17 @@ export async function GET(
 ) {
   //const { searchParams } = new URL(req.url);
   const { id } = await context.params;
-  const investidorId = await converterString(id);
+  const investidorId = Number(id);
   try {
+    await sequelize.authenticate()
+    await sequelize.sync()
 
     const result = await Investidor.findOne({
       where: { id: investidorId },
       include: [
         {
           model: User,
+          as:"User",
           attributes: [
             "id",
             "primeiro_nome",
@@ -30,12 +33,13 @@ export async function GET(
             "bilhete",
             "telemovel"
           ],
-          include: [{ model: Pessoa }],
+          include: [{ model: Pessoa, as:"Pessoa"}],
         },
         {
           model: Diversificacao,
+          as:"Diversificacaos",
           where: { investidor_id: investidorId, protencao: true, estado: true },
-          include: [{ model: Emprestimo }],
+          include: [{ model: Emprestimo, as:"Emprestimos" }],
         },
       ],
     });
@@ -55,10 +59,12 @@ export async function PUT(
   context: { params: { id: number } }
 ) {
   const { id } = await context.params;
-  const uuid = await converterString(id);
+  const uuid = Number(id);
   const body = await req.json();
 
   try {
+    await sequelize.authenticate()
+    await sequelize.sync()
 
     const result = await Investidor.update(body, { where: { id: uuid } });
     return NextResponse.json(result, { status: 200 });

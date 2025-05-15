@@ -113,6 +113,19 @@ export interface InvestidorProps {
   Diversificacaos: DiversificacaoProps[];
 }
 
+export interface InvestidorSimps {
+  id: any;
+  maior_risco: boolean;
+  maior_seguranca: boolean;
+  saque_antecipado: boolean;
+  fundo_protegido: boolean;
+  partilhar_emprestimo: boolean;
+  estado: boolean;
+  user_id: any;
+  createdAt: any;
+  updatedAt: any;
+}
+
 export interface ProponenteProps {
   id: any;
   solicitacao: any;
