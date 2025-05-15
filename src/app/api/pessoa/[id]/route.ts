@@ -22,12 +22,12 @@ export async function GET(
     const pessoa = await Pessoa.findOne({
       where: { id: uuid },
       include: [
-        { model: Conta },
-        { model: Emprego },
-        { model: Conjugue },
-        { model: Residencia },
-        { model: Solidario },
-        { model: User, attributes: ["id", "email"] },
+        { model: Conta, as:"Conta" },
+        { model: Emprego, as:"Emprego"},
+        { model: Conjugue, as:"Conjugue" },
+        { model: Residencia, as:"Residencia" },
+        { model: Solidario, as:"Solidario" },
+        { model: User, as:"User", attributes: ["id", "email"] },
       ],
     });
 
