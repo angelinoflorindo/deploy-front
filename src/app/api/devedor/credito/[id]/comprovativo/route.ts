@@ -8,7 +8,7 @@ import { Documento } from "@/models/Documento";
 import { User } from "@/models/User";
 import { DebitoVinculado } from "@/models/DebitoVinculado";
 import { Devedor } from "@/models/Devedor";
-import { setUserAssociation } from "@/lib/user.associations";
+import { sequelize } from "@/lib/sequelize";
 
 export async function GET(
   req: NextRequest,
@@ -23,7 +23,8 @@ export async function GET(
   }
 
   try {
-    setUserAssociation()
+    await sequelize.authenticate()
+    await sequelize.sync()
      const vinculo = await DebitoVinculado.findOne({
       where: { id: uuid },
     });

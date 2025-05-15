@@ -28,7 +28,7 @@ export function setUserAssociation():void{
   });
 
   Devedor.hasMany(DebitoVinculado, {
-    as:"DebitoVinculado",
+    as:"DebitoVinculados",
     foreignKey: "devedor_id",
   });
   

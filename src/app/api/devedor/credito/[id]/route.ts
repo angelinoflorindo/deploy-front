@@ -1,4 +1,5 @@
 export const dynamic = "force-dynamic";
+import { sequelize } from "@/lib/sequelize";
 import { Credito } from "@/models/Credito";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -12,6 +13,8 @@ export async function PUT(
   const uuid = Number(id);
 
   try {
+    await sequelize.authenticate();
+    await sequelize.sync();
     await Credito.update({ progresso: "CONCLUIDO" }, { where: { id: uuid } });
     return NextResponse.json({ message: "Pedido efectuado" }, { status: 200 });
   } catch (error) {
@@ -28,7 +31,8 @@ export async function GET(
   const { id } = await context.params;
   const uuid = Number(id);
   try {
-    
+    await sequelize.authenticate();
+    await sequelize.sync();
     await Credito.update({ progresso: "CANCELADO" }, { where: { id: uuid } });
     return NextResponse.json(
       { message: "Pedido foi rejeitado" },
@@ -49,7 +53,8 @@ export async function DELETE(
   const uuid = Number(id);
 
   try {
-    
+    await sequelize.authenticate();
+    await sequelize.sync();
     await Credito.update({ estado: false }, { where: { id: uuid } });
     return NextResponse.json({ message: "Pedido Elimindado" }, { status: 200 });
   } catch (error) {

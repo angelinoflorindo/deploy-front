@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fn, col, literal } from "sequelize";
 import {DebitoVinculado} from "@/models/DebitoVinculado";
 import {Devedor} from "@/models/Devedor";
+import { sequelize } from "@/lib/sequelize";
 
 // Buscar os dados dos Creditos aprovados
 export async function GET(
@@ -18,6 +19,8 @@ export async function GET(
 
   try {
 
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const credito = await Credito.findOne({
       where: {
@@ -49,9 +52,11 @@ export async function GET(
       include: [
         {
           model: CreditoSolidario,
+          as:"CreditoSolidarios",
           include: [
             {
               model: Solidario,
+              as:"Solidario",
               where: { estado: true },
               attributes: ["parentesco", "taxa", "tipo"],
             },
@@ -59,9 +64,11 @@ export async function GET(
         },
         {
           model: Devedor,
+          as:"Devedor",
           include: [
             {
               model: User,
+              as:"User",
               attributes: [
                 "id",
                 "primeiro_nome",
@@ -72,6 +79,7 @@ export async function GET(
             },
             {
               model: DebitoVinculado,
+              as:"DebitoVinculados",
               where: { estado: true },
               required: false,
             },
