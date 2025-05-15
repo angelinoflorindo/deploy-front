@@ -10,39 +10,17 @@ import { sequelize } from "@/lib/sequelize";
 import { setPessoaAssociation } from "@/lib/pessoa.association";
 import { setUserAssociation } from "@/lib/user.associations";
 
+/*
 async function findOrCreateResidencia(info: any) {
-  const [residencia] = await Residencia.findOrCreate({
-    where: {
-      tipo: info.tipo,
-      data_inicio: info.data_inicio,
-    },
-    defaults: {
-      tipo: info.tipo,
-      data_inicio: info.data_inicio,
-    },
-    transaction: info.t,
-  });
+  const [residencia] = 
   return residencia;
-}
-
+}*/
+/*
 async function findOrCreateEmprego(info: any) {
-  const [emprego] = await Emprego.findOrCreate({
-    where: {
-      area: info.area,
-      cargo: info.cargo,
-      sector: info.sector,
-      data_inicio: info.data_inicio,
-    },
-    defaults: {
-      area: info.area,
-      cargo: info.cargo,
-      sector: info.sector,
-      data_inicio: info.data_inicio,
-    },
-    transaction: info.t,
-  });
+  const [emprego] = 
   return emprego;
 }
+*/
 
 async function findPessoaByUserId(userId: number) {
   return await Pessoa.findOne({ where: { user_id: userId } });
@@ -95,7 +73,6 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const userId = Number(body.pessoa.user_id);
 
-  console.log("confirmar os dados", body)
   await sequelize.authenticate();
   await sequelize.sync();
 
@@ -106,46 +83,48 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
-  const [emprego, residencia, pessoa] = await sequelize.transaction(
-    async (t) => {
-      const residencia = await findOrCreateResidencia({
+  const result = await sequelize.transaction(async (t) => {
+    const residencia = await Residencia.create(
+      {
         tipo: body.residencia.tipo,
         data_inicio: new Date(body.residencia.data_inicio),
-        t: t,
-      });
+      },
+      {
+        transaction: t,
+      }
+    );
 
-      const emprego = await findOrCreateEmprego({
+    const emprego = await Emprego.create(
+      {
         area: body.emprego.area,
         cargo: body.emprego.cargo,
         sector: body.emprego.sector,
         data_inicio: new Date(body.emprego.data_inicio),
-        t: t,
-      });
+      },
+      { transaction: t }
+    );
 
-      const pessoa = await Pessoa.create(
-        {
-          profissao: body.pessoa.profissao,
-          data_nascimento: new Date(body.pessoa.data_nascimento),
-          estado_civil: body.pessoa.estado_civil,
-          municipio: body.pessoa.municipio,
-          nivel_instrucao: body.pessoa.nivel_instrucao,
-          provincia: body.pessoa.provincia,
-          user_id: userId,
-          emprego_id: emprego.id,
-          residencia_id: residencia.id,
-        },
-        { transaction: t }
-      );
+    console.log("emprego" + emprego + "residencia" + residencia);
 
-      return [emprego, residencia, pessoa];
-    }
-  );
+    const pessoa = await Pessoa.create(
+      {
+        profissao: body.pessoa.profissao,
+        data_nascimento: new Date(body.pessoa.data_nascimento),
+        estado_civil: body.pessoa.estado_civil,
+        municipio: body.pessoa.municipio,
+        nivel_instrucao: body.pessoa.nivel_instrucao,
+        provincia: body.pessoa.provincia,
+        user_id: userId,
+        emprego_id: emprego.id,
+        residencia_id: residencia.id,
+      },
+      { transaction: t }
+    );
 
-  return NextResponse.json({
-    pessoa,
-    emprego,
-    residencia,
+    return [emprego, residencia, pessoa];
   });
+
+  return NextResponse.json({ result });
 
   /*
   try {
