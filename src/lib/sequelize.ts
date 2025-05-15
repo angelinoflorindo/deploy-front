@@ -1,7 +1,6 @@
 // lib/sequelize.ts
 //import { Sequelize } from "sequelize";
 import { Sequelize } from "sequelize-typescript";
-import path from "path";
 import {User} from "@/models/User";
 import {Pessoa} from "@/models/Pessoa";
 import {Documento} from "../models/Documento";
@@ -34,6 +33,10 @@ import Credora from "../models/Credora";
 import { config } from "dotenv";
 import { setUserAssociation } from "./user.associations";
 import { setPessoaAssociation } from "./pessoa.association";
+import { setInvestidorAssociation } from "./investidor.association";
+import { setProponenteAssociation } from "./proponente.association";
+import { setDevedorAssociation } from "./devedor.association";
+import { setDinheiroAssociation } from "./dinheiro.associations";
 
 config();
 
@@ -80,3 +83,7 @@ export const sequelize = new Sequelize({
 
 setUserAssociation()
 setPessoaAssociation()
+setInvestidorAssociation()
+setProponenteAssociation()
+setDevedorAssociation()
+setDinheiroAssociation()

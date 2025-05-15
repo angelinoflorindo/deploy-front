@@ -1,5 +1,5 @@
 "use client";
-import { buscarPessoa, submitDetalhes } from "@/app/actions/auth";
+import { submitDetalhes } from "@/app/actions/auth";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import styles from "@/modules/Login.module.css";
@@ -8,61 +8,72 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const PageInfo = async () => {
+const PageInfo =  () => {
   const params = useParams();
   const id = params.id;
+  const router = useRouter();
   const [pessoaData, setPessoaData] = useState<PessoaDef>({
-    id: undefined,
-    municipio: undefined,
-    emprego_id: undefined,
-    user_id: undefined,
-    estado_civil: undefined,
-    residencia_id: undefined,
-    provincia: undefined,
-    nivel_instrucao: undefined,
-    data_nascimento: undefined,
+    id: '',
+    municipio: '',
+    emprego_id: '',
+    user_id: '',
+    estado_civil: '',
+    residencia_id: '',
+    provincia: '',
+    nivel_instrucao: '',
+    data_nascimento: '',
     Conjugue: {
-      id: undefined,
-      nome_completo: undefined,
-      nivel_instrucao: undefined,
-      dependentes: undefined,
-      data_nascimento: undefined,
+      id: '',
+      nome_completo: '',
+      nivel_instrucao: '',
+      dependentes: '',
+      data_nascimento: '',
     },
     Emprego: {
-      id: undefined,
-      data_inicio: undefined,
-      sector: undefined,
-      cargo: undefined,
-      area: undefined,
-      createdAt: undefined,
-      updatedAt: undefined,
+      id: '',
+      data_inicio: '',
+      sector: '',
+      cargo: '',
+      area: '',
+      createdAt: '',
+      updatedAt: '',
     },
     profissao: {},
     Conta: {
-      id: undefined,
-      nome: undefined,
-      iban: undefined,
-      salario: undefined,
-      emprego_id: undefined,
-      pessoa_id: undefined,
-      createdAt: undefined,
-      updatedAt: undefined,
+      id: '',
+      nome: '',
+      iban: '',
+      salario: '',
+      emprego_id: '',
+      pessoa_id: '',
+      createdAt: '',
+      updatedAt: '',
     },
     Residencia: {
-      id: undefined,
-      tipo: undefined,
-      data_inicio: undefined,
-      createdAt: undefined,
-      updatedAt: undefined,
+      id: '',
+      tipo: '',
+      data_inicio: '',
+      createdAt: '',
+      updatedAt: '',
     },
     User: {
-      id: undefined,
-      email: undefined,
+      id: '',
+      email: '',
     },
   });
-  const fetchData = async () => {
-    const pessoa: PessoaDef = await buscarPessoa(id);
-    setPessoaData(pessoa);
+  const fetchData =  () => {
+    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa/${id}`)
+      .then((res) => {
+        if (!res.ok) {
+          console.log("Erro ao buscar os dados");
+          router.push("/");
+        }
+        return res.json();
+      })
+      .then((user: PessoaDef) => {
+        setPessoaData(user);
+        return
+      });
   };
 
   useEffect(() => {
@@ -70,14 +81,13 @@ const PageInfo = async () => {
   }, []);
 
   return (
-    <div className={styles.Container}>
+   <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
         {/* Navbar Fixa */}
         <Header />
-
         {/* Conteúdo Principal */}
         <main className="flex-1 overflow-y-auto p-4 bg-white">
-          <form action={submitDetalhes}>
+           <form action={submitDetalhes}>
             <h2>
               <b>Informações financeiras</b>
             </h2>
@@ -86,7 +96,7 @@ const PageInfo = async () => {
               type="text"
               name="pessoaId"
               value={id}
-              readOnly={true}
+              readOnly
               hidden={true}
             />
 
@@ -94,18 +104,18 @@ const PageInfo = async () => {
               type="text"
               name="empregoId"
               value={pessoaData.emprego_id}
-              readOnly={true}
+              readOnly
               hidden={true}
             />
-            
+
             <input
               type="text"
               name="userId"
               value={pessoaData.user_id}
-              readOnly={true}
+              readOnly
               hidden={true}
             />
-            {pessoaData.Conta === null ? (
+            {pessoaData.Conta == null ? (
               <div>
                 <input
                   type="text"
@@ -181,9 +191,7 @@ const PageInfo = async () => {
             </div>
           </form>
         </main>
-
-        {/* Rodapé Fixo */}
-        <Footer />
+        {/* Rodapé Fixo */} <Footer />
       </div>
     </div>
   );

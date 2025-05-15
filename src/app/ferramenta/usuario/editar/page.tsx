@@ -170,7 +170,6 @@ export default function EditarUsuario() {
       }
     );
 
-
     if (infoPessoa.id) {
       const updatePessoa = await fetch(
         `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa/${infoPessoa.id}`,
@@ -183,13 +182,12 @@ export default function EditarUsuario() {
         }
       );
 
-      if (!updateUser.ok || !updatePessoa.ok ) {
+      if (!updateUser.ok || !updatePessoa.ok) {
         console.log("error ao atualizar");
-        return router.push("/ferramenta/usuario/editar")
+        return router.push("/ferramenta/usuario/editar");
       }
-      
-      return  router.push("/ferramenta/usuario/")
-      
+
+      return router.push("/ferramenta/usuario/");
     }
 
     const createPessoa = await fetch(
@@ -205,7 +203,7 @@ export default function EditarUsuario() {
 
     if (!createPessoa.ok || !updateUser.ok) {
       console.log("error ao registrar ou atualizar");
-     return  router.push("/ferramenta/usuario/editar")
+      return router.push("/ferramenta/usuario/editar");
     }
 
     return router.push("/ferramenta/usuario");
@@ -281,8 +279,7 @@ export default function EditarUsuario() {
     }
   }, []);
 
-  if(!session?.user.email) return Loading
-
+  if (!session?.user.email) return Loading;
 
   return (
     <div className={styles.container}>
