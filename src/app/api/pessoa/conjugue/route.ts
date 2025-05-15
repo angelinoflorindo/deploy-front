@@ -1,5 +1,5 @@
 export const dynamic = 'force-dynamic';
-import { converterString } from "@/app/actions/auth";
+import { sequelize } from "@/lib/sequelize";
 import {Conjugue} from "@/models/Conjugue";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,13 +10,15 @@ export async function POST(req: NextRequest) {
 
   const info = {
     nome_completo: body.nome_completo,
-    dependentes: await converterString(body.dependentes),
+    dependentes:Number(body.dependentes),
     nivel_instrucao: body.nivel_instrucao,
     data_nascimento: body.data_nascimento,
-    pessoa_id: await converterString(body.pessoa_id),
+    pessoa_id: Number(body.pessoa_id),
   };
 
   try {
+    await sequelize.authenticate()
+    await sequelize.sync()
     const resp = await Conjugue.create(info);
 
     return NextResponse.json(resp);

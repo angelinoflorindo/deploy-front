@@ -3,6 +3,8 @@ import { converterString, hashPassword } from "@/app/actions/auth";
 import { NextRequest, NextResponse } from "next/server";
 import {User} from "@/models/User";
 import {Pessoa} from "@/models/Pessoa";
+import { sequelize } from "@/lib/sequelize";
+import { setUserAssociation } from "@/lib/user.associations";
 
 export async function GET(
   req: NextRequest,
@@ -17,6 +19,9 @@ export async function GET(
 
  
   try{
+    setUserAssociation()
+    await sequelize.authenticate()
+    await sequelize.sync()
   
     if (isEmail) {
       user = await User.findOne({
@@ -64,13 +69,10 @@ export async function PUT(
 ) {
   //const { searchParams } = new URL(req.url);
   const { id } = await context.params;
-  const uuid = await converterString(id);
+  const uuid = Number(id);
   let body = await req.json();
 
-  //console.log("testar userId", useid)
-  //console.log("user info", body)
-  try {
-    let userInfo = {
+  let userInfo = {
       primeiro_nome: body.primeiro_nome,
       segundo_nome: body.segundo_nome,
       email: body.email,
@@ -89,6 +91,13 @@ export async function PUT(
       password: body.password,
     };
 
+   
+
+  try {
+
+     await sequelize.authenticate()
+    await sequelize.sync()
+
     if (body.password) {
       const hashPass = await hashPassword(body.password);
       bodyInfo.password = hashPass;
@@ -101,7 +110,6 @@ export async function PUT(
           { status: 404 }
         );
       }
-      console.log("from client", userResponse);
       return NextResponse.json(userResponse, { status: 200 });
     }
 
@@ -115,9 +123,11 @@ export async function PUT(
     }
 
     return NextResponse.json(userResponse, { status: 200 });
+    
   } catch (error) {
     return NextResponse.json(error);
   }
+
 }
 
 // DELETE - Remover usuário por ID
@@ -125,8 +135,10 @@ export async function DELETE(
   req: NextRequest,
   context: { params: { id: string } }
 ) {
-  const { id } = context.params;
+  const { id } = await context.params;
   try {
+    await sequelize.authenticate()
+    await sequelize.sync()
     await User.destroy({ where: { where: { id: id } } });
 
     return NextResponse.json("Dados eliminado");

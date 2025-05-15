@@ -1,5 +1,4 @@
 export const dynamic = "force-dynamic";
-import { converterString } from "@/app/actions/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { Pessoa } from "@/models/Pessoa";
 import { Emprego } from "@/models/Emprego";
@@ -53,34 +52,33 @@ async function findPessoaByUserId(userId: number) {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get("email");
-  
-  
-    setUserAssociation();
-    setPessoaAssociation();
-    await sequelize.authenticate();
-    await sequelize.sync();
-    // testar 1 por 1 include
-    // separar as consultas
 
-    const userInfo = await User.findOne({
-      where: { email: email },
-      attributes: { exclude: ["password"] },
-      include: [
-        {
-          model: Pessoa,
-          include: [
-            {
-              model: Emprego,
-            },
-            { model: Residencia },
-            { model: Conjugue },
-            { model: Conta },
-          ],
-        },
-      ],
-    });
-    return NextResponse.json(userInfo, { status: 200 });
-    
+  setUserAssociation();
+  setPessoaAssociation();
+  await sequelize.authenticate();
+  await sequelize.sync();
+  // testar 1 por 1 include
+  // separar as consultas
+
+  const userInfo = await User.findOne({
+    where: { email: email },
+    attributes: { exclude: ["password"] },
+    include: [
+      {
+        model: Pessoa,
+        include: [
+          {
+            model: Emprego,
+          },
+          { model: Residencia },
+          { model: Conjugue },
+          { model: Conta },
+        ],
+      },
+    ],
+  });
+  return NextResponse.json(userInfo, { status: 200 });
+
   /*
   try {
   } catch (error) {
@@ -95,59 +93,62 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const userId = await converterString(body.pessoa.user_id);
+  const userId = Number(body.pessoa.user_id);
 
-  try {
-    await sequelize.authenticate();
-    await sequelize.sync();
+  await sequelize.authenticate();
+  await sequelize.sync();
 
-    const existingPessoa = await findPessoaByUserId(userId);
-    if (existingPessoa) {
-      return NextResponse.json(
-        { message: "Usuário já possui dados de pessoa registrados." },
-        { status: 400 }
-      );
-    }
-    const [emprego, residencia, pessoa] = await sequelize.transaction(
-      async (t) => {
-        const residencia = await findOrCreateResidencia({
-          tipo: body.residencia.tipo,
-          data_inicio: new Date(body.residencia.data_inicio),
-          t: t,
-        });
-
-        const emprego = await findOrCreateEmprego({
-          area: body.emprego.area,
-          cargo: body.emprego.cargo,
-          sector: body.emprego.sector,
-          data_inicio: new Date(body.emprego.data_inicio),
-          t: t,
-        });
-
-        const pessoa = await Pessoa.create(
-          {
-            profissao: body.pessoa.profissao,
-            data_nascimento: new Date(body.pessoa.data_nascimento),
-            estado_civil: body.pessoa.estado_civil,
-            municipio: body.pessoa.municipio,
-            nivel_instrucao: body.pessoa.nivel_instrucao,
-            provincia: body.pessoa.provincia,
-            user_id: userId,
-            emprego_id: emprego.id,
-            residencia_id: residencia.id,
-          },
-          { transaction: t }
-        );
-
-        return [emprego, residencia, pessoa];
-      }
+  const existingPessoa = await findPessoaByUserId(userId);
+  if (existingPessoa) {
+    return NextResponse.json(
+      { message: "Usuário já possui dados de pessoa registrados." },
+      { status: 400 }
     );
+  }
+  const [emprego, residencia, pessoa] = await sequelize.transaction(
+    async (t) => {
+      const residencia = await findOrCreateResidencia({
+        tipo: body.residencia.tipo,
+        data_inicio: new Date(body.residencia.data_inicio),
+        t: t,
+      });
 
-    return NextResponse.json({
-      pessoa,
-      emprego,
-      residencia,
-    });
+      const emprego = await findOrCreateEmprego({
+        area: body.emprego.area,
+        cargo: body.emprego.cargo,
+        sector: body.emprego.sector,
+        data_inicio: new Date(body.emprego.data_inicio),
+        t: t,
+      });
+
+      const pessoa = await Pessoa.create(
+        {
+          profissao: body.pessoa.profissao,
+          data_nascimento: new Date(body.pessoa.data_nascimento),
+          estado_civil: body.pessoa.estado_civil,
+          municipio: body.pessoa.municipio,
+          nivel_instrucao: body.pessoa.nivel_instrucao,
+          provincia: body.pessoa.provincia,
+          user_id: userId,
+          emprego_id: emprego.id,
+          residencia_id: residencia.id,
+        },
+        { transaction: t }
+      );
+
+      return [emprego, residencia, pessoa];
+    }
+  );
+
+  return NextResponse.json({
+    pessoa,
+    emprego,
+    residencia,
+  });
+
+  /*
+  try {
+    
   } catch (error: any) {
     console.error("Erro no registro:", error);
     return NextResponse.json(
@@ -155,4 +156,5 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
+  */
 }
