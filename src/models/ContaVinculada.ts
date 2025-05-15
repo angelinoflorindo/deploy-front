@@ -8,7 +8,9 @@ import {
   AutoIncrement,
   CreatedAt,
   UpdatedAt,
+  ForeignKey,
 } from "sequelize-typescript";
+import Proponente from "./Proponente";
 
 @Table({ tableName: "conta_vinculadas" })
 export default class ContaVinculada extends Model {
@@ -17,6 +19,7 @@ export default class ContaVinculada extends Model {
   @Column(DataType.INTEGER)
   id!: number;
 
+  @ForeignKey(()=>Proponente)
   @Column(DataType.INTEGER)
   proponente_id!: number;
 

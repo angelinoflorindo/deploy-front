@@ -1,14 +1,13 @@
 export const dynamic = 'force-dynamic';
-import { converterString } from "@/app/actions/auth";
+import { sequelize } from "@/lib/sequelize";
 import {Devedor} from "@/models/Devedor"; 
 import { NextRequest, NextResponse } from "next/server";
 
 // Registrar devedor assim que cionvidar os guardiãos
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const userId = await converterString(body.user_id);
 
-  try {
+  const userId = Number(body.user_id);
 
     const info = {
       solicitacao: 0,
@@ -16,7 +15,12 @@ export async function POST(req: NextRequest) {
       inadimplencia: 0,
       user_id: userId,
     };
-    const devedor = await Devedor.findOrCreate({
+
+  try {
+    await sequelize.authenticate()
+    await sequelize.sync()
+
+     await Devedor.findOrCreate({
       where: { user_id: userId },
       defaults: info,
     });

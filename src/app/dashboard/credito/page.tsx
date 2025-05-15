@@ -1,33 +1,274 @@
-import React from "react";
+"use client";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "@/modules/Login.module.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import global from "@/modules/global.module.css";
 import Image from "next/image";
 import Link from "next/link";
-import { getServerSession } from "next-auth";
-import { UserInfo } from "@/services/user.service";
+import { UserInfo, UserProps } from "@/services/user.service";
 import { buscarCreditoValidadoByEmail, buscarUser } from "@/app/actions/auth";
-import { CreditoUserProps } from "@/services/Credito.service";
-import { redirect } from "next/navigation";
+import { CreditoProps, CreditoUserProps } from "@/services/Credito.service";
+import { redirect, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-const Credito = async () => {
-  const session = await getServerSession();
+const Credito = () => {
+  const { data: session, status } = useSession();
+  const divRef = useRef<HTMLDivElement | null>(null);
+  const [user, setUser] = useState<UserInfo>({
+    id: undefined,
+    bilhete: "",
+    email: "",
+    genero: "",
+    password: "",
+    primeiro_nome: "",
+    segundo_nome: "",
+    telemovel: "",
+    Carteira: {
+      id: "",
+      codigo: "",
+      createdAt: "",
+      numero: "",
+      saldo: "",
+      updatedAt: "",
+      user_id: "",
+    },
+    Depositos: {
+      id: "",
+      user_id: "",
+      estado: true,
+      pendencia: true,
+      createdAt: "",
+      updatedAt: "",
+      valor: "",
+    },
+    Devedor: {
+      id: "",
+      estado: true,
+      inadimplencia: "",
+      adimplencia: "",
+      solicitacao: "",
+      updatedAt: "",
+      createdAt: "",
+      user_id: "",
+    },
+    Investidor: {
+      id: undefined,
+      maior_risco: false,
+      maior_seguranca: false,
+      saque_antecipado: false,
+      fundo_protegido: false,
+      partilhar_emprestimo: false,
+      estado: true,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+      Diversificacaos: [],
+    },
+    Documentos: {
+      id: undefined,
+      tipo: undefined,
+      titulo: undefined,
+      nome_salvado: undefined,
+      nome_original: undefined,
+      extensao: undefined,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+    },
+    Papel: {
+      id: undefined,
+      perfil: undefined,
+    },
+    Pessoa: {
+      id: undefined,
+      estado_civil: undefined,
+      provincia: undefined,
+      municipio: undefined,
+      profissao: undefined,
+      user_id: undefined,
+      emprego_id: undefined,
+      residencia_id: undefined,
+      nivel_instrucao: undefined,
+      data_nascimento: undefined,
+      Conjugue: {
+        id: undefined,
+        nome_completo: undefined,
+        nivel_instrucao: undefined,
+        dependentes: undefined,
+        data_nascimento: undefined,
+      },
+      Emprego: {
+        id: undefined,
+        data_inicio: undefined,
+        sector: undefined,
+        cargo: undefined,
+        area: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+      },
+      Residencia: {
+        id: undefined,
+        tipo: undefined,
+        data_inicio: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+      },
+      Conta: {
+        id: undefined,
+        nome: undefined,
+        iban: undefined,
+        salario: undefined,
+        emprego_id: undefined,
+        pessoa_id: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+      },
+      User: {
+        id: undefined,
+        email: undefined,
+      },
+    },
+    Proponente: {
+      id: undefined,
+      solicitacao: undefined,
+      reembolsar: undefined,
+      satisfeitos: undefined,
+      insatisfeitos: undefined,
+      estado: false,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+      Emprestimos: [],
+    },
+    Reclamacaos: {
+      id: undefined,
+      assunto: undefined,
+      conteudo: undefined,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+    },
+    Saque: {
+      id: undefined,
+      taxa: undefined,
+      valor: undefined,
+      estado: true,
+      pendencia: true,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+    },
+  });
+  let credito = new Array<CreditoProps>();
 
-  if(!session?.user.email){
-    return redirect("/")
+  const router = useRouter();
+
+  const fetchData = async () => {
+    const user: UserInfo = await buscarUser(session?.user.email);
+    const credit: CreditoUserProps = await buscarCreditoValidadoByEmail(
+      session?.user.email
+    );
+    setUser(user);
+    if (credit && credit.Devedor && credit.Devedor.Creditos) {
+      credito = credit.Devedor.Creditos;
+    }
+  };
+
+  useEffect(() => {
+    if (session?.user.email) {
+      fetchData();
+    }
+  }, []);
+
+  if (user.id && (!user.Carteira || !user.Pessoa.Conta)) {
+    return (
+       <div className={styles.container}>
+        <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
+          <Header />
+          <main className="flex-1 overflow-y-auto p-4 bg-white">
+            <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
+              (*) Sem informações Financeiras!
+            </div>
+
+            <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
+              (*) Sem informações Investimentos!
+            </div>
+
+            <button
+              onClick={() => {
+                router.push("/ferramenta/");
+              }}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Voltar
+            </button>
+          </main>
+          <Footer />
+        </div>
+      </div>
+    );
   }
-  const user: UserInfo = await buscarUser(session?.user.email);
-  const credito: CreditoUserProps = await buscarCreditoValidadoByEmail(
-    session?.user.email
-  );
 
- //console.log('creditos', credito)
+  if (user.id && !user.Pessoa) {
+    return (
+      <div className={styles.container}>
+        <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
+          <Header />
+          <main className="flex-1 overflow-y-auto p-4 bg-white">
+            <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
+              (*) Sem informações Pessais!
+            </div>
 
-  if (user.Carteira == null || user.Carteira == undefined) {
-    console.log("sem conta digital");
-    return redirect("/ferramenta/cartao");
+            <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
+              (*) Sem informações Profissionais!
+            </div>
+
+            <button
+              onClick={() => {
+                router.push("/ferramenta/usuario");
+              }}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Voltar
+            </button>
+          </main>
+          <Footer />
+        </div>
+      </div>
+    );
   }
+
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
@@ -102,24 +343,25 @@ const Credito = async () => {
           <h2 className="text-xl font-bold mb-2">Efectuar pagamentos</h2>
           <section>
             {/*BUSANDO OS EMPRESTIMOS POR INVESTIDORES*/}
-            {credito ? (
+
+            {credito.length > 0 && credito[0].id ? (
               <div>
                 <Link
-                  key={credito.Devedor.Creditos[0].id}
-                  href={`/dashboard/credito/${credito.Devedor.Creditos[0].Credoras[0].investidor_id}`}
+                  key={credito[0].id}
+                  href={`/dashboard/credito/${credito[0].Credoras[0].investidor_id}`}
                   className="flex flex-col px-4 py-2 h-20 shadow-md w-[100%]"
                 >
                   <span className="flex flex-row justify-start">
                     <p className="font-bold"> Crédito até: </p>{" "}
-                    {credito.Devedor.Creditos[0].prazo.split("T")[0]}
+                    {credito[0].prazo.split("T")[0]}
                   </span>
                   <div className="flex flex-row justify-between">
                     <span className="py-1">
                       <b> Prestação:</b>
-                      {credito.Devedor.Creditos[0].prestacao}
+                      {credito[0].prestacao}
                     </span>
                     <span className="flex flex-row justify-between">
-                      <b>Valor:</b> {credito.Devedor.Creditos[0].valor},00kz
+                      <b>Valor:</b> {credito[0].valor},00kz
                     </span>
                   </div>
                 </Link>

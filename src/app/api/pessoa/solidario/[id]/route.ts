@@ -1,5 +1,4 @@
-export const dynamic = 'force-dynamic';
-import { converterString } from "@/app/actions/auth";
+ export const dynamic = 'force-dynamic';
 import { sequelize } from "@/lib/sequelize";
 import {Credito} from "@/models/Credito";
 import {CreditoSolidario} from "@/models/CreditoSolidario";
@@ -18,16 +17,18 @@ export async function PUT(
   context: { params: { id: number } }
 ) {
   const { id } = await context.params;
-  const uuid = await converterString(id);
+  const uuid = Number(id);
   const body = await req.json();
   const dbData: any = {};
 
   try {
+    await sequelize.authenticate()
+    await sequelize.sync()
 
     const user = await User.findByPk(body.user_id, {
       include: [
-        { model: Devedor, attributes: ["id"] },
-        { model: Proponente, attributes: ["id"] },
+        { model: Devedor, as:"Devedor", attributes: ["id"] },
+        { model: Proponente,as:"Proponente", attributes: ["id"] },
       ],
     });
 
@@ -92,17 +93,21 @@ export async function GET(
 ) {
   //const { searchParams } = new URL(req.url);
   const { id } = await context.params;
-  const uuid = await converterString(id);
+  const uuid = Number(id);
   try {
 
+    await sequelize.authenticate()
+    await sequelize.sync()
     const resp = await Solidario.findAll({
       where: { user_id: uuid, estado: false },
       include: [
         {
           model: Pessoa,
+          as:"Pessoa",
           include: [
             {
               model: User,
+              as:"User",
               attributes: ["primeiro_nome", "segundo_nome", "id", "email"],
             },
           ],
@@ -142,9 +147,12 @@ export async function DELETE(
   context: { params: { id: string } }
 ) {
   const { id } = await context.params;
-  const uuid = await converterString(id);
+  const uuid =Number(id);
 
   try {
+    
+    await sequelize.authenticate()
+    await sequelize.sync()
 
     await Solidario.destroy({ where: { id: uuid } }); // posteriormente criar um atributo definido para remoção de dados
 

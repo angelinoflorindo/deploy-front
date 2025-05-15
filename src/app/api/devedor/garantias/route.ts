@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic';
 import { converterString, validarEstado } from "@/app/actions/auth"; 
+import { sequelize } from "@/lib/sequelize";
 import {Credito} from "@/models/Credito";
 import {CreditoSolidario} from "@/models/CreditoSolidario";
 import {DebitoVinculado} from "@/models/DebitoVinculado";
@@ -22,6 +23,9 @@ export async function GET(req: NextRequest) {
   where.credito_id = creditoId;
 
   try {
+
+    await sequelize.authenticate()
+    await sequelize.sync()
 
   const credito = await Credito.findOne({
     where: { id: creditoId },

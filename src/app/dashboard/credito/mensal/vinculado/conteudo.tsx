@@ -197,7 +197,7 @@ const Conteudo = () => {
     }, []);
 
     if (!user.id) {
-      return <Loading />;
+    Loading 
     }
 
   return (

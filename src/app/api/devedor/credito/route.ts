@@ -1,12 +1,13 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import { converterString, validarEstado } from "@/app/actions/auth";
-import {Solidario} from "@/models/Solidario";
+import { Solidario } from "@/models/Solidario";
 import { NextRequest, NextResponse } from "next/server";
-import {User} from "@/models/User";
+import { User } from "@/models/User";
 import { Op } from "sequelize";
-import {Credito} from "@/models/Credito";
-import {CreditoSolidario} from "@/models/CreditoSolidario";
-import {Devedor} from "@/models/Devedor";
+import { Credito } from "@/models/Credito";
+import { CreditoSolidario } from "@/models/CreditoSolidario";
+import { Devedor } from "@/models/Devedor";
+import { sequelize } from "@/lib/sequelize";
 
 /**
  *
@@ -15,7 +16,7 @@ import {Devedor} from "@/models/Devedor";
  * @returns
  */
 
-// Listar todos os pedidos de créditos 
+// Listar todos os pedidos de créditos
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
   const status = await validarEstado(searchParams.get("status"));
   const pendencia = await validarEstado(searchParams.get("pendencia"));
   const devedorId = await converterString(searchParams.get("devedor"));
-  const progresso = searchParams.get("progresso")
+  const progresso = searchParams.get("progresso");
   const orderBy = searchParams.get("order") || "created_at";
   const offset = (Number(page) - 1) * Number(limit);
   const where: any = {};
@@ -36,32 +37,41 @@ export async function GET(req: NextRequest) {
   }
 
   if (pendencia) {
-    where.pendencia = pendencia; // se a pendencia for false => já foi investido, senão, vale o contrário 
+    where.pendencia = pendencia; // se a pendencia for false => já foi investido, senão, vale o contrário
   }
 
   if (devedorId) {
     where.devedor_id = { [Op.ne]: devedorId }; // exibir expto do devedor que consulta
   }
-  if(progresso){
-    where.progresso
+  if (progresso) {
+    where.progresso;
   }
   // console.log('conditions',  where)
   try {
-    
+    await sequelize.authenticate();
+    await sequelize.sync();
+
     const { rows: data, count: total } = await Credito.findAndCountAll({
       where,
       offset,
       limit: Number(limit),
       order: [[`${orderBy}`, "DESC"]],
       include: [
-        { model: Devedor, 
-          include:[{model:User, attributes:['id','primeiro_nome', 'segundo_nome']}]
+        {
+          model: Devedor,
+          as: "Devedor",
+          include: [
+            {
+              model: User,
+              as: "User",
+              attributes: ["id", "primeiro_nome", "segundo_nome"],
+            },
+          ],
         },
-       
       ],
     });
 
-    const result = {      
+    const result = {
       data,
       total,
       totalPages: Math.ceil(total / Number(limit)),
@@ -81,9 +91,11 @@ export async function GET(req: NextRequest) {
 // devedor - Permite iniciar um pedido de crédito
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const userId = await converterString(body.user_id);
+  const userId = Number(body.user_id);
 
   try {
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const usuario: any = {};
     const devedor = await Devedor.findOne({ where: { user_id: userId } });
@@ -98,7 +110,7 @@ export async function POST(req: NextRequest) {
         prestacao: await converterString(body.prestacao),
         devedor_id: usuario.devedor_id,
         juro: await converterString(body.juro),
-        tipo: body.duracao,
+        tipo_credito: body.duracao,
       },
       defaults: {
         valor: await converterString(body.valor),
@@ -106,7 +118,7 @@ export async function POST(req: NextRequest) {
         prestacao: await converterString(body.prestacao),
         devedor_id: usuario.devedor_id,
         juro: await converterString(body.juro),
-        tipo: body.duracao,
+        tipo_credito: body.duracao,
       },
     });
 

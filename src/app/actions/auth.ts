@@ -336,7 +336,7 @@ export async function vincularDebito(formData: FormData) {
 
   formData.append("tipo", "ORDEM_DEBITO");
   formData.append("titulo", "Débito de retenção");
-  formData.append("user_id", `${userId}`);
+  //formData.append("user_id", `${userId}`);
 
   const files = formData.getAll("scanner") as File[];
 
@@ -344,13 +344,7 @@ export async function vincularDebito(formData: FormData) {
     return redirect(`/dashboard/credito/${returnUrl}/vinculado`);
   }
 
-  const res = await fetch(`${process.env.CLIENT_URL}/api/upload`, {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!res.ok) {
-    console.log("Erro ao anexar comprovativo!");
+  if (!userId || userId === undefined) {
     return redirect(`/dashboard/credito/${returnUrl}/vinculado`);
   }
 
@@ -364,8 +358,18 @@ export async function vincularDebito(formData: FormData) {
       body: JSON.stringify({ user_id: userId, valor: formData.get("valor") }),
     }
   );
-
   if (!vincular.ok) {
+    console.log("erro vincular", vincular.status);
+    return redirect(`/dashboard/credito/${returnUrl}/vinculado`);
+  }
+
+  const res = await fetch(`${process.env.CLIENT_URL}/api/upload`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    console.log("erro vincular", res.status);
     return redirect(`/dashboard/credito/${returnUrl}/vinculado`);
   }
 
