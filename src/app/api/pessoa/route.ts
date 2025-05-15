@@ -95,6 +95,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const userId = Number(body.pessoa.user_id);
 
+  console.log("confirmar os dados", body)
   await sequelize.authenticate();
   await sequelize.sync();
 
