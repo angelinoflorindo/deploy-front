@@ -1,7 +1,6 @@
 'use client';
 
 import { useFormStatus } from 'react-dom';
-import global from '@/modules/global.module.css'
 
 export function SubmitButton() {
   const { pending } = useFormStatus();

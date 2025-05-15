@@ -1,14 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "@/modules/Login.module.css";
-import { InvestidorProps, UserInfo } from "@/services/user.service";
-import { redirect } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
-import { buscarUser } from "@/app/actions/auth";
+import { InvestidorSimps, UserInfo } from "@/services/user.service";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const Conteudo = () => {
   const [userId, setUserID] = useState(0);
-  const [data, setData] = useState<InvestidorProps>({
+  const router = useRouter();
+  const [data, setData] = useState<InvestidorSimps>({
     id: "",
     maior_risco: false,
     maior_seguranca: false,
@@ -19,65 +19,41 @@ const Conteudo = () => {
     user_id: "",
     createdAt: "",
     updatedAt: "",
-    User: {
-      id: "",
-      primeiro_nome: "",
-      segundo_nome: "",
-      password: "",
-      email: "",
-      bilhete: "",
-      telemovel: "",
-      genero: "",
-    },
-    Diversificacaos: [],
-  });
-  
-
-  const [investidor, setInvestidor] = useState<InvestidorProps>({
-    id: "",
-    user_id: "",
-    updatedAt: "",
-    createdAt: "",
-    saque_antecipado: false,
-    estado: true,
-    fundo_protegido: false,
-    maior_risco: false,
-    maior_seguranca: false,
-    partilhar_emprestimo: false,
-    Diversificacaos:[],
-    User: {
-      id: "",
-      bilhete: "",
-      email: "",
-      genero: "",
-      password: "",
-      primeiro_nome: "",
-      segundo_nome: "",
-      telemovel: "",
-    },
   });
 
   const { data: session, status } = useSession();
 
-  const fetchData = async () => {
-    const userData: UserInfo = await buscarUser(session?.user?.email);
-    setUserID(userData.id);
-    setInvestidor(userData.Investidor);
+  const fetchData = () => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario?email=${session?.user?.email}`
+    )
+      .then((res) => {
+        if (!res.ok) {
+          console.log("Erro ao buscar os dados");
+          router.push("/");
+        }
+        return res.json();
+      })
+      .then((user: UserInfo) => {
+        setUserID(user.id);
+        setData(user.Investidor);
+      });
   };
 
-  
   useEffect(() => {
-    fetchData();
+    if (session?.user.email) {
+      fetchData();
+    }
   }, []);
 
   const handler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
-    setData((prev: InvestidorProps) => ({ ...prev, [name]: checked }));
+    setData((prev: InvestidorSimps) => ({ ...prev, [name]: checked }));
   };
 
   // console.log("verifcar o data", data)
 
-  async function submitForm(e: React.FormEvent) {
+  function submitForm(e: React.FormEvent) {
     e.preventDefault();
     const info = {
       maior_risco: data.maior_risco,
@@ -89,29 +65,43 @@ const Conteudo = () => {
       user_id: userId,
     };
 
-    if (investidor) {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa/investidor/${investidor.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(info),
+    if (data) {
+      fetch(
+        `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa/investidor/${data.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(info),
+        }
+      ).then((res) => {
+        if (!res.ok) {
+          console.log("Erro ao buscar os dados");
+          router.push("/ferramenta/");
+        }
+        return res.json();
       });
-
-      if (!res.ok) return signOut({ callbackUrl: "/" });
-      return redirect("/ferramenta");
+      window.location.reload();
+      return;
     }
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa/investidor`, {
+    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa/investidor`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
       },
       body: JSON.stringify(info),
+    }).then((res) => {
+      if (!res.ok) {
+        console.log("Erro ao buscar os dados");
+        router.push("/ferramenta/");
+      }
+      return res.json();
     });
-    if (!res.ok) return signOut({ callbackUrl: "/" });
 
-    return redirect("/ferramenta");
+    window.location.reload();
+    return;
   }
 
   return (

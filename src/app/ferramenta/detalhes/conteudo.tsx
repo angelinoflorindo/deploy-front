@@ -199,7 +199,7 @@ const Conteudo = () => {
         return res.json();
       })
       .then((user: UserInfo) => {
-        console.log(user);
+       // console.log(user);
         setUserData(user);
       });
   };
