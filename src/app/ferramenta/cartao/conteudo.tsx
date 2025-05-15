@@ -44,7 +44,8 @@ const Conteudo = () => {
       }
       return res.json();
     });
-    return router.push("/ferramenta/cartao");
+    window.location.reload()
+    return 
   }
 
   const fetchData = () => {

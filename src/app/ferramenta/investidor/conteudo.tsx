@@ -6,22 +6,28 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 const Conteudo = () => {
-  const [userId, setUserID] = useState(0);
   const router = useRouter();
-  const [data, setData] = useState<InvestidorSimps>({
+  const { data: session, status } = useSession();
+  const [userId, setUserID] = useState(0);
+  const [pessoa, setPessoa] = useState<any>({});
+  const [controller, setInvestidor] = useState<any>({});
+  const [investidorData, setData] = useState<InvestidorSimps>({
     id: "",
+    estado: true,
+    fundo_protegido: false,
     maior_risco: false,
     maior_seguranca: false,
-    estado: true,
     saque_antecipado: false,
-    fundo_protegido: false,
     partilhar_emprestimo: false,
     user_id: "",
     createdAt: "",
     updatedAt: "",
   });
-  const [pessoa, setPessoa] = useState<any>("")
-  const { data: session, status } = useSession();
+
+  const handler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setData((prev: InvestidorSimps) => ({ ...prev, [name]: checked }));
+  };
 
   const fetchData = () => {
     fetch(
@@ -36,8 +42,8 @@ const Conteudo = () => {
       })
       .then((user: UserInfo) => {
         setUserID(user.id);
-        setData(user.Investidor);
-        setPessoa(user.Pessoa)
+        setInvestidor(user.Investidor);
+        setPessoa(user.Pessoa);
       });
   };
 
@@ -47,28 +53,37 @@ const Conteudo = () => {
     }
   }, []);
 
-  const handler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setData((prev: InvestidorSimps) => ({ ...prev, [name]: checked }));
-  };
-
-  // console.log("verifcar o data", data)
+  useEffect(() => {
+    if (
+      controller &&
+      typeof controller == "object" &&
+      Object.keys(controller).length > 0 &&
+      controller.hasOwnProperty("fundo_protegido")
+    ) {
+      setData(controller);
+    }
+  }, [controller]);
 
   function submitForm(e: React.FormEvent) {
     e.preventDefault();
     const info = {
-      maior_risco: data.maior_risco,
-      maior_seguranca: data.maior_seguranca,
-      saque_antecipado: data.saque_antecipado,
-      fundo_protegido: data.fundo_protegido,
-      partilhar_emprestimo: data.partilhar_emprestimo,
+      maior_risco: investidorData.maior_risco,
+      maior_seguranca: investidorData.maior_seguranca,
+      saque_antecipado: investidorData.saque_antecipado,
+      fundo_protegido: investidorData.fundo_protegido,
+      partilhar_emprestimo: investidorData.partilhar_emprestimo,
       estado: false,
       user_id: userId,
     };
 
-    if (data) {
+    if (
+      controller &&
+      typeof controller == "object" &&
+      Object.keys(controller).length > 0 &&
+      controller.hasOwnProperty("fundo_protegido")
+    ) {
       fetch(
-        `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa/investidor/${data.id}`,
+        `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/pessoa/investidor/${controller.id}`,
         {
           method: "PUT",
           headers: {
@@ -105,12 +120,15 @@ const Conteudo = () => {
     return;
   }
 
-    if (!pessoa || !pessoa.Conta) {
+  if (!pessoa || !pessoa.Conta) {
     return (
       <div>
         <section className="shadow-md py-5 px-5 ">
-          <span className="text-green-500">(*) Sem Informações Pessoais</span> <br />
-          <span className="text-green-500">(*) Sem Informações Financeiras</span>
+          <span className="text-green-500">(*) Sem Informações Pessoais</span>{" "}
+          <br />
+          <span className="text-green-500">
+            (*) Sem Informações Financeiras
+          </span>
         </section>
         <button
           onClick={() => {
@@ -129,17 +147,14 @@ const Conteudo = () => {
       <h1 className="font-bold text-center">Perfil de investidor </h1>
       <form onSubmit={submitForm}>
         <section className="shadow-md p-5">
-          <h2>
-            <b>Conservador</b>
-          </h2>
           <div className="flex flex-col ">
             <span className="py-1 flex justify-between">
               Fundo de proteção
               <input
                 type="checkbox"
                 name="fundo_protegido"
+                checked={!!investidorData.fundo_protegido}
                 onChange={handler}
-                checked={data.fundo_protegido}
                 className="w-5 h-5"
               />
             </span>
@@ -149,8 +164,8 @@ const Conteudo = () => {
               <input
                 type="checkbox"
                 name="saque_antecipado"
+                checked={!!investidorData.saque_antecipado}
                 onChange={handler}
-                checked={data.saque_antecipado}
                 className="w-5 h-5"
               />
             </span>
@@ -160,8 +175,8 @@ const Conteudo = () => {
               <input
                 type="checkbox"
                 name="partilhar_emprestimo"
+                checked={!!investidorData.partilhar_emprestimo}
                 onChange={handler}
-                checked={data.partilhar_emprestimo}
                 className="w-5 h-5"
               />
             </span>
@@ -175,8 +190,8 @@ const Conteudo = () => {
               <input
                 type="checkbox"
                 name="maior_seguranca"
+                checked={!!investidorData.maior_seguranca}
                 onChange={handler}
-                checked={data.maior_seguranca}
                 className="w-5 h-5"
               />
             </span>
@@ -186,13 +201,14 @@ const Conteudo = () => {
               <input
                 type="checkbox"
                 name="maior_risco"
-                checked={data.maior_risco}
+                checked={!!investidorData.maior_risco}
                 onChange={handler}
                 className="w-5 h-5"
               />
             </span>
           </div>
         </section>
+
         <div className="flex justify-center">
           <button
             type="submit"
