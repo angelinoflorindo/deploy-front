@@ -127,14 +127,14 @@ const Usuario = () => {
         createdAt: undefined,
         updatedAt: undefined,
       },
-      Residencium: {
+      Residencia: {
         id: undefined,
         tipo: undefined,
         data_inicio: undefined,
         createdAt: undefined,
         updatedAt: undefined,
       },
-      Contum: {
+      Conta: {
         id: undefined,
         nome: undefined,
         iban: undefined,

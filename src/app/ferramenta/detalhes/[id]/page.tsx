@@ -38,7 +38,7 @@ const PageInfo = async () => {
       updatedAt: undefined,
     },
     profissao: {},
-    Contum: {
+    Conta: {
       id: undefined,
       nome: undefined,
       iban: undefined,
@@ -48,7 +48,7 @@ const PageInfo = async () => {
       createdAt: undefined,
       updatedAt: undefined,
     },
-    Residencium: {
+    Residencia: {
       id: undefined,
       tipo: undefined,
       data_inicio: undefined,
@@ -70,7 +70,7 @@ const PageInfo = async () => {
   }, []);
 
   return (
-    <div className={styles.Contuminer}>
+    <div className={styles.Container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
         {/* Navbar Fixa */}
         <Header />
@@ -105,7 +105,7 @@ const PageInfo = async () => {
               readOnly={true}
               hidden={true}
             />
-            {pessoaData.Contum === null ? (
+            {pessoaData.Conta === null ? (
               <div>
                 <input
                   type="text"
@@ -135,7 +135,7 @@ const PageInfo = async () => {
                 <input
                   type="text"
                   name="nome"
-                  placeholder={pessoaData.Contum.nome}
+                  placeholder={pessoaData.Conta.nome}
                   required
                   className={styles.input}
                 />
@@ -143,14 +143,14 @@ const PageInfo = async () => {
                 <input
                   type="text"
                   name="iban"
-                  placeholder={pessoaData.Contum.iban}
+                  placeholder={pessoaData.Conta.iban}
                   required
                   className={styles.input}
                 />
                 <input
                   type="number"
                   name="salario"
-                  placeholder={pessoaData.Contum.salario}
+                  placeholder={pessoaData.Conta.salario}
                   required
                   className={styles.input}
                 />

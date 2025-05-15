@@ -123,14 +123,14 @@ const Conteudo = () => {
         createdAt: undefined,
         updatedAt: undefined,
       },
-      Residencium: {
+      Residencia: {
         id: undefined,
         tipo: undefined,
         data_inicio: undefined,
         createdAt: undefined,
         updatedAt: undefined,
       },
-      Contum: {
+      Conta: {
         id: undefined,
         nome: undefined,
         iban: undefined,
@@ -208,8 +208,8 @@ const Conteudo = () => {
         setIsRedirecting(true);
         router.push("/ferramenta/usuario");
       } else if (
-        user.Pessoa.Contum === null ||
-        user.Pessoa.Contum === undefined
+        user.Pessoa.Conta === null ||
+        user.Pessoa.Conta === undefined
       ) {
         setIsRedirecting(true);
         router.push("/ferramenta/detalhes");
@@ -231,10 +231,10 @@ const Conteudo = () => {
           </h1>
 
           <h3>
-            <b>Conta:</b> {user.Pessoa.Contum.nome}
+            <b>Conta:</b> {user.Pessoa.Conta.nome}
           </h3>
           <h3>
-            <b>Iban:</b> {user.Pessoa.Contum.iban}
+            <b>Iban:</b> {user.Pessoa.Conta.iban}
           </h3>
         </div>
         <div className={global.cartao_direita_depositar}>

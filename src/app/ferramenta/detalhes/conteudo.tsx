@@ -123,14 +123,14 @@ const Conteudo = () => {
         createdAt: undefined,
         updatedAt: undefined
       },
-      Residencium: {
+      Residencia: {
         id: undefined,
         tipo: undefined,
         data_inicio: undefined,
         createdAt: undefined,
         updatedAt: undefined
       },
-      Contum: {
+      Conta: {
         id: undefined,
         nome: undefined,
         iban: undefined,
@@ -214,7 +214,7 @@ const Conteudo = () => {
         </button>
       </div>
     );
-  const ContumInfo = userData.Pessoa.Contum;
+  const ContaInfo = userData.Pessoa.Conta;
   const tempo = userData.Pessoa.Emprego.data_inicio;
   const tempoActual = new Date();
   const mesActual = new Date();
@@ -230,8 +230,8 @@ const Conteudo = () => {
         <div className="flex flex-col  ">
           <span className="py-1">
             Renda estimada:
-            {ContumInfo ? (
-              <b>{ContumInfo.salario} Kz</b>
+            {ContaInfo ? (
+              <b>{ContaInfo.salario} Kz</b>
             ) : (
               <span className="text-red-500"> Sem informação</span>
             )}
@@ -256,17 +256,17 @@ const Conteudo = () => {
         <hr className={styles.divider} />
         <div className="flex flex-col">
           <span className="py-1">
-            Contum Principal :
-            {ContumInfo ? (
-              <b>{ContumInfo.nome}</b>
+            Conta Principal :
+            {ContaInfo ? (
+              <b>{ContaInfo.nome}</b>
             ) : (
               <span className="text-red-500"> Sem informação</span>
             )}
           </span>
           <span className="py-1">
             IBAN:
-            {ContumInfo ? (
-              <b>{ContumInfo.iban}</b>
+            {ContaInfo ? (
+              <b>{ContaInfo.iban}</b>
             ) : (
               <span className="text-red-500"> Sem informação</span>
             )}

@@ -16,7 +16,6 @@ export async function GET(
   const { id } = context.params;
   const uuid = Number(id);
   try {
-   ////setupAssociations()();
     await sequelize.authenticate();
     await sequelize.sync();
     
@@ -42,7 +41,7 @@ export async function PUT(
   const body: NegociarEmprestimoProps = await req.json();
 
 
-  const investidorId = await converterString(body.investidor_id);
+  const investidorId = Number(body.investidor_id);
 
   try {
     await sequelize.authenticate();

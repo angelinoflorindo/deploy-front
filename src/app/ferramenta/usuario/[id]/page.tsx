@@ -1,9 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "@/modules/Login.module.css";
-import { signOut } from "next-auth/react";
-import { ConjugueProps, PessoaProps, UserInfo } from "@/services/user.service";
-import { redirect, useRouter, useParams } from "next/navigation";
+import { ConjugueProps, PessoaProps } from "@/services/user.service";
+import {  useRouter, useParams } from "next/navigation";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
