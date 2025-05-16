@@ -1,21 +1,21 @@
 "use client";
-import Image from "next/image";
 import global from "@/modules/global.module.css";
 import Link from "next/link";
 import { CarteiraProps, UserInfo, UserProps } from "@/services/user.service";
-import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { buscarUser } from "@/app/actions/auth";
+import { useRouter } from "next/navigation";
 
-const Conteudo = ( ) => {
-  const [carteira, setCarteira] = useState<CarteiraProps>({  id: undefined,
+const Conteudo = () => {
+  const [carteira, setCarteira] = useState<CarteiraProps>({
+    id: undefined,
     codigo: undefined,
     createdAt: undefined,
     numero: undefined,
     saldo: undefined,
     updatedAt: undefined,
-    user_id: undefined,})
+    user_id: undefined,
+  });
   const [userData, setUserData] = useState<UserProps>({
     id: undefined,
     primeiro_nome: undefined,
@@ -24,36 +24,75 @@ const Conteudo = ( ) => {
     email: undefined,
     bilhete: undefined,
     telemovel: undefined,
-    genero: undefined})
+    genero: undefined,
+  });
 
   const { data: session, status } = useSession();
-
-  async function gerarCartao() {
-    //Gerar Cartão digital
-    const cartaoDigital = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario/carteira`, {
+  const [pessoa, setPessoa] = useState<any>();
+  const router = useRouter();
+  function gerarCartao() {
+    fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario/carteira`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
       },
       body: JSON.stringify({ user_id: userData.id }),
+    }).then((res) => {
+      if (!res.ok) {
+        console.log("Erro ao buscar os dados");
+        return router.push("/ferramenta");
+      }
+      return res.json();
     });
-
-    if (!cartaoDigital.ok) {
-      return redirect("/ferramenta");
-    }
-    return redirect("/ferramenta/cartao");
+    window.location.reload()
+    return 
   }
 
-  const fetchData = async () => {
-    
-  const user: UserInfo = await buscarUser(session?.user?.email);
-  setUserData(user)
-  setCarteira(user.Carteira)
+  const fetchData = () => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario?email=${session?.user?.email}`
+    )
+      .then((res) => {
+        if (!res.ok) {
+          console.log("Erro ao buscar os dados");
+          router.push("/");
+        }
+        return res.json();
+      })
+      .then((user: UserInfo) => {
+        setUserData(user);
+        setCarteira(user.Carteira);
+        setPessoa(user.Pessoa);
+      });
   };
 
   useEffect(() => {
-    fetchData();
+    if (session?.user.email) {
+      fetchData();
+    }
   }, []);
+
+  if (!pessoa || !pessoa.Conta) {
+    return (
+      <div>
+        <section className="shadow-md py-5 px-5 ">
+          <span className="text-green-500">(*) Sem Informações Pessoais</span>{" "}
+          <br />
+          <span className="text-green-500">
+            (*) Sem Informações Financeiras
+          </span>
+        </section>
+        <button
+          onClick={() => {
+            router.push("/ferramenta/");
+          }}
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Voltar
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className={global.grid}>
@@ -62,7 +101,7 @@ const Conteudo = ( ) => {
           <h1>
             {userData.primeiro_nome} {userData.segundo_nome}
           </h1>
-          {!carteira || carteira === null ? (
+          {!carteira || carteira == undefined ? (
             <>
               <h3>Sem cartão</h3>
               <button
@@ -83,7 +122,7 @@ const Conteudo = ( ) => {
         </div>
         <div className={global.cartao_direita}>
           <div className={global.cartao_saldo}>
-            {!carteira || carteira === null ? (
+            {!carteira || carteira == undefined ? (
               <>Kz</>
             ) : (
               <div>{carteira.saldo}kz</div>
