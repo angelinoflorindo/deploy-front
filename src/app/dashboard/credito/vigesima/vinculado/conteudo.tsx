@@ -195,11 +195,6 @@ const Conteudo = () => {
     fetchData();
   }, []);
 
-  if (!user.id) {
-    return <Loading />;
-  }
-
-  
   return (
     <div>
       <h1 className="font-bold text-align">Conta vinculada</h1>

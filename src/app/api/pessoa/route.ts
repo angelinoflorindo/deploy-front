@@ -20,6 +20,10 @@ export async function GET(req: NextRequest) {
   const email = searchParams.get("email");
 
   
+  
+  try {
+  
+  
   await sequelize.authenticate();
   await sequelize.sync();
   
@@ -45,16 +49,12 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json(userInfo, { status: 200 });
 
-  /*
-  try {
   } catch (error) {
     return NextResponse.json(
       { message: "Erro ao buscar usuário", error },
       { status: 500 }
     );
   }
-
-  */
 }
 
 export async function POST(req: NextRequest) {

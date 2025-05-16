@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
-          model: 'proponentes', // Relacionamento com a tabela Proponente
+          model: 'devedores', 
           key: 'id',
         },
         onUpdate: 'CASCADE',

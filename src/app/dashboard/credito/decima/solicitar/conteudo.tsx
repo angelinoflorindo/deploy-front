@@ -232,11 +232,11 @@ const Conteudo = () => {
       </header>
 
       <div className="flex py-2 flex-col justify-center items-center">
-        <h3 className="text-blue-500">
+        <div className="text-blue-500 text-xl font-bold">
           {guardiao
-            ? "Guardiãos convidados"
-            : "Sem guardiãos | clicar duas vezes!"}
-        </h3>
+            ? "Guardião incluido"
+            : "Pedido sem guardião"}
+        </div>
         <form
           action={solicitarCredito}
           className="flex flex-col  justify-center items-center"
@@ -302,13 +302,13 @@ const Conteudo = () => {
             />
           </div>
 
-          <div className="flex flex-row justify-around">
+          <div className="flex flex-row justify-evenly w-[100%]">
             <button
               type="button"
               className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
               onClick={() => setGuardiao(prev => !prev)}
             >
-              Guardião
+              incluir guardião
             </button>
 
             <SubmitButton />

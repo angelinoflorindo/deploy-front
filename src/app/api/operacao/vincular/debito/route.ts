@@ -1,25 +1,27 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import { converterString } from "@/app/actions/auth";
-import {Deposito} from "@/models/Deposito";
+import { Deposito } from "@/models/Deposito";
 import ContaVinculada from "@/models/ContaVinculada";
 import { NextRequest, NextResponse } from "next/server";
-import {Devedor} from "@/models/Devedor";
-import {DebitoVinculado} from "@/models/DebitoVinculado";
+import { Devedor } from "@/models/Devedor";
+import { DebitoVinculado } from "@/models/DebitoVinculado";
 import { sequelize } from "@/lib/sequelize";
 
 export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+
+  const page = (await converterString(searchParams.get("page"))) || 1;
+  const limit = (await converterString(searchParams.get("limit"))) || 5;
+  //    const estado = searchParams.get('status')
+
+  const offset = (Number(page) - 1) * Number(limit);
+  // const where: any = { estado: true };
+  // para definir as condições de listagem apartir do client
+  // if (estado) where.estado = estado;
+
   try {
-
-    const { searchParams } = new URL(req.url);
-
-    const page = (await converterString(searchParams.get("page"))) || 1;
-    const limit = (await converterString(searchParams.get("limit"))) || 5;
-    //    const estado = searchParams.get('status')
-
-    const offset = (Number(page) - 1) * Number(limit);
-    // const where: any = { estado: true };
-    // para definir as condições de listagem apartir do client
-    // if (estado) where.estado = estado;
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const { rows: data, count: total } = await ContaVinculada.findAndCountAll({
       offset,
@@ -44,74 +46,82 @@ export async function GET(req: NextRequest) {
   }
 }
 
-
 // REZERVADO PARA RETENÇÃO DE DÉBBITOS COMO GARANTIAS
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const userId = await converterString(body.user_id);
+  const userId = Number(body.user_id);
+  const info = {
+    solicitacao: 0,
+    adimplencia: 0,
+    inadimplencia: 0,
+    user_id: userId,
+  };
 
   try {
 
-    const info = {
-      solicitacao: 0,
-      adimplencia: 0,
-      inadimplencia: 0,
-      user_id: userId,
-    };
+  await sequelize.authenticate();
+  await sequelize.sync();
 
-    const result = await sequelize.transaction(async (t)=>{
-      const devedor = await Devedor.findOrCreate({
-        where: { user_id: userId },
-        defaults: info,
-        transaction:t
-      });
+  const result = await sequelize.transaction(async (t) => {
+    const [devedor, isDevedo] = await Devedor.findOrCreate({
+      where: { user_id: userId },
+      defaults: info,
+      transaction: t,
+    });
 
-      const [debitos, iscreated] = await DebitoVinculado.findOrCreate(
-        {where:{
-          devedor_id: devedor[0].id,
-          estado:true
-        }, defaults:{
-          devedor_id: devedor[0].id,
-          valor_retido: await converterString(body.valor),
-          data_desbloqueio: new Date()
-        }, transaction:t}
+    const [debitos, iscreated] = await DebitoVinculado.findOrCreate({
+      where: {
+        devedor_id: devedor.id,
+        estado: true,
+      },
+      defaults: {
+        devedor_id: devedor.id,
+        valor_retido: await converterString(body.valor),
+        data_desbloqueio: new Date(),
+      },
+      transaction: t,
+    });
+
+    if (!iscreated) {
+      await DebitoVinculado.update(
+        { estado: false },
+        { where: { devedor_id: devedor.id } }
       );
-  
-  
-      if(!iscreated){
-        await DebitoVinculado.update({estado:false}, {where:{devedor_id:devedor[0].id}})
-        await DebitoVinculado.create({ devedor_id:devedor[0].id,
-          valor_retido: await converterString(body.valor),
-          data_desbloqueio: new Date()})
-      }
-  
-      return {devedor, debitos}
-    })
+      await DebitoVinculado.create({
+        devedor_id: devedor.id,
+        valor_retido: await converterString(body.valor),
+        data_desbloqueio: new Date(),
+      });
+    }
 
+    return { devedor, debitos };
+  });
 
-    return NextResponse.json(result,{ status: 200 }
-    );
+  return NextResponse.json(result, { status: 200 });
+
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }
 }
 
-
 export async function DELETE(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+
+  const page = (await converterString(searchParams.get("page"))) | 1;
+  const limit = (await converterString(searchParams.get("limit"))) | 5;
+  const status = searchParams.get("status");
+  const pendencia = searchParams.get("pendencia");
+  const orderBy = searchParams.get("order") || "created_at";
+
+  const offset = (Number(page) - 1) * Number(limit);
+  const where: any = {};
+  // para definir as condições de listagem apartir do client
+  if (status) where.estado = status;
+  if (pendencia) where.pendencia = pendencia;
+
   try {
-    const { searchParams } = new URL(req.url);
-
-    const page = (await converterString(searchParams.get("page"))) | 1;
-    const limit = (await converterString(searchParams.get("limit"))) | 5;
-    const status = searchParams.get("status");
-    const pendencia = searchParams.get("pendencia");
-    const orderBy = searchParams.get("order") || "created_at";
-
-    const offset = (Number(page) - 1) * Number(limit);
-    const where: any = {};
-    // para definir as condições de listagem apartir do client
-    if (status) where.estado = status;
-    if (pendencia) where.pendencia = pendencia;
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const { rows: data, count: total } = await Deposito.findAndCountAll({
       where,

@@ -1,4 +1,5 @@
 export const dynamic = 'force-dynamic';
+import { sequelize } from "@/lib/sequelize";
 import {Pessoa} from "@/models/Pessoa";
 import {Solidario} from "@/models/Solidario";
 import {User} from "@/models/User";
@@ -13,15 +14,19 @@ export async function GET(
   const { id } =  context.params;
   const uuid = Number(id);
   try {
+    await sequelize.authenticate()
+    await sequelize.sync()
 
     const resp = await Solidario.findAll({
       where: { user_id: uuid, estado: false },
       include: [
         {
           model: Pessoa,
+          as:"Pessoa",
           include: [
             {
               model: User,
+              as:"User",
               attributes: ["primeiro_nome", "segundo_nome", "id", "email"],
             },
           ],

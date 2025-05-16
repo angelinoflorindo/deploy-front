@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 import {User} from "@/models/User";
 import {Pessoa} from "@/models/Pessoa";
 import { sequelize } from "@/lib/sequelize";
-import { setUserAssociation } from "@/lib/user.associations";
 
 export async function GET(
   req: NextRequest,
@@ -19,7 +18,6 @@ export async function GET(
 
  
   try{
-    setUserAssociation()
     await sequelize.authenticate()
     await sequelize.sync()
   
@@ -30,6 +28,7 @@ export async function GET(
         include: [
           {
             model: Pessoa,
+            as:"Pessoa",
             attributes: ["id"],
           }
         ],
@@ -40,6 +39,7 @@ export async function GET(
         attributes: ["id", "primeiro_nome", "segundo_nome", "telemovel", "email"],
         include: {
           model: Pessoa,
+          as:"Pessoa",
           attributes: ["id"],
         },
       });

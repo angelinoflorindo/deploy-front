@@ -1,14 +1,14 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { converterString } from "@/app/actions/auth";
 import { getToken } from "next-auth/jwt";
-import {Deposito} from "@/models/Deposito";
-import {Documento} from "@/models/Documento";
+import { Deposito } from "@/models/Deposito";
+import { Documento } from "@/models/Documento";
+import { sequelize } from "@/lib/sequelize";
 
-
-// mantentdo informaçoes atuais 
+// mantentdo informaçoes atuais
 export async function GET(
   req: NextRequest,
   context: { params: { id: string } }
@@ -21,6 +21,8 @@ export async function GET(
     return NextResponse.json("Não autorizado", { status: 403 });
   }
   try {
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const deposito = await Deposito.findOne({ where: { id: uuid } });
     const infoDeposito = {

@@ -20,7 +20,7 @@ export  class DebitoVinculado extends Model{
   id!: number;
 
   
-    @ForeignKey(() => Devedor)
+  @ForeignKey(() => Devedor)
   @Column(DataType.INTEGER)
   devedor_id!: number;
 

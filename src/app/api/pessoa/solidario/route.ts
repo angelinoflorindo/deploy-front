@@ -1,4 +1,5 @@
 export const dynamic = 'force-dynamic';
+import { sequelize } from "@/lib/sequelize";
 import {Pessoa} from "@/models/Pessoa";
 import {Solidario} from "@/models/Solidario";
 import {User} from "@/models/User";
@@ -13,6 +14,8 @@ export async function GET(req: NextRequest) {
   const email = searchParams.get("email");
 
   try {
+    await sequelize.authenticate()
+    await sequelize.sync()
 
     const user = await User.findOne({
       where: { email: email },
@@ -41,7 +44,9 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
 
   try {
-
+    await sequelize.authenticate()
+    await sequelize.sync()
+    
     const result = await Solidario.create(body);
     return NextResponse.json(result);
   } catch (error) {

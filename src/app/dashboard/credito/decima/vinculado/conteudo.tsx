@@ -5,10 +5,12 @@ import styles from "@/modules/Login.module.css";
 import { UserInfo } from "@/services/user.service";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Conteudo = () => {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const [user, setUser] = useState<UserInfo>({
     id: "",
     bilhete: "",
@@ -184,19 +186,28 @@ const Conteudo = () => {
       updatedAt: undefined,
     },
   });
-  const fetchData = async () => {
-    if (session?.user.email) {
-      const result = await buscarUser(session?.user?.email);
-      setUser(result);
-    }
+  const fetchData = () => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/usuario?email=${session?.user?.email}`
+    )
+      .then((res) => {
+        if (!res.ok) {
+          console.log("Erro ao buscar os dados");
+          router.push("/");
+        }
+        return res.json();
+      })
+      .then((user: UserInfo) => {
+       // console.log(user);
+        setUser(user);
+      });
   };
 
   useEffect(() => {
-    fetchData();
+    if (session?.user.email) {
+      fetchData();
+    }
   }, []);
-  if (!user.id) {
-    return <Loading />;
-  }
 
   return (
     <div>

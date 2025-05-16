@@ -1,8 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
-import path from "path";
-import { converterString } from "@/app/actions/auth";
+import path from "path"; 
 import { getToken } from "next-auth/jwt";
 import {Deposito} from "@/models/Deposito";
 import {Documento} from "@/models/Documento";
@@ -12,7 +11,7 @@ export async function GET(
   context: { params: { id: string } }
 ) {
   const { id } = await context.params;
-  const uuid = await converterString(id);
+  const uuid = Number(id);
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (!token || (token.role !== "ADMIN" && token.role != "ANALISTA")) {

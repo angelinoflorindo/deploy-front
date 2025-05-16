@@ -1,8 +1,9 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
+import { sequelize } from "@/lib/sequelize";
 import Carteira from "@/models/Carteira";
-import {DebitoVinculado} from "@/models/DebitoVinculado";
-import {Devedor} from "@/models/Devedor";
-import {User} from "@/models/User";
+import { DebitoVinculado } from "@/models/DebitoVinculado";
+import { Devedor } from "@/models/Devedor";
+import { User } from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 // PUT - Realizar a devolução do depódito retidos
@@ -14,6 +15,8 @@ export async function PUT(
   const uuid = Number(id);
 
   try {
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const vinculo = await DebitoVinculado.findOne({
       where: { id: uuid, estado: true },
@@ -48,12 +51,12 @@ export async function GET(
   req: NextRequest,
   context: { params: { id: number } }
 ) {
-  
-  
-  const { id } =  context.params;
+  const { id } = context.params;
   const uuid = Number(id);
 
   try {
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const vinculo = await DebitoVinculado.findOne({
       where: { id: uuid, estado: false },

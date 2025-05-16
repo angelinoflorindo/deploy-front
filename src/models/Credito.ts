@@ -13,13 +13,18 @@ import {
 import { Devedor } from "./Devedor";
 
 export enum TipoCredito {
-  PENDENTE = "30_DIAS",
-  CONCLUIDO = "60_DIAS",
-  CANCELADO = "90_DIAS",
+  DECIMA = "30_DIAS",
+  MESNSAL = "60_DIAS",
+  VIGESIMA ="90_DIAS",
+}
+export enum TipoProgresso {
+  PENDENTE ="PENDENTE",
+  CONCLUIDO ="CONCLUIDO",
+  CANCELADO = "CANCELADO",
 }
 
 @Table({ tableName: "creditos" })
-export  class Credito extends Model {
+export class Credito extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -29,7 +34,7 @@ export  class Credito extends Model {
     type: DataType.ENUM(...Object.values(TipoCredito)),
     allowNull: false,
   })
-  tipo!: TipoCredito;
+  tipo_credito!: TipoCredito;
 
   @Column(DataType.BIGINT)
   valor!: number;
@@ -48,9 +53,9 @@ export  class Credito extends Model {
 
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   pendencia!: boolean;
-  
+
   @Column({
-    type: DataType.ENUM(...Object.values(TipoCredito)),
+    type: DataType.ENUM(...Object.values(TipoProgresso)),
     allowNull: false,
     defaultValue: "PENDENTE",
   })
@@ -59,7 +64,6 @@ export  class Credito extends Model {
   @ForeignKey(() => Devedor)
   @Column(DataType.INTEGER)
   devedor_id!: number;
-
 
   @CreatedAt
   @Column({ field: "created_at", type: DataType.DATE })

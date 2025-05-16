@@ -22,6 +22,22 @@ export interface CreditoProps {
   Credoras: CredoraProps[];
 }
 
+export interface CreditoSimps{
+  id: any;
+  valor: any;
+  estado: any;
+  juro: any;
+  prestacao: any;
+  prazo: any;
+  tipo: any;
+  progresso: any;
+  devedor_id: any;
+  pendencia: any;
+  user_id: any;
+  createdAt: any;
+  updatedAt: any;
+}
+
 
 export interface CredoraProps{
   investidor_id: any;
