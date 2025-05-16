@@ -31,7 +31,7 @@ module.exports = {
         unique: true,
         allowNull: false,
         references: {
-          model: 'users', // relacionamento com a tabela User
+          model: 'users', 
           key: 'id',
         },
         onUpdate: 'CASCADE',
