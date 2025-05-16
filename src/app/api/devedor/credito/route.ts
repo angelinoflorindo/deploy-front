@@ -97,29 +97,18 @@ export async function POST(req: NextRequest) {
     await sequelize.authenticate();
     await sequelize.sync();
 
-    const usuario: any = {};
     const devedor = await Devedor.findOne({ where: { user_id: userId } });
-    if (devedor) {
-      usuario.devedor_id = devedor.id;
+    if (!devedor) {
+      return NextResponse.json({ message: devedor }, { status: 404 });
     }
 
-    const [result, iscreated] = await Credito.findOrCreate({
-      where: {
-        valor: await converterString(body.valor),
-        prazo: body.prazo,
-        prestacao: await converterString(body.prestacao),
-        devedor_id: usuario.devedor_id,
-        juro: await converterString(body.juro),
-        tipo_credito: body.duracao,
-      },
-      defaults: {
-        valor: await converterString(body.valor),
-        prazo: body.prazo,
-        prestacao: await converterString(body.prestacao),
-        devedor_id: usuario.devedor_id,
-        juro: await converterString(body.juro),
-        tipo_credito: body.duracao,
-      },
+    const result = await Credito.create({
+      valor: await converterString(body.valor),
+      prazo: body.prazo,
+      prestacao: await converterString(body.prestacao),
+      devedor_id: devedor.id,
+      juro: await converterString(body.juro),
+      tipo_credito: body.duracao,
     });
 
     if (body.guardiao === "on" || body.guardiao === true) {

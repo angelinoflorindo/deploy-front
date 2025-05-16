@@ -1,6 +1,5 @@
 "use client";
 import {  buscarUser, vincularDebito } from "@/app/actions/auth";
-import Loading from "@/app/loading";
 import styles from "@/modules/Login.module.css";
 import { UserInfo } from "@/services/user.service";
 import { useSession } from "next-auth/react";
@@ -196,9 +195,6 @@ const Conteudo = () => {
       fetchData();
     }, []);
 
-    if (!user.id) {
-    Loading 
-    }
 
   return (
     <div>

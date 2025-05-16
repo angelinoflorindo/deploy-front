@@ -311,7 +311,7 @@ const Credito = () => {
               Crédito 30 dias
             </Link>
             <Link
-              href="/dashboard/credito/vigesima"
+              href="/dashboard/credito/mensal"
               className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md"
             >
               <Image
@@ -326,7 +326,7 @@ const Credito = () => {
 
             {/* href="/dashboard/credito/mensal"*/}
             <Link
-              href="/dashboard/credito/mensal"
+              href="/dashboard/credito/vigesima"
               className="flex flex-row w-[100%] justify-start items-center  h-14 shadow-md"
             >
               <Image

@@ -232,11 +232,11 @@ const Conteudo = () => {
       </header>
 
       <div className="flex py-2 flex-col justify-center itmes-center">
-        <h3 className="text-blue-500">
+        <div className="text-blue-500 text-xl font-bold">
           {guardiao
-            ? "Guardiãos convidados"
-            : "Sem guardiãos | clicar duas vezes!"}
-        </h3>
+            ? "Guardião incluido"
+            : "Pedido sem guardião"}
+        </div>
         <form
           action={solicitarCredito}
           className="flex flex-col  justify-center itmes-center"
@@ -292,7 +292,7 @@ const Conteudo = () => {
               type="number"
               name="valor"
               onChange={valorHandler}
-              placeholder="valor max. 50000,00kz"
+              placeholder="valor max. 150000,00kz"
               className={styles.input}
             />
             <input
@@ -304,12 +304,12 @@ const Conteudo = () => {
           </div>
 
           <div className="flex flex-row justify-around">
-            <button
+           <button
               type="button"
               className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
-              onClick={() => setGuardiao((prev) => !prev)}
+              onClick={() => setGuardiao(prev => !prev)}
             >
-              Guardião
+              incluir guardião
             </button>
 
             <SubmitButton />

@@ -219,7 +219,7 @@ const Conteudo = () => {
     if (session?.user.email) {
       const user: UserInfo = await buscarUser(session?.user?.email);
       const { data, total } = await buscarGuardiao(user.id);
-      //console.log("guard", total)
+     
       setGuardInfo(data); // como também podia testar com o push
       setTotal(total);
       setUser(user);

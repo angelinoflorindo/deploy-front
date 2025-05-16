@@ -10,11 +10,13 @@ import {
   buscarUserQuery,
   convidarSolidario,
 } from "@/app/actions/auth";
-import {  useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Guardiao, SolidarioProps, UserInfo } from "@/services/user.service";
-import { SubmitButton } from "@/components/submitButton"; 
+import { SubmitButton } from "@/components/submitButton";
 import { useSession } from "next-auth/react";
- 
+import Footer from "@/components/footer";
+import Header from "@/components/header";
+
 const Conteudo = () => {
   const [guard, setGuard] = useState("");
   const [familiar, setFamiliar] = useState("");
@@ -33,7 +35,7 @@ const Conteudo = () => {
     user_id: "",
   });
 
-  let guardInfo = new Array<SolidarioProps>();
+  const [guardInfo, setGuardInfo] = useState<SolidarioProps[]>([]);
   const [user, setUser] = useState<UserInfo>({
     id: "",
     bilhete: "",
@@ -212,11 +214,13 @@ const Conteudo = () => {
 
   const { data: session, status } = useSession();
   const router = useRouter();
+
   const fetchData = async () => {
     if (session?.user.email) {
       const user: UserInfo = await buscarUser(session?.user?.email);
       const { data, total } = await buscarGuardiao(user.id);
-      guardInfo = data; // como também podia testar com o push
+     
+      setGuardInfo(data); // como também podia testar com o push
       setTotal(total);
       setUser(user);
     }
@@ -234,6 +238,7 @@ const Conteudo = () => {
     const selected = event.target.value;
     setFamiliar(selected);
   };
+
 
   async function submitForm(e: React.FormEvent) {
     e.preventDefault();
@@ -319,31 +324,39 @@ const Conteudo = () => {
     return 
   }
 
+
   useEffect(() => {
-    //console.log("Proximo", total);
     if (total > 50) {
       setTotal(total);
       setProximo(true);
     }
+  }, [total, taxa]);
 
-  }, [taxa]);
-
-  if (user.Pessoa === null || user.Pessoa === undefined) {
+  if (!user.Pessoa || user.Pessoa == undefined) {
     return (
-      <div>
-        <section className="shadow-md py-5 px-5 ">
-          <h1 className="text-green-500">Termina de registrar o perfil! </h1>
-          <span>(*) Informações pessoais</span> <br />
-          <span>(*) Informações profissionais</span>
-        </section>
-        <button
-          onClick={() => {
-            router.push("/ferramenta/usuario");
-          }}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Voltar
-        </button>
+        <div className={styles.container}>
+        <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
+          <Header />
+          <main className="flex-1 overflow-y-auto p-4 bg-white">
+            <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
+              (*) Sem informações Pessais!
+            </div>
+
+            <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
+              (*) Sem informações Profissionais!
+            </div>
+
+            <button
+              onClick={() => {
+                router.push("/ferramenta/usuario");
+              }}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Voltar
+            </button>
+          </main>
+          <Footer />
+        </div>
       </div>
     );
   }
@@ -385,7 +398,7 @@ const Conteudo = () => {
                 src="/img/guardiao.png"
                 className={global.imagemGuardiao}
                 width={50}
-                height={0}
+                height={0}//verificar o formato
                 alt=""
               />
 
@@ -412,7 +425,7 @@ const Conteudo = () => {
                     <Image
                       src="/img/reduzir.png"
                       onClick={() => {
-                        if(taxa >0) setTaxa(taxa - 1);
+                        if (taxa > 0) setTaxa(taxa - 1);
                       }}
                       className={global.footerImagem}
                       width={25}
@@ -431,6 +444,7 @@ const Conteudo = () => {
                       height={30}
                       alt=""
                     />
+
                     {parentesco && familiar !== "" && (
                       <Image
                         src="/img/convite.png"
@@ -493,7 +507,7 @@ const Conteudo = () => {
 
       <div className="flex flex-row w-[100%] justify-between items-center  h-14">
         <Link
-          href="/dashboard/credito/vigesima"
+          href="/dashboard/credito/decima"
           type="submit"
           className="px-4 py-2 bg-gray-500 text-white rounded"
         >
