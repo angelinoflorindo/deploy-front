@@ -16,8 +16,8 @@ import {
   EmprestimoValidado,
 } from "@/services/Emprestimo.service";
 import { UserInfo } from "@/services/user.service";
-import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const Emprestimo = () => {
   const { data: session, status } = useSession();
@@ -227,7 +227,7 @@ const Emprestimo = () => {
       updatedAt: undefined,
     },
   });
-
+const router = useRouter()
   const [diverseData, setDiverseData] = useState<DiversificacaoProps[]>([]);
   let multipleIncome: any = [];
 
@@ -236,11 +236,11 @@ const Emprestimo = () => {
     const result: EmprestimoValidado = await buscarEmprestimoValidadoByEmail(
       session?.user.email
     );
-
+   // console.log("resultados falam", result)
     if (result.Proponente) {
       setDiverseData(result.Proponente.Emprestimos[0].Diversificacaos);
 
-      if (result.Proponente.Emprestimos[0].Diversificacaos.length > 0) {
+      if (result.Proponente.Emprestimos[0] &&  result.Proponente.Emprestimos[0].Diversificacaos.length > 0) {
         diverseData.forEach((data, index) => {
           multipleIncome.push({
             investidorId: data.investidor_id,
@@ -250,11 +250,6 @@ const Emprestimo = () => {
           });
         });
       }
-    }
-
-    if (res.Carteira == null || res.Carteira == undefined) {
-      console.log("sem conta digital");
-      return redirect("/ferramenta/cartao");
     }
 
     setUser(res);
@@ -267,6 +262,67 @@ const Emprestimo = () => {
     }
   }, []);
 
+
+  
+    if (user.id && (!user.Carteira || !user.Pessoa.Conta)) {
+      return (
+         <div className={styles.container}>
+          <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
+            <Header />
+            <main className="flex-1 overflow-y-auto p-4 bg-white">
+              <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
+                (*) Sem informações Financeiras!
+              </div>
+  
+              <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
+                (*) Sem informações Investimentos!
+              </div>
+  
+              <button
+                onClick={() => {
+                  router.push("/ferramenta/");
+                }}
+                className="px-4 py-2 bg-blue-500 text-white rounded"
+              >
+                Voltar
+              </button>
+            </main>
+            <Footer />
+          </div>
+        </div>
+      );
+    }
+  
+    if (user.id && !user.Pessoa) {
+      return (
+        <div className={styles.container}>
+          <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
+            <Header />
+            <main className="flex-1 overflow-y-auto p-4 bg-white">
+              <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
+                (*) Sem informações Pessais!
+              </div>
+  
+              <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
+                (*) Sem informações Profissionais!
+              </div>
+  
+              <button
+                onClick={() => {
+                  router.push("/ferramenta/usuario");
+                }}
+                className="px-4 py-2 bg-blue-500 text-white rounded"
+              >
+                Voltar
+              </button>
+            </main>
+            <Footer />
+          </div>
+        </div>
+      );
+    }
+  
+  
   return (
     <div className={styles.container}>
       <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
@@ -324,9 +380,9 @@ const Emprestimo = () => {
             <h2 className="text-xl font-bold mb-2">Efectuar reembolsos</h2>
             <section>
               {/*BUSANDO OS EMPRESTIMOS POR INVESTIDORES*/}
-              {emprestimo.Proponente ? (
+              {emprestimo.Proponente && emprestimo.Proponente.Emprestimos[0] ? (
                 <div>
-                  {diverseData && diverseData.length > 1 ? (
+                  {diverseData && diverseData.length > 0 ? (
                     <div>
                       {diverseData.map((data, index) => (
                         <Link
@@ -335,7 +391,7 @@ const Emprestimo = () => {
                           className="flex flex-col px-4 py-2 h-20 shadow-md w-[100%]"
                         >
                           <span className="flex flex-row justify-between">
-                            <p className="font-bold"> Emprestimo até</p>{" "}
+                            <p className="font-bold"> Empréstimo até</p>{" "}
                             {
                               emprestimo.Proponente.Emprestimos[0].prazo.split(
                                 "T"

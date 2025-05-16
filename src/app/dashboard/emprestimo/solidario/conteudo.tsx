@@ -246,7 +246,7 @@ const Conteudo = () => {
       return;
     }
 
-    if (guardiao.email === user.email) {
+    if (guardiao.email == user.email) {
       console.log("Convide outro guardião");
       router.push("/dashboard/emprestimo/solidario");
       return;
@@ -320,14 +320,13 @@ const Conteudo = () => {
   }
 
   useEffect(() => {
-    console.log("Proximo", total);
     if (total > 50) {
       setTotal(total);
       setProximo(true);
     }
-  }, [taxa]);
+  }, [total, taxa]);
 
-  if (user.Pessoa === null || user.Pessoa === undefined) {
+  if (!user.Pessoa || user.Pessoa == undefined) {
     return (
       <div>
         <section className="shadow-md py-5 px-5 ">

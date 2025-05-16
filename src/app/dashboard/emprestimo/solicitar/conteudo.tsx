@@ -8,7 +8,7 @@ import { buscarUser, submitEmprestimo } from "@/app/actions/auth";
 import { useSession } from "next-auth/react";
 
 const Conteudo = () => {
-  const [valor, setValor] = useState<string>('');
+  const [valor, setValor] = useState<string>("");
   const [prazo, setPrazo] = useState("");
   const [guardiao, setGuardiao] = useState(false);
   const [juro, setJuro] = useState<any>(0);
@@ -241,11 +241,9 @@ const Conteudo = () => {
       </header>
 
       <div className="flex py-2 flex-col justify-center itmes-center">
-        <h3 className="text-blue-500">
-          {guardiao
-            ? "Guardiãos convidados"
-            : "Sem guardiãos | clicar duas vezes!"}
-        </h3>
+        <div className="text-blue-500 text-xl font-bold">
+          {guardiao ? "Guardião incluido" : "Pedido sem guardião"}
+        </div>
         <form
           action={submitEmprestimo}
           className="flex flex-col  justify-center itmes-center"
@@ -297,13 +295,13 @@ const Conteudo = () => {
               className={styles.input}
             />
           </div>
-          <div className="flex flex-row justify-around">
+          <div className="flex flex-row justify-evenly w-[100%]">
             <button
               type="button"
               className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
-              onClick={() => setGuardiao(prev => !prev)}
+              onClick={() => setGuardiao((prev) => !prev)}
             >
-              Guardião
+              incluir guardião
             </button>
 
             <SubmitButton />

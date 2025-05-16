@@ -20,6 +20,8 @@ export async function GET(req: NextRequest) {
   const email = searchParams.get("email");
 
   try {
+    await sequelize.authenticate()
+    await sequelize.sync()
 
     const result = await User.findOne({
       where: { email: email },
@@ -27,19 +29,24 @@ export async function GET(req: NextRequest) {
       include: [
         {
           model: Proponente,
+          as:"Proponente",
           include: [
             {
               model: Emprestimo,
+              as:"Emprestimos",
               where: { estado: true, progresso: "CONCLUIDO" },
               include: [
                 {
                   model: Diversificacao,
+                  as:"Diversificacaos",
                   include: [
                     {
                       model: Investidor,
+                      as:"Investidor",
                       include: [
                         {
                           model: User,
+                          as:"User",
                           attributes: [
                             "id",
                             "primeiro_nome",
@@ -71,12 +78,15 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
 
   const valor = await converterString(body.valor);
-  const userId = await converterString(body.userId);
-  const emprestimoId = await converterString(body.emprestimoId);
-  const propUserId = await converterString(body.propUserId);
+  const userId =Number(body.userId);
+  const emprestimoId =Number(body.emprestimoId);
+  const propUserId = Number(body.propUserId);
   const income: any = {};
 
   try {
+
+    await sequelize.authenticate()
+    await sequelize.sync()
 
     const carteira = await Carteira.findOne({ where: { user_id: userId } }); // carteira do  investidor
 
