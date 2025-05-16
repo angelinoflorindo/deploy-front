@@ -687,21 +687,21 @@ export async function solicitarCredito(formData: FormData) {
   // Controlar o valor solicitado
 
   if (info.duracao == "30_DIAS") {
-    if (info.valor > 50000 || duracaoMes > 1) {
+    if (info.valor > 50000 || duracaoMes > 2) {
       console.log("Excedeu os limites");
       return redirect(`/dashboard/credito/${info.tipo}/solicitar`);
     }
   }
 
   if (info.duracao == "60_DIAS") {
-    if (info.valor > 150000 || duracaoMes > 2) {
+    if (info.valor > 150000 || duracaoMes > 3) {
       console.log("Excedeu os limites");
       return redirect(`/dashboard/credito/${info.tipo}/solicitar`);
     }
   }
 
   if (info.duracao == "90_DIAS") {
-    if (info.valor > 250000 || duracaoMes > 3) {
+    if (info.valor > 250000 || duracaoMes > 4) {
       console.log("Excedeu os limites");
       return redirect(`/dashboard/credito/${info.tipo}/solicitar`);
     }
