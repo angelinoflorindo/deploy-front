@@ -37,6 +37,7 @@ import { setInvestidorAssociation } from "./investidor.association";
 import { setProponenteAssociation } from "./proponente.association";
 import { setDevedorAssociation } from "./devedor.association";
 import { setDinheiroAssociation } from "./dinheiro.associations";
+import { setCreditoAssociation } from "./credito.association";
 
 config();
 
@@ -87,3 +88,4 @@ setInvestidorAssociation()
 setProponenteAssociation()
 setDevedorAssociation()
 setDinheiroAssociation()
+setCreditoAssociation()

@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  EmprestimoDef,
-  UserInfo,
-} from "@/services/user.service";
+import { EmprestimoDef, UserInfo } from "@/services/user.service";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -12,9 +9,12 @@ import {
   buscarPropostasOpProponente,
   buscarUser,
 } from "@/app/actions/auth";
-import {  useRouter } from "next/navigation";
+import styles from "@/modules/Login.module.css";
+import { useRouter } from "next/navigation";
 import { CreditoDef } from "@/services/Credito.service";
 import { useSession } from "next-auth/react";
+import Footer from "@/components/footer";
+import Header from "@/components/header";
 
 export default function Conteudo() {
   const { data: session, status } = useSession();
@@ -198,17 +198,17 @@ export default function Conteudo() {
   const [step, setStep] = useState(true);
   const [pageE, setPageE] = useState(1);
   const [pageC, setPageC] = useState(1);
-  const router = useRouter()
+  const router = useRouter();
   const [totalPagesE, setTotalPagesE] = useState(1);
   const [totalPagesC, setTotalPagesC] = useState(1);
-  const [isRedirecting, setIsRedirecting] = useState(false)
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const fetchData = async () => {
     const res: UserInfo = await buscarUser(session?.user?.email);
     setUser(res);
 
     const response: any = {};
-    if (user.Proponente) {
-      response.search = await buscarPropostasOpProponente(user.Proponente.id, {
+    if (res.Proponente) {
+      response.search = await buscarPropostasOpProponente(res.Proponente.id, {
         pageE,
       });
     } else {
@@ -216,8 +216,8 @@ export default function Conteudo() {
         pageE,
       });
     }
-    if (user.Devedor) {
-      response.credito = await buscarPropostasOpDevedor(user.Devedor.id, {
+    if (res.Devedor) {
+      response.credito = await buscarPropostasOpDevedor(res.Devedor.id, {
         pageC,
       });
     } else {
@@ -236,25 +236,72 @@ export default function Conteudo() {
   };
 
   useEffect(() => {
-    fetchData();
+    if (session?.user.email) {
+      fetchData();
+    }
   }, []);
 
-  useEffect(() => {
-    if (user && user.id !== "") {
-      if (user.Investidor == null || user.Investidor == undefined) {
-        setIsRedirecting(true);
-        router.push("/ferramenta/investidor");
-      } else if (user.Carteira == null || user.Carteira == undefined) {
-        setIsRedirecting(true);
-        router.push("/ferramenta/cartao");
-      }
-    }
-  }, [user, router]); // depende de "user"
 
-  if (isRedirecting) {
-    return null; // ou loading spinner se quiser
-  }
   
+  if (user.id && (!user.Carteira || !user.Pessoa.Conta)) {
+    return (
+       <div className={styles.container}>
+        <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
+          <Header />
+          <main className="flex-1 overflow-y-auto p-4 bg-white">
+            <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
+              (*) Sem informações Financeiras!
+            </div>
+
+            <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
+              (*) Sem informações Investimentos!
+            </div>
+
+            <button
+              onClick={() => {
+                router.push("/ferramenta/");
+              }}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Voltar
+            </button>
+          </main>
+          <Footer />
+        </div>
+      </div>
+    );
+  }
+
+  if (user.id && (!user.Pessoa /*|| !user.Investidor */)) {
+    return (
+      <div className={styles.container}>
+        <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
+          <Header />
+          <main className="flex-1 overflow-y-auto p-4 bg-white">
+            <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
+              (*) Sem informações Pessais!
+            </div>
+
+            <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
+              (*) Pefil de Investidor indefinido!
+            </div>
+
+            <button
+              onClick={() => {
+                router.push("/ferramenta/usuario");
+              }}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Voltar
+            </button>
+          </main>
+          <Footer />
+        </div>
+      </div>
+    );
+  }
+
+
   return (
     <div>
       <h1 className="text-xl font-bold mb-4">Solicitações!</h1>
@@ -320,7 +367,7 @@ export default function Conteudo() {
             <div className="flex justify-between items-center mt-4">
               <button
                 onClick={() => setPageE((prev) => Math.max(prev - 1, 1))}
-                disabled={pageE === 1}
+                disabled={pageE == 1}
                 className="bg-gray-200 px-3 py-1 rounded disabled:opacity-50"
               >
                 Anterior
@@ -332,7 +379,7 @@ export default function Conteudo() {
                 onClick={() =>
                   setPageE((prev) => Math.min(prev + 1, totalPagesE))
                 }
-                disabled={pageE === totalPagesE}
+                disabled={pageE == totalPagesE}
                 className="bg-gray-200 px-3 py-1 rounded disabled:opacity-50"
               >
                 Próxima
@@ -378,7 +425,7 @@ export default function Conteudo() {
             <div className="flex justify-between items-center mt-4">
               <button
                 onClick={() => setPageC((prev) => Math.max(prev - 1, 1))}
-                disabled={pageC === 1}
+                disabled={pageC == 1}
                 className="bg-gray-200 px-3 py-1 rounded disabled:opacity-50 cursor-pointer"
               >
                 Anterior
@@ -390,7 +437,7 @@ export default function Conteudo() {
                 onClick={() =>
                   setPageC((prev) => Math.min(prev + 1, totalPagesC))
                 }
-                disabled={pageC === totalPagesC}
+                disabled={pageC == totalPagesC}
                 className="bg-gray-200 px-3 py-1 rounded disabled:opacity-50 cursor-pointer"
               >
                 Próxima
