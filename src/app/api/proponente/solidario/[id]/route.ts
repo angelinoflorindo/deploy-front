@@ -1,10 +1,10 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import { converterString } from "@/app/actions/auth";
-import {Pessoa} from "@/models/Pessoa";
-import {Solidario} from "@/models/Solidario";
-import {User} from "@/models/User";
+import { sequelize } from "@/lib/sequelize";
+import { Pessoa } from "@/models/Pessoa";
+import { Solidario } from "@/models/Solidario";
+import { User } from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
-
 
 // consulta auxiliar para convidar para classe de guarnição
 export async function GET(
@@ -13,17 +13,22 @@ export async function GET(
 ) {
   //const { searchParams } = new URL(req.url);
   const { id } = await context.params;
-  const uuid = await converterString(id);
-  try {
+  const uuid = Number(id);
 
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync();
+    
     const resp = await Solidario.findAll({
       where: { user_id: uuid, estado: false },
       include: [
         {
           model: Pessoa,
+          as:"Pessoa",
           include: [
             {
               model: User,
+              as:"User",
               attributes: ["primeiro_nome", "segundo_nome", "id", "email"],
             },
           ],
@@ -31,9 +36,9 @@ export async function GET(
       ],
     });
 
-    const total = await Solidario.sum("taxa",{
-      where:{estado:false,  user_id: uuid}
-    }) 
+    const total = await Solidario.sum("taxa", {
+      where: { estado: false, user_id: uuid },
+    });
 
     if (!resp) {
       return NextResponse.json(
@@ -46,7 +51,7 @@ export async function GET(
       data: resp,
       total: total,
     };
-   // console.log("Dados solicitados", result);
+    // console.log("Dados solicitados", result);
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {

@@ -230,7 +230,6 @@ export async function vincularConta(formData: FormData) {
 
   formData.append("tipo", "DEPOSITO");
   formData.append("titulo", "Depósito de retenção");
-  formData.append("user_id", `${userId}`);
 
   const files = formData.getAll("scanner") as File[];
 
@@ -238,15 +237,6 @@ export async function vincularConta(formData: FormData) {
     return redirect("/dashboard/emprestimo/vinculado");
   }
 
-  const res = await fetch(`${process.env.CLIENT_URL}/api/upload`, {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!res.ok) {
-    console.log("Erro ao anexar comprovativo!");
-    return redirect("/dashboard/emprestimo/vinculado");
-  }
 
   const vincular = await fetch(
     `${process.env.CLIENT_URL}/api/operacao/vincular`,
@@ -259,7 +249,13 @@ export async function vincularConta(formData: FormData) {
     }
   );
 
-  if (!vincular.ok) {
+  const res = await fetch(`${process.env.CLIENT_URL}/api/upload`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!vincular.ok || !res.ok) {
+    console.log("Erro ao anexar comprovativo!");
     return redirect("/dashboard/emprestimo/vinculado");
   }
 
