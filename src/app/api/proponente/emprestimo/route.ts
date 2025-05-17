@@ -62,8 +62,9 @@ export async function GET(req: NextRequest) {
       limit: Number(limit),
       order: [[`${orderBy}`, "DESC"]],
       include: [
-        { model: Proponente, 
-          include:[{model:User, attributes:['id','primeiro_nome', 'segundo_nome']}]
+        { model: Proponente,
+          as:"Proponente",
+          include:[{model:User, as:"User", attributes:['id','primeiro_nome', 'segundo_nome']}]
         },
        
       ],

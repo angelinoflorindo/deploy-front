@@ -1,5 +1,4 @@
-import { Credito } from "@/models/Credito";
-import Credora from "@/models/Credora";
+
 import Diversificacao from "@/models/Diversificacao";
 import Emprestimo from "@/models/Emprestimo";
 import EmprestimoSolidario from "@/models/EmprestimoSolidario";
@@ -24,10 +23,7 @@ export function setDinheiroAssociation(): void {
     as: "EmprestimoSolidarios",
     foreignKey: "solidario_id",
   });
-  Credito.hasMany(Credora, {
-    as: "Credoras",
-    foreignKey: "credito_id",
-  });
+
 
   EmprestimoSolidario.belongsTo(Emprestimo, {
     as: "Emprestimo",
@@ -46,8 +42,5 @@ export function setDinheiroAssociation(): void {
     foreignKey: "emprestimo_id",
   });
 
-  Credora.belongsTo(Credito, {
-    as: "Credito",
-    foreignKey: "credito_id",
-  });
+
 }
