@@ -291,7 +291,7 @@ const Conteudo = () => {
     window.location.reload();
   };
 
-  if (users.id && (!users.Pessoa || !users.Investidor)) {
+  if (users && users.id && (!users.Pessoa || !users.Investidor)) {
     return (
       <div >
         <div className="flex flex-col">
@@ -328,7 +328,7 @@ const Conteudo = () => {
 
       {/*BUSANDO PEDIDOS DE GUARDIÃO FEITOS POR PROPONENTES*/}
 
-      {formData.User && formData.User.id ? (
+      {formData && formData.User && formData.User.id ? (
         <div className="flex flex-col p-4 h-50 shadow-md w-[100%]">
           <div className="mb-2 flex flex-col">
             <span className="font-bold">Pedido de guardião</span>
