@@ -286,7 +286,14 @@ export interface SolidarioFace {
   user_id: any;
   createdAt: any;
   updatedAt: any;
-  User: UserProps;
+  User: {
+    id: any;
+    primeiro_nome: any;
+    segundo_nome: any;
+    email: any;
+    Investidor: InvestidorSimps;
+    Pessoa: PessoaProps;
+  };
 }
 
 export interface SolidarioProps {

@@ -8,77 +8,313 @@ import Link from "next/link";
 import {
   NegociarEmprestimoProps,
   SolidarioFace,
-} from "@/services/user.service"; 
+  UserInfo,
+} from "@/services/user.service";
+import styles from "@/modules/Login.module.css";
 import {
   aceitarSolidario,
   buscarPropostaInvestidor,
   buscarSolidarios,
+  buscarUser,
   rejeitarSolidario,
 } from "@/app/actions/auth";
 import { useSession } from "next-auth/react";
- 
+import Footer from "@/components/footer";
+import Header from "@/components/header";
+import { useRouter } from "next/navigation";
+
 const Conteudo = () => {
   const { data: session, status } = useSession();
-  const [pessoa, setPessoa] = useState("");
-  const [user, setUser] = useState("");
-  const [tipo, setTipo] = useState("");
   const [negoData, setNegoData] = useState<NegociarEmprestimoProps[]>([]);
   const [formData, setFormData] = useState<SolidarioFace>({
-    id:undefined,
-    parentesco:undefined,
-    taxa:undefined,
-    user_id:undefined,
-    tipo:undefined,
-    pessoa_id:undefined,
-    updatedAt:undefined,
-    createdAt:undefined,
-    User:{
+    id: undefined,
+    parentesco: undefined,
+    taxa: undefined,
+    user_id: undefined,
+    tipo: undefined,
+    pessoa_id: undefined,
+    updatedAt: undefined,
+    createdAt: undefined,
+    User: {
       id: undefined,
       primeiro_nome: undefined,
       segundo_nome: undefined,
-      password: undefined,
       email: undefined,
-      bilhete: undefined,
-      telemovel: undefined,
-      genero: undefined
-    }
+      Investidor: {
+        id: undefined,
+        maior_risco: false,
+        maior_seguranca: false,
+        saque_antecipado: false,
+        fundo_protegido: false,
+        partilhar_emprestimo: false,
+        estado: false,
+        user_id: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+      },
+      Pessoa: {
+        id: undefined,
+        estado_civil: undefined,
+        provincia: undefined,
+        municipio: undefined,
+        profissao: undefined,
+        user_id: undefined,
+        emprego_id: undefined,
+        residencia_id: undefined,
+        nivel_instrucao: undefined,
+        data_nascimento: undefined,
+      },
+    },
   });
-
-  const fetchData = async () => {
-    if (session?.user.email) {
-      const result = await buscarPropostaInvestidor(session?.user.email);
-      const res = await buscarSolidarios(session?.user.email);
-      setNegoData(result);
-      setFormData(res);
-    }
+  const [users, setUser] = useState<UserInfo>({
+    id: "",
+    bilhete: "",
+    email: "",
+    genero: "",
+    password: "",
+    primeiro_nome: "",
+    segundo_nome: "",
+    telemovel: "",
+    Carteira: {
+      id: "",
+      codigo: "",
+      createdAt: "",
+      numero: "",
+      saldo: "",
+      updatedAt: "",
+      user_id: "",
+    },
+    Depositos: {
+      id: "",
+      user_id: "",
+      estado: true,
+      pendencia: true,
+      createdAt: "",
+      updatedAt: "",
+      valor: "",
+    },
+    Devedor: {
+      id: "",
+      estado: true,
+      inadimplencia: "",
+      adimplencia: "",
+      solicitacao: "",
+      updatedAt: "",
+      createdAt: "",
+      user_id: "",
+    },
+    Investidor: {
+      id: undefined,
+      maior_risco: false,
+      maior_seguranca: false,
+      saque_antecipado: false,
+      fundo_protegido: false,
+      partilhar_emprestimo: false,
+      estado: true,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+      Diversificacaos: [],
+    },
+    Documentos: {
+      id: undefined,
+      tipo: undefined,
+      titulo: undefined,
+      nome_salvado: undefined,
+      nome_original: undefined,
+      extensao: undefined,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+    },
+    Papel: {
+      id: undefined,
+      perfil: undefined,
+    },
+    Pessoa: {
+      id: undefined,
+      estado_civil: undefined,
+      provincia: undefined,
+      municipio: undefined,
+      profissao: undefined,
+      user_id: undefined,
+      emprego_id: undefined,
+      residencia_id: undefined,
+      nivel_instrucao: undefined,
+      data_nascimento: undefined,
+      Conjugue: {
+        id: undefined,
+        nome_completo: undefined,
+        nivel_instrucao: undefined,
+        dependentes: undefined,
+        data_nascimento: undefined,
+      },
+      Emprego: {
+        id: undefined,
+        data_inicio: undefined,
+        sector: undefined,
+        cargo: undefined,
+        area: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+      },
+      Residencia: {
+        id: undefined,
+        tipo: undefined,
+        data_inicio: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+      },
+      Conta: {
+        id: undefined,
+        nome: undefined,
+        iban: undefined,
+        salario: undefined,
+        emprego_id: undefined,
+        pessoa_id: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+      },
+      User: {
+        id: undefined,
+        email: undefined,
+      },
+    },
+    Proponente: {
+      id: undefined,
+      solicitacao: undefined,
+      reembolsar: undefined,
+      satisfeitos: undefined,
+      insatisfeitos: undefined,
+      estado: false,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      User: {
+        id: undefined,
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+      Emprestimos: [],
+    },
+    Reclamacaos: {
+      id: undefined,
+      assunto: undefined,
+      conteudo: undefined,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+    },
+    Saque: {
+      id: undefined,
+      taxa: undefined,
+      valor: undefined,
+      estado: true,
+      pendencia: true,
+      user_id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+    },
+  });
+  const router = useRouter();
+  const fetchs = async () => {
+    const user: UserInfo = await buscarUser(session?.user.email);
+    setUser(user);
   };
 
+  const buscaProposta = async () => {
+    const result = await buscarPropostaInvestidor(session?.user.email);
+    setNegoData(result);
+  };
+
+  const buscaSolidario = async () => {
+    const res = await buscarSolidarios(session?.user.email);
+    setFormData(res);
+  };
   useEffect(() => {
-    fetchData;
-  }, []);
-  useEffect(() => {
-    if (formData) {
-      setPessoa(formData.pessoa_id);
-      setUser(formData.user_id);
-      setTipo(formData.tipo);
+    if(session?.user.email){
+    fetchs()
     }
   }, []);
+
+  useEffect(() => {
+    if (session?.user.email) {
+      buscaProposta();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (session?.user.email) {
+      buscaSolidario();
+    }
+  }, []);
+
   const onAccept = async () => {
     const info = {
-      solidario: pessoa,
-      user: user,
-      tipo: tipo,
+      solidario: formData.pessoa_id,
+      user: formData.user_id,
+      tipo: formData.tipo,
     };
-   await aceitarSolidario(info);
- 
+    await aceitarSolidario(info);
+
     window.location.reload();
   };
 
   const onReject = async () => {
     await rejeitarSolidario(formData.id);
-  
+
     window.location.reload();
   };
+
+  if (users.id && (!users.Pessoa || !users.Investidor)) {
+    return (
+      <div >
+        <div className="flex flex-col">
+            <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
+              (*) Sem informações Pessais!
+            </div>
+
+            <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
+              (*) Pefil de Investidor indefinido!
+            </div>
+
+            <button 
+              onClick={() => {
+                router.push("/ferramenta/usuario");
+              }}
+              className="px-4 py-2 bg-blue-500 text-white w-[40%] rounded"
+            >
+              Voltar
+            </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -92,7 +328,7 @@ const Conteudo = () => {
 
       {/*BUSANDO PEDIDOS DE GUARDIÃO FEITOS POR PROPONENTES*/}
 
-      {formData ? (
+      {formData.User && formData.User.id ? (
         <div className="flex flex-col p-4 h-50 shadow-md w-[100%]">
           <div className="mb-2 flex flex-col">
             <span className="font-bold">Pedido de guardião</span>
@@ -130,7 +366,7 @@ const Conteudo = () => {
       {/* RESOLVENDO OS DESAFIOS */}
       <div>
         {/*BUSANDO AS NEGOCIAÇÕES INVESTIDOR - EMPRESTIMO */}
-        {negoData.length ? (
+        {negoData.length > 0 ? (
           <>
             {negoData.map((data) => (
               <Link

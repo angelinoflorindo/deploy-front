@@ -12,7 +12,7 @@ import { sequelize } from "@/lib/sequelize";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const userId = await converterString(body.user_id);
+  const userId = Number(body.user_id);
 
   const data:any = {
     emprestimo_id: await converterString(body.emprestimo_id),
@@ -23,6 +23,8 @@ export async function POST(req: NextRequest) {
   };
 
   try {
+    await sequelize.authenticate()
+    await sequelize.sync()
 
     const emprestimoNegociado = await NegocearEmprestimos.findOne({
       where: {
@@ -36,7 +38,7 @@ export async function POST(req: NextRequest) {
     }
 
     const user = await User.findByPk(userId, {
-      include: [{ model: Investidor, attributes: ["id"] }],
+      include: [{ model: Investidor, as:"Investidor", attributes: ["id"] }],
       raw: false,
     });
     const investidor: any = await user?.get("Investidor");
@@ -83,10 +85,13 @@ export async function GET(req: NextRequest) {
 
   try {
 
+    await sequelize.authenticate()
+    await sequelize.sync()
+
     const user = await User.findOne({
       where: { email: email },
       attributes: ["id"],
-      include: [{ model: Proponente, attributes: ["id"] }],
+      include: [{ model: Proponente,as:"Proponente", attributes: ["id"] }],
     });
     const emprestimo = await Emprestimo.findOne({
       where: { estado: true, proponente_id: user?.toJSON().Proponente.id },
@@ -100,16 +105,19 @@ export async function GET(req: NextRequest) {
       include: [
         {
           model: Investidor,
+          as:"Investidor",
           attributes: ["id"],
           include: [
             {
               model: User,
+              as:"User",
               attributes: ["id", "primeiro_nome", "segundo_nome"],
             },
           ],
         },
         {
           model: Emprestimo,
+          as:"Emprestimos",
           attributes: ["id"],
         },
       ],

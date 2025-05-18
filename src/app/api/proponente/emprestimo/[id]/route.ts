@@ -1,5 +1,6 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import { converterString } from "@/app/actions/auth";
+import { sequelize } from "@/lib/sequelize";
 import Emprestimo from "@/models/Emprestimo";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -11,18 +12,21 @@ export async function PUT(
   context: { params: { id: number } }
 ) {
   const { id } = await context.params;
-  const uuid = await converterString(id);
+  const uuid = Number(id);
 
   try {
+    await sequelize.authenticate();
+    await sequelize.sync();
 
-    await Emprestimo.update({ progresso: 'CONCLUIDO' }, { where: { id: uuid } });
+    await Emprestimo.update(
+      { progresso: "CONCLUIDO" },
+      { where: { id: uuid } }
+    );
     return NextResponse.json({ message: "Pedido efectuado" }, { status: 200 });
-
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }
 }
-
 
 // Rejeitar o pedido de  Emprestimo
 
@@ -31,15 +35,22 @@ export async function GET(
   context: { params: { id: number } }
 ) {
   const { id } = await context.params;
-  const uuid = await converterString(id);
+  const uuid = Number(id);
   try {
+    await sequelize.authenticate();
+    await sequelize.sync();
 
-   await Emprestimo.update({progresso:'CANCELADO'}, {where:{id:uuid}})
-    return NextResponse.json({ message: "Pedido foi rejeitado" }, { status: 200 });
+    await Emprestimo.update(
+      { progresso: "CANCELADO" },
+      { where: { id: uuid } }
+    );
+    return NextResponse.json(
+      { message: "Pedido foi rejeitado" },
+      { status: 200 }
+    );
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }
-  
 }
 
 // Eliminar o pedido de  Emprestimo
@@ -52,8 +63,10 @@ export async function DELETE(
   const uuid = await converterString(id);
 
   try {
+    await sequelize.authenticate();
+    await sequelize.sync();
 
-     await Emprestimo.update({ estado: false }, { where: { id: uuid } });
+    await Emprestimo.update({ estado: false }, { where: { id: uuid } });
     return NextResponse.json({ message: "Pedido Elimindado" }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });

@@ -2,12 +2,12 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
-import { converterString } from "@/app/actions/auth";
 import { getToken } from "next-auth/jwt";
 import {Documento} from "@/models/Documento";
 import ContaVinculada from "@/models/ContaVinculada";
 import Proponente from "@/models/Proponente";
 import {User} from "@/models/User";
+import { sequelize } from "@/lib/sequelize";
 
 export async function GET(
   req: NextRequest,
@@ -15,7 +15,7 @@ export async function GET(
 ) {
   const { id } = await context.params;
   
-  const uuid = await converterString(id);
+  const uuid = Number(id);
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (!token || (token.role !== "ADMIN" && token.role != "ANALISTA")) {
@@ -24,6 +24,8 @@ export async function GET(
 
   
   try {
+    await sequelize.authenticate()
+    await sequelize.sync()
    
   const vinculo = await ContaVinculada.findOne({
     where: { id: uuid },
