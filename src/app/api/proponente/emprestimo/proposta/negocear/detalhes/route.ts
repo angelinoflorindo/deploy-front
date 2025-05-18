@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic';
 import { converterString } from "@/app/actions/auth";
+import { sequelize } from "@/lib/sequelize";
 import Emprestimo from "@/models/Emprestimo";
 import Investidor from "@/models/Investidor";
 import NegocearEmprestimos from "@/models/NegocearEmprestimo";
@@ -20,11 +21,13 @@ export async function GET(
   const investidorId = await converterString(searchParams.get("investidorId"));
 
   try {
-  
+    await sequelize.authenticate()
+    await sequelize.sync()
+
     const user = await User.findOne({
       where: { email: email },
       attributes: ["id"],
-      include: [{ model: Proponente, attributes: ["id"] }],
+      include: [{ model: Proponente,as:"Proponente", attributes: ["id"] }],
     });
     const emprestimo = await Emprestimo.findOne({
       where: { estado: true, proponente_id: user?.toJSON().Proponente.id },
@@ -39,10 +42,12 @@ export async function GET(
       include: [
         {
           model: Investidor,
+          as:"Investidor",
           attributes: ["id"],
           include: [
             {
               model: User,
+              as:"User",
               attributes: ["id", "primeiro_nome", "segundo_nome"],
             },
           ],

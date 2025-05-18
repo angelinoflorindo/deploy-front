@@ -201,7 +201,6 @@ export default function Conteudo() {
   const router = useRouter();
   const [totalPagesE, setTotalPagesE] = useState(1);
   const [totalPagesC, setTotalPagesC] = useState(1);
-  const [isRedirecting, setIsRedirecting] = useState(false);
   const fetchData = async () => {
     const res: UserInfo = await buscarUser(session?.user?.email);
     setUser(res);
@@ -272,7 +271,7 @@ export default function Conteudo() {
     );
   }
 
-  if (user.id && (!user.Pessoa /*|| !user.Investidor */)) {
+  if (user.id && (!user.Pessoa || !user.Investidor )) {
     return (
       <div className={styles.container}>
         <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">

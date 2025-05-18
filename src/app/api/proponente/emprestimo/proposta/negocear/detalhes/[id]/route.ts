@@ -1,13 +1,10 @@
-export const dynamic = 'force-dynamic';
-import { converterString } from "@/app/actions/auth";
+export const dynamic = "force-dynamic";
 import { sequelize } from "@/lib/sequelize";
 import Diversificacao from "@/models/Diversificacao";
 import Emprestimo from "@/models/Emprestimo";
 import NegocearEmprestimos from "@/models/NegocearEmprestimo";
 import { NegociarEmprestimoProps } from "@/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
-
-
 
 // Confirmar se o emprestimo tem no mínimo uma negociação
 
@@ -16,20 +13,20 @@ export async function GET(
   context: { params: { id: number } }
 ) {
   const { id } = await context.params;
-  const uuid = await converterString(id);
+  const uuid = Number(id);
   try {
+    await sequelize.authenticate();
+    await sequelize.sync();
 
-    const emprestimo = await Diversificacao.findOne({ where: { emprestimo_id: uuid, protencao:true } });
+    const emprestimo = await Diversificacao.findOne({
+      where: { emprestimo_id: uuid, protencao: true },
+    });
     //console.log('testando', emprestimo)
-    return NextResponse.json({ emprestimo}, { status: 200 });
+    return NextResponse.json({ emprestimo }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }
-  
 }
-
-
-
 
 // PUT - confirmar  a proposta do primeiro investidor
 export async function PUT(
@@ -39,10 +36,12 @@ export async function PUT(
   const { id } = await context.params;
   const body: NegociarEmprestimoProps = await req.json();
 
-  const emprestimoId = await converterString(id);
-  const investidorId = await converterString(body.investidor_id);
+  const emprestimoId = Number(id);
+  const investidorId = Number(body.investidor_id);
 
   try {
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const result = await sequelize.transaction(async (t) => {
       const negociacao = await NegocearEmprestimos.update(
@@ -97,11 +96,13 @@ export async function PATCH(
   context: { params: { id: string } }
 ) {
   const { id } = await context.params;
-  const investidorId = await converterString(id);
+  const investidorId = Number(id);
   const body = await req.json();
   const emprestimoId = body.emprestimoId;
 
   try {
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     await NegocearEmprestimos.update(
       { estado: false, pendencia: false },
