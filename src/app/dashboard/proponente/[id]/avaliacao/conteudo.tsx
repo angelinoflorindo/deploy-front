@@ -50,6 +50,7 @@ const Conteudo = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
   return (
     <div className="flex flex-col justify-start items-start">
       <h2 className="text-xl font-bold mb-4">Garantias associadas</h2>
@@ -64,7 +65,7 @@ const Conteudo = () => {
           </span>
 
           <span className="flex flex-col font-bold  w-40 h-30 justify-center items-center shadow-md">
-            {formData.Proponente.ContaVinculadas[0].updatedAt.split("T")[0]}
+            {formData.Proponente.ContaVinculadas[0].updated_at? (formData.Proponente.ContaVinculadas[0].updated_at.split("T")[0]):(<></>)}
             <p className="py-2">Data de confirmação</p>
           </span>
         </div>

@@ -52,7 +52,7 @@ const Conteudo = () => {
       user_id: "",
     },
     Investidor: {
-      id: undefined,
+      id: '',
       maior_risco: false,
       maior_seguranca: false,
       saque_antecipado: false,
@@ -63,7 +63,7 @@ const Conteudo = () => {
       createdAt: undefined,
       updatedAt: undefined,
       User: {
-        id: undefined,
+        id: '',
         primeiro_nome: undefined,
         segundo_nome: undefined,
         password: undefined,
@@ -190,7 +190,7 @@ const Conteudo = () => {
     },
   })
   const [formData, setFormData] = useState<EmprestimoDef>({
-    id:undefined,
+    id:'',
     pendencia:undefined,
     juro:undefined,
     estado:true,
@@ -213,12 +213,12 @@ const Conteudo = () => {
         },
         ContaVinculadas: []
     },
-    proponente_id:undefined,
+    proponente_id:'',
     totalTaxa:'',
-    totalGuardiaos:undefined,
-    user_id:undefined,
-    valor:undefined,
-    taxaDiversificada:undefined,
+    totalGuardiaos:'',
+    user_id:'',
+    valor:"",
+    taxaDiversificada:"",
     createdAt:undefined,
     updatedAt:undefined
 

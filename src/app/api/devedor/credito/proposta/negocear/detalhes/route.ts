@@ -31,7 +31,7 @@ export async function GET(
     const user = await User.findOne({
       where: { email: email },
       attributes: ["id"],
-      include: [{ model: Proponente, attributes: ["id"] }],
+      include: [{ model: Proponente, as:"Proponente", attributes: ["id"] }],
     });
     const emprestimo = await Emprestimo.findOne({
       where: { estado: true, proponente_id: user?.toJSON().Proponente.id },
@@ -46,10 +46,12 @@ export async function GET(
       include: [
         {
           model: Investidor,
+          as:"Investidor",
           attributes: ["id"],
           include: [
             {
               model: User,
+              as:"User",
               attributes: ["id", "primeiro_nome", "segundo_nome"],
             },
           ],

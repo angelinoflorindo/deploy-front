@@ -637,7 +637,7 @@ export async function sacarFundos(formData: FormData) {
   if (!fundos.ok) {
     return redirect("/ferramenta/cartao/sacar");
   }
-  return redirect("/ferramenta");
+  return redirect("/ferramenta/cartao");
 }
 
 export async function submitCredito(formData: FormData) {

@@ -19,8 +19,6 @@ import {
   rejeitarSolidario,
 } from "@/app/actions/auth";
 import { useSession } from "next-auth/react";
-import Footer from "@/components/footer";
-import Header from "@/components/header";
 import { useRouter } from "next/navigation";
 
 const Conteudo = () => {
@@ -274,6 +272,7 @@ const Conteudo = () => {
     }
   }, []);
 
+  console.log("resultados", negoData)
   const onAccept = async () => {
     const info = {
       solidario: formData.pessoa_id,
@@ -305,7 +304,7 @@ const Conteudo = () => {
 
             <button 
               onClick={() => {
-                router.push("/ferramenta/usuario");
+                router.push("/ferramenta/");
               }}
               className="px-4 py-2 bg-blue-500 text-white w-[40%] rounded"
             >

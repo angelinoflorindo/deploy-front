@@ -13,27 +13,28 @@ export async function GET(req: NextRequest) {
   const offset = (Number(page) - 1) * Number(limit);
   const where: any = {};
 
+
   try {
-    await sequelize.authenticate();
-    await sequelize.sync();
+  await sequelize.authenticate();
+  await sequelize.sync();
 
-    // para definir as condições de listagem apartir do client
-    if (status) where.estado = status;
+  // para definir as condições de listagem apartir do client
+  if (status) where.estado = {estado:true}
 
-    const { rows: data, count: total } = await Saque.findAndCountAll({
-      where,
-      offset,
-      limit: Number(limit),
-      order: [[`${orderBy}`, "DESC"]],
-    });
+  const { rows: data, count: total } = await Saque.findAndCountAll({
+    where:where.estado,
+    offset,
+    limit: Number(limit),
+    order: [[`${orderBy}`, "DESC"]],
+  });
 
-    const result = {
-      data,
-      total,
-      totalPages: Math.ceil(total / Number(limit)),
-      currentPage: Number(page),
-    };
-    return NextResponse.json(result, { status: 200 });
+  const result = {
+    data,
+    total,
+    totalPages: Math.ceil(total / Number(limit)),
+    currentPage: Number(page),
+  };
+  return NextResponse.json(result, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

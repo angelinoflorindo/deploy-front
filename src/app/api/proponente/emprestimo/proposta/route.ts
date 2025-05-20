@@ -9,8 +9,8 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
 
   const data = {
-    emprestimo_id: await converterString(body.emprestimo_id),
-    investidor_id: await converterString(body.investidor_id),
+    emprestimo_id: Number(body.emprestimo_id),
+    investidor_id: Number(body.investidor_id),
     taxa: await converterString(body.taxa),
     protencao: false,
   };

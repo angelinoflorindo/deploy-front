@@ -210,6 +210,7 @@ export default function Conteudo() {
       response.search = await buscarPropostasOpProponente(res.Proponente.id, {
         pageE,
       });
+      
     } else {
       response.search = await buscarPropostasOpProponente(null, {
         pageE,
@@ -244,10 +245,8 @@ export default function Conteudo() {
   
   if (user.id && (!user.Carteira || !user.Pessoa.Conta)) {
     return (
-       <div className={styles.container}>
-        <div className="flex flex-col h-screen w-[400px] mx-auto shadow-lg">
-          <Header />
-          <main className="flex-1 overflow-y-auto p-4 bg-white">
+       <div >
+        <div className="flex flex-col">
             <div className="bg-red-100 text-red-700 p-3 rounded shadow-md mb-4">
               (*) Sem informações Financeiras!
             </div>
@@ -260,12 +259,10 @@ export default function Conteudo() {
               onClick={() => {
                 router.push("/ferramenta/");
               }}
-              className="px-4 py-2 bg-blue-500 text-white rounded"
+              className="px-4 py-2 bg-blue-500 w-[40%] text-white rounded"
             >
               Voltar
             </button>
-          </main>
-          <Footer />
         </div>
       </div>
     );
