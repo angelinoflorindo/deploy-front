@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic';
 import { converterString, validarEstado } from "@/app/actions/auth";
+import { sequelize } from "@/lib/sequelize";
 import ContaVinculada from "@/models/ContaVinculada";
 import Emprestimo from "@/models/Emprestimo";
 import EmprestimoSolidario from "@/models/EmprestimoSolidario";
@@ -23,6 +24,9 @@ export async function GET(req: NextRequest) {
 
 
   try {
+    await sequelize.authenticate()
+    await sequelize.sync()
+
     const emprestimo = await Emprestimo.findOne({
       where: { id: emprestimoId },
     });
@@ -41,7 +45,7 @@ export async function GET(req: NextRequest) {
         offset,
         limit: Number(limit),
         order: [[`${orderBy}`, "DESC"]],
-        include: [{ model: Solidario,where:{estado:status} }],
+        include: [{ model: Solidario,as:"Solidario",where:{estado:status} }],
       });
 
     const result = {

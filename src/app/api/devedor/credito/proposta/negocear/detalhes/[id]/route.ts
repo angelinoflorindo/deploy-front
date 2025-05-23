@@ -1,5 +1,4 @@
 export const dynamic = 'force-dynamic';
-import { converterString } from "@/app/actions/auth";
 import { sequelize } from "@/lib/sequelize";
 import Diversificacao from "@/models/Diversificacao";
 import Emprestimo from "@/models/Emprestimo";

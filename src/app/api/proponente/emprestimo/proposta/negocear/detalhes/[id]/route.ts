@@ -22,7 +22,7 @@ export async function GET(
       where: { emprestimo_id: uuid, protencao: true },
     });
     //console.log('testando', emprestimo)
-    return NextResponse.json({ emprestimo }, { status: 200 });
+    return NextResponse.json(emprestimo, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }

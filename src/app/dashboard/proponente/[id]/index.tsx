@@ -61,9 +61,11 @@ const Detalhes = () => {
         fetchData()
     }, [])
 
+
     return (
 
         <div className="flex flex-col justify-center items-center " >
+            
             <h1 className="font-bold text-center">{data.Proponente.User.primeiro_nome} {" "} {data.Proponente.User.segundo_nome}</h1>
 
             <section className="shadow-md p-5 w-[100%]" >
@@ -83,7 +85,7 @@ const Detalhes = () => {
 
                         <div className="flex flex-col    justify-center  items-center" >
                             <span>Prazo </span>
-                            <h3> <b>{data.prazo.split("T")[0]}</b>  </h3>
+                            <h3> <b>{data.prazo ?(data.prazo.split("T")[0]):(<></>)}</b>  </h3>
                         </div>
 
                     </div>

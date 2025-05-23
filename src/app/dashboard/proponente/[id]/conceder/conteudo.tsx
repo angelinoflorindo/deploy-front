@@ -151,7 +151,7 @@ const Conteudo = () => {
       },
     },
     Proponente: {
-      id: undefined,
+      id: '',
       solicitacao: undefined,
       reembolsar: undefined,
       satisfeitos: undefined,
@@ -161,7 +161,7 @@ const Conteudo = () => {
       createdAt: undefined,
       updatedAt: undefined,
       User: {
-        id: undefined,
+        id: '',
         primeiro_nome: undefined,
         segundo_nome: undefined,
         password: undefined,
@@ -192,7 +192,7 @@ const Conteudo = () => {
     },
   })
   const [formData, setFormData] = useState<EmprestimoDef>({
-    id:undefined,
+    id:'',
     pendencia:undefined,
     juro:undefined,
     estado:true,
@@ -202,9 +202,9 @@ const Conteudo = () => {
     prestacao:undefined,
     progresso:undefined,
     Proponente:{
-        id: undefined,
+        id: '',
         User: {
-            id: undefined,
+            id: '',
             primeiro_nome: undefined,
             segundo_nome: undefined,
             password: undefined,

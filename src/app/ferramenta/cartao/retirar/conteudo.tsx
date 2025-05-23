@@ -3,7 +3,7 @@ import Image from "next/image";
 import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
 import { UserInfo } from "@/services/user.service";
-import {  sacarFundos } from "@/app/actions/auth";
+import { sacarFundos } from "@/app/actions/auth";
 import { SubmitButton } from "@/components/submitButton";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -204,12 +204,11 @@ const Conteudo = () => {
       });
   };
 
-
   useEffect(() => {
-    fetchData();
+    if (session?.user.email) {
+      fetchData();
+    }
   }, []);
-
-
 
   if (!user.Carteira || user.Carteira == undefined) {
     return (
@@ -219,7 +218,7 @@ const Conteudo = () => {
         </section>
         <button
           onClick={() => {
-            router.push("/ferramenta/cartao")
+            router.push("/ferramenta/cartao");
           }}
           className="px-4 py-2 bg-blue-500 text-white rounded"
         >

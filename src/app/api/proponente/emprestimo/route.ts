@@ -33,11 +33,11 @@ export async function GET(req: NextRequest) {
 
   //console.log('p', pendencia)
   if (status) {
-    where.estado = status;
+    where.estado = true
   }
 
   if (pendencia) {
-    where.pendencia = pendencia; // passando a pendencia como false
+    where.pendencia =true // passando a pendencia como false
   }
 
   if(proponenteId){
@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
     //setupAssociations();
 
     const { rows: data, count: total } = await Emprestimo.findAndCountAll({
-      where,
+      where:where,
       offset,
       limit: Number(limit),
       order: [[`${orderBy}`, "DESC"]],

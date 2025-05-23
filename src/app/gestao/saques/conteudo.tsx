@@ -45,6 +45,7 @@ export default function Conteudo() {
       `${process.env.NEXT_PUBLIC_CLIENT_URL}/api/operacao/sacar?page=${page}&limit=5&status=${true}`
     );
 
+
     if (!res.ok) {
       const text = await res.text(); // debug da resposta
       console.error("Erro na API:", res.status, text);
@@ -52,6 +53,8 @@ export default function Conteudo() {
     }
 
     const search = await res.json();
+    
+    console.log("dados consultados", search)
 
     setDepositos(search.data);
     setTotalPages(search.totalPages);

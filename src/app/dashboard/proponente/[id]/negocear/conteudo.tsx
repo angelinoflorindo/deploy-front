@@ -196,14 +196,14 @@ const Conteudo = () => {
     },
   })
   const [formData, setFormData] = useState<EmprestimoDef>({
-    id:undefined,
-    pendencia:undefined,
-    juro:undefined,
+    id:"",
+    pendencia:true,
+    juro:"",
     estado:true,
     Diversificacaos:[],
     EmprestimoSolidarios:[],
-    prazo:undefined,
-    prestacao:undefined,
+    prazo:"",
+    prestacao:"",
     progresso:undefined,
     Proponente:{
         id: undefined,
@@ -222,9 +222,9 @@ const Conteudo = () => {
     proponente_id:undefined,
     totalTaxa:'',
     totalGuardiaos:undefined,
-    user_id:undefined,
-    valor:undefined,
-    taxaDiversificada:undefined,
+    user_id:"",
+    valor:"",
+    taxaDiversificada:"",
     createdAt:undefined,
     updatedAt:undefined
 
@@ -240,7 +240,6 @@ const Conteudo = () => {
     console.log('Negociação já foi realizada!')
     return router.push(`/dashboard/proponente/${id}`)
   }
-  
   setFormData(result)
   setUser(res)
 
@@ -267,7 +266,7 @@ const Conteudo = () => {
   };
 
   useEffect(() => {
-    if (formData.valor) {
+    if (formData.valor){
       setValor(formData.valor);
     }
     if (formData.juro) {
@@ -275,11 +274,11 @@ const Conteudo = () => {
     }
     if (formData.prestacao) {
       setPrestacao(formData.prestacao);
-    }
+    } 
     if (formData.prazo) {
       setPrazo(formData.prazo.split("T")[0]);
     }
-  }, []);
+  }, [formData]);
   return (
     <div className={global.grid}>
       <header className={global.cartao_header_depositar}>
@@ -326,7 +325,7 @@ const Conteudo = () => {
             <input
               type="number"
               name="valor"
-              value={valor}
+              value={valor??0}
               onChange={valorHandler}
               className={styles.input}
             />
@@ -335,7 +334,7 @@ const Conteudo = () => {
               type="number"
               name="juro"
               onChange={juroHandler}
-              value={juro}
+              value={juro??0}
               className={styles.input}
             />
           </div>
@@ -344,7 +343,7 @@ const Conteudo = () => {
               type="number"
               name="prestacao"
               onChange={prestacaoHandler}
-              value={prestacao}
+              value={prestacao??0}
               className={styles.input}
             />
 
@@ -352,7 +351,7 @@ const Conteudo = () => {
               type="date"
               name="prazo"
               onChange={prazoHandler}
-              value={prazo}
+              value={prazo??""}
               className={styles.input}
             />
           </div>

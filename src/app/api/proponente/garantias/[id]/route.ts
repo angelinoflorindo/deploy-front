@@ -1,9 +1,10 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import { converterString } from "@/app/actions/auth";
+import { sequelize } from "@/lib/sequelize";
 import Carteira from "@/models/Carteira";
 import ContaVinculada from "@/models/ContaVinculada";
 import Proponente from "@/models/Proponente";
-import {User} from "@/models/User";
+import { User } from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 // PUT - Atualizar usuário por ID
@@ -12,9 +13,11 @@ export async function PUT(
   context: { params: { id: number } }
 ) {
   const { id } = await context.params;
-  const uuid = await converterString(id);
+  const uuid = Number(id);
 
   try {
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const vinculo = await ContaVinculada.findOne({
       where: { id: uuid, estado: true },
@@ -41,7 +44,7 @@ export async function PUT(
       );
     }
     carteira!.saldo = carteira!.saldo + vinculo.valor_retido;
-    vinculo.estado = false; 
+    vinculo.estado = false;
     vinculo.save();
     carteira?.save();
     return NextResponse.json({ message: "Serviço efectuado" }, { status: 200 });
@@ -55,8 +58,10 @@ export async function GET(
   context: { params: { id: number } }
 ) {
   const { id } = await context.params;
-  const uuid = await converterString(id);
+  const uuid = Number(id);
   try {
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const vinculo = await ContaVinculada.findOne({
       where: { id: uuid, estado: false },
@@ -83,7 +88,7 @@ export async function GET(
       );
     }
     carteira!.saldo = carteira!.saldo - vinculo.valor_retido;
-    vinculo.estado = true; 
+    vinculo.estado = true;
     vinculo.save();
     carteira?.save();
     return NextResponse.json(

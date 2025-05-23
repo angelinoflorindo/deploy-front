@@ -1,13 +1,14 @@
 "use client";
 
-import { DepositoProps, EmprestimoProps } from "@/services/user.service";
-import { redirect } from "next/navigation";
+import {  EmprestimoProps } from "@/services/user.service";
+import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Conteudo() {
   const [depositos, setDepositos] = useState<EmprestimoProps[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const router = useRouter()
 
   const handleAcao = async (acao: string, id: number) => {
     switch (acao) {
@@ -31,7 +32,7 @@ export default function Conteudo() {
         fetchData()
         break;
       case "garantias":
-        redirect(`/gestao/emprestimos/${id}`)
+        router.push(`/gestao/emprestimos/${id}`)
       default:
         break;
     }

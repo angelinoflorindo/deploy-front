@@ -262,8 +262,8 @@ export interface ContaVinculadaProps {
   valor_retido: any;
   estado: any;
   proponente_id: any;
-  createdAt: any;
-  updatedAt: any;
+  created_at: any;
+  updated_at: any;
 }
 
 export interface DevedorProps {
