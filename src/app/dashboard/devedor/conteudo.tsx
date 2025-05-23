@@ -226,12 +226,12 @@ const router = useRouter()
     fetchData();
   }, []);
 
-  if (user.Investidor === null || user.Investidor == undefined) {
+  if (user.Investidor == null || user.Investidor == undefined) {
     router.push("/ferramenta/investidor");
     return 
   }
 
-  if (user.Carteira === null || user.Carteira == undefined) {
+  if (user.Carteira == null || user.Carteira == undefined) {
     router.push("/ferramenta/cartao");
     return 
   }

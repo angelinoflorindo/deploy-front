@@ -1,5 +1,7 @@
 export const dynamic = "force-dynamic";
 import { sequelize } from "@/lib/sequelize";
+import { CreditoSolidario } from "@/models/CreditoSolidario";
+import EmprestimoSolidario from "@/models/EmprestimoSolidario";
 import Investidor from "@/models/Investidor";
 import { Pessoa } from "@/models/Pessoa";
 import { Solidario } from "@/models/Solidario";
@@ -43,7 +45,7 @@ export async function GET(req: NextRequest) {
             { model: Pessoa, as: "Pessoa" },
             { model: Investidor, as: "Investidor" },
           ],
-        },
+        }
       ],
     });
 

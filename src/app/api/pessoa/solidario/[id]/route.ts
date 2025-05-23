@@ -1,14 +1,8 @@
- export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import { sequelize } from "@/lib/sequelize";
-import {Credito} from "@/models/Credito";
-import {CreditoSolidario} from "@/models/CreditoSolidario";
-import {Devedor} from "@/models/Devedor";
-import Emprestimo from "@/models/Emprestimo";
-import EmprestimoSolidario from "@/models/EmprestimoSolidario";
-import {Pessoa} from "@/models/Pessoa";
-import Proponente from "@/models/Proponente";
-import {Solidario} from "@/models/Solidario";
-import {User} from "@/models/User";
+import { Pessoa } from "@/models/Pessoa";
+import { Solidario } from "@/models/Solidario";
+import { User } from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 // PUT - Método que permite o guardião aceitar o convite
@@ -22,62 +16,14 @@ export async function PUT(
   const dbData: any = {};
 
   try {
-    await sequelize.authenticate()
-    await sequelize.sync()
+    await sequelize.authenticate();
+    await sequelize.sync();
 
-    const user = await User.findByPk(body.user_id, {
-      include: [
-        { model: Devedor, as:"Devedor", attributes: ["id"] },
-        { model: Proponente,as:"Proponente", attributes: ["id"] },
-      ],
-    });
+    await Solidario.update(
+      { estado: true },
+      { where: { id: uuid, tipo: body.tipo } }
+    );
 
-    if (user?.toJSON().Devedor) {
-      dbData.credito = await Credito.findOne({
-        where: {
-          devedor_id: user?.toJSON().Devedor.id,
-          progresso: "CONCLUIDO",
-          estado: true,
-        },
-      });
-    }
-
-    if (user?.toJSON().Proponente) {
-      dbData.emprestimo = await Emprestimo.findOne({
-        where: {
-          proponente_id: user?.toJSON().Proponente.id,
-          progresso: "CONCLUIDO",
-          estado: true,
-        },
-      });
-    }
-
-    await sequelize.transaction(async (t) => {
-      await Solidario.update(
-        { estado: true },
-        { where: { id: uuid, tipo: body.tipo }, transaction: t }
-      );
-
-      if (body.tipo === "CREDITO") {
-        const [result, iscreated] = await CreditoSolidario.findOrCreate({
-          where: {
-            credito_id: dbData.credito?.id,
-            solidario_id: uuid,
-          },
-          defaults: { credito_id: dbData.credito?.id, solidario_id: uuid },
-          transaction: t,
-        });
-      }
-
-      const [result, iscreated] = await EmprestimoSolidario.findOrCreate({
-        where: {
-          emprestimo_id: dbData.emprestimo?.id,
-          solidario_id: uuid,
-        },
-        defaults: { emprestimo_id: dbData.emprestimo?.id, solidario_id: uuid },
-        transaction: t,
-      });
-    });
     return NextResponse.json(
       { message: "convite aceite com sucesso!" },
       { status: 200 }
@@ -95,19 +41,18 @@ export async function GET(
   const { id } = await context.params;
   const uuid = Number(id);
   try {
-
-    await sequelize.authenticate()
-    await sequelize.sync()
+    await sequelize.authenticate();
+    await sequelize.sync();
     const resp = await Solidario.findAll({
       where: { user_id: uuid, estado: false },
       include: [
         {
           model: Pessoa,
-          as:"Pessoa",
+          as: "Pessoa",
           include: [
             {
               model: User,
-              as:"User",
+              as: "User",
               attributes: ["primeiro_nome", "segundo_nome", "id", "email"],
             },
           ],
@@ -147,12 +92,11 @@ export async function DELETE(
   context: { params: { id: string } }
 ) {
   const { id } = await context.params;
-  const uuid =Number(id);
+  const uuid = Number(id);
 
   try {
-    
-    await sequelize.authenticate()
-    await sequelize.sync()
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     await Solidario.destroy({ where: { id: uuid } }); // posteriormente criar um atributo definido para remoção de dados
 

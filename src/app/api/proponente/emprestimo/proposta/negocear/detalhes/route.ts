@@ -30,14 +30,14 @@ export async function GET(
       include: [{ model: Proponente,as:"Proponente", attributes: ["id"] }],
     });
     const emprestimo = await Emprestimo.findOne({
-      where: { estado: true, proponente_id: user?.toJSON().Proponente.id },
+      where: { estado: true,progresso:'CONCLUIDO',proponente_id: user?.toJSON().Proponente.id },
     });
     const result = await NegocearEmprestimos.findOne({
       where: {
         pendencia: true,
         estado: true,
         investidor_id:investidorId,
-        emprestimo_id: emprestimo?.toJSON().id,
+        emprestimo_id: emprestimo?.id,
       },
       include: [
         {

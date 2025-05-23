@@ -12,7 +12,7 @@ import {
 import Investidor from "./Investidor";
 import Emprestimo from "./Emprestimo";
 
-@Table({ tableName: "negocear_emprestimos" })
+@Table({ tableName: "negociar_emprestimos" })
 export default class NegocearEmprestimos extends Model {
   @PrimaryKey
   @ForeignKey(() => Investidor)

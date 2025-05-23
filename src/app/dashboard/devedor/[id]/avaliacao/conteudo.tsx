@@ -74,7 +74,7 @@ const Conteudo = () => {
           </span>
 
           <span className="flex flex-col  w-40 h-30 justify-center items-center shadow-md">
-            <b>{formData.Devedor.DebitoVinculados[0].updatedAt.split("T")[0]}</b>
+            <b>{formData.Devedor.DebitoVinculados[0].updatedAt ? (formData.Devedor.DebitoVinculados[0].updatedAt.split("T")[0]):(<></>)}</b>
             <small className="py-2">Data de confirmação</small>
           </span>
         </div>
@@ -87,7 +87,7 @@ const Conteudo = () => {
       )}
       <br />
 
-      <h3>Guardiões do emprestimo</h3>
+      <h3>Guardiões do crédito</h3>
 
       {formData.CreditoSolidarios.length > 0 ? (
         <div className="flex justify-between items-center  w-[100%]  ">

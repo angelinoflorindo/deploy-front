@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
     });
 
     // parte reservada para confirmar o convite enviado pelo proponente
-    if (body.guardiao === "on" || body.guardiao === true) {
+    if (body.guardiao === "on" || body.guardiao === 'true') {
       const solidarios = await Solidario.findAll({
         where: { user_id: userId, estado: false },
       });

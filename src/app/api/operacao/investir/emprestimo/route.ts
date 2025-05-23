@@ -89,11 +89,12 @@ export async function POST(req: NextRequest) {
     await sequelize.sync()
 
     const carteira = await Carteira.findOne({ where: { user_id: userId } }); // carteira do  investidor
-
+    const investidor  = await Investidor.findOne({where:{user_id:userId}})
     const emprestimo = await Emprestimo.findOne({where:{id:emprestimoId, valor:valor}});
     const propCarteira = await Carteira.findOne({
       where: { user_id: propUserId },
     }); // carteira do  proponente
+
 
     if (valor > carteira!.saldo) {
       console.log("investimento maior que a carteira!");
@@ -104,6 +105,19 @@ export async function POST(req: NextRequest) {
     income.bonificado = propCarteira!.saldo + valor;
 
     const result = await sequelize.transaction(async (t) => {
+          const [diverse, iscreated] = await Diversificacao.findOrCreate({
+      where:{
+        emprestimo_id:emprestimoId,
+        investidor_id:investidor?.id
+      },
+      defaults:{
+        emprestimo_id:emprestimoId,
+        investidor_id:investidor?.id,
+        taxa:100
+      },
+      transaction:t
+
+    })
       // Parte do investidor
       const historicoSaque = await Saque.create(
         { valor: valor, taxa: 0, user_id: userId, pendencia: true },

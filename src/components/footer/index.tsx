@@ -12,7 +12,7 @@ const Footer = () => {
         <Image src="/img/credit.png" width={25} height={25} alt="imagem" className={global.footerImagem} />
       </Link>
       <Link  href="/ferramenta" className={global.footerButton}>
-        <Image src="/img/ferramenta.png" width={25} height={25} alt="imagem" className={global.footerImagem}/>
+        <Image src="/img/tools.png" width={25} height={25} alt="imagem" className={global.footerImagem}/>
       </Link>
     </footer>
   );

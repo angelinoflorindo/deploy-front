@@ -28,33 +28,33 @@ const Conteudo = () => {
   const [emprestimoData, setEmprestimoData] = useState<EmprestimoValidado>({
     bilhete: undefined,
     email: undefined,
-    id: undefined,
-    primeiro_nome: undefined,
+    id: '',
+    primeiro_nome: '',
     Proponente: {
-      id: undefined,
+      id: '',
       createdAt: undefined,
       estado: true,
       updatedAt: undefined,
       user_id: undefined,
       Emprestimos: [
         {
-          id: undefined,
-          valor: undefined,
+          id: '',
+          valor: '',
           estado: undefined,
-          juro: undefined,
-          prestacao: undefined,
+          juro: '',
+          prestacao: '',
           prazo: undefined,
           progresso: undefined,
           proponente_id: undefined,
           pendencia: undefined,
-          user_id: undefined,
+          user_id: '',
           createdAt: undefined,
           updatedAt: undefined,
           Diversificacaos: [],
         },
       ],
     },
-    segundo_nome: undefined,
+    segundo_nome: '',
   });
   const [userData, setUserData] = useState<InvestidorProps>({
     id: "",
@@ -79,12 +79,13 @@ const Conteudo = () => {
     },
     Diversificacaos: [],
   });
+
+  const [valor, setValor] = useState("");
   const [saldo, setSaldo] = useState(0);
   const [prestacao, setPrestacao] = useState(0);
   const [montante, setMontante] = useState(0);
   const [limite, setLimite] = useState(0);
 
-  const [valor, setValor] = useState("");
   const handleValor = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValor(e.target.value);
   };
@@ -94,28 +95,28 @@ const Conteudo = () => {
       await buscarEmprestimoValidadoByEmail(session?.user.email);
     const investidordata: InvestidorProps = await buscarInvestidor(id);
     const limitePrestacao =
-      investidordata.Diversificacaos[0].Emprestimo.prestacao;
+      investidordata.Diversificacaos[0].Emprestimos.prestacao;
 
     // calcular a prestação
-    const prestacao: any = {};
+    let Installment: any = {};
     const reembolsoData: ReembolsoProps = await buscarReembolsoByProp(
       emprestimoByUser.Proponente.id
     );
 
     if (!reembolsoData || reembolsoData === undefined) {
-      prestacao.valor = 1;
+      setPrestacao(1)
     } else if (reembolsoData.prestacao < limitePrestacao) {
-      prestacao.valor = reembolsoData.prestacao + 1;
+        setPrestacao(reembolsoData.prestacao + 1)
     }
 
-    const saldo = Math.round(
-      investidordata.Diversificacaos[0].Emprestimo.valor *
+    const balance = Math.round(
+      investidordata.Diversificacaos[0].Emprestimos.valor *
         (investidordata.Diversificacaos[0].taxa / 100)
     );
-    const taxa = investidordata.Diversificacaos[0].Emprestimo.juro / 100;
-    const montante = await calcularJurosSimples(saldo, taxa, limitePrestacao);
+    const taxa = investidordata.Diversificacaos[0].Emprestimos.juro / 100;
+    const montante = await calcularJurosSimples(balance, taxa, limitePrestacao);
     const simples = await calcularPrestacaoSimples(
-      saldo,
+      balance,
       taxa,
       limitePrestacao
     );
@@ -123,7 +124,6 @@ const Conteudo = () => {
 
     setMontante(arround);
     setSaldo(simples);
-
     setLimite(limitePrestacao);
     setUserData(investidordata);
     setEmprestimoData(emprestimoByUser);
@@ -138,8 +138,11 @@ const Conteudo = () => {
 
   useEffect(() => {
     fetchData();
-    setValor(`${saldo}`);
   }, []);
+
+  useEffect(()=>{
+    setValor(`${saldo}`);
+  }, [saldo])
 
   return (
     <div className={global.grid}>
@@ -208,7 +211,7 @@ const Conteudo = () => {
           name="emprestimoId"
           readOnly={true}
           hidden={true}
-          value={userData.Diversificacaos[0].emprestimo_id}
+          value={userData.Diversificacaos[0]?(userData.Diversificacaos[0].emprestimo_id):('')}
         />
         <input
           type="text"

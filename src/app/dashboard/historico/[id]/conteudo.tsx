@@ -4,7 +4,6 @@
 
 
 import React from "react";
-import global from "@/modules/global.module.css"
 import Image from "next/image";
 import Link from "next/link";
 

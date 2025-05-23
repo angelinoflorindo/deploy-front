@@ -18,7 +18,6 @@ import {Conta} from "../models/Conta";
 import {Credito} from "../models/Credito";
 import Diversificacao from "../models/Diversificacao";
 import Pagamento from "../models/Pagamento";
-import Movel from "../models/Movel";
 import Emprestimo from "../models/Emprestimo";
 import EmprestimoSolidario from "../models/EmprestimoSolidario";
 import Reembolso from "../models/Reembolso";
@@ -66,7 +65,6 @@ export const sequelize = new Sequelize({
     Devedor,
     Investidor,
     Proponente,
-    Movel,
     Saque,
     Deposito,
     Carteira,

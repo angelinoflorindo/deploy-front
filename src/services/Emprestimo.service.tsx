@@ -1,4 +1,30 @@
-import { EmprestimoProps } from "./user.service";
+import { EmprestimoProps, InvestidorProps } from "./user.service";
+
+
+
+export interface EmprestimoNegociar{
+   id: any;
+        valor: any;
+        estado: any;
+        juro: any;
+        prestacao: any;
+        prazo: any;
+        progresso: any;
+        proponente_id: any;
+        pendencia: any;
+        user_id: any;
+        createdAt: any;
+        updatedAt: any;
+        NegocearEmprestimos: NegocearEmprestimoDef[]
+}
+
+export interface NegocearEmprestimoDef{
+        id:any,
+        createdAt: any;
+        updatedAt: any;
+        Investidor:InvestidorProps,
+        Emprestimo:EmprestimoProps
+}
 
 export interface EmprestimoValidado {
   id: any;
@@ -40,7 +66,7 @@ export interface DiversificacaoProps {
   taxa: any;
   createdAt: any;
   updatedAt: any;
-  Emprestimo:EmprestimoProps
+  Emprestimos:EmprestimoProps
 }
 
 export interface ReembolsoProps {

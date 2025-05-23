@@ -1,8 +1,8 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import { converterString } from "@/app/actions/auth";
 import { NextRequest, NextResponse } from "next/server";
 import NegocearEmprestimos from "@/models/NegocearEmprestimo";
-import {User} from "@/models/User";
+import { User } from "@/models/User";
 import Investidor from "@/models/Investidor";
 import Emprestimo from "@/models/Emprestimo";
 import Proponente from "@/models/Proponente";
@@ -14,8 +14,8 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const userId = Number(body.user_id);
 
-  const data:any = {
-    emprestimo_id: await converterString(body.emprestimo_id),
+  const data: any = {
+    emprestimo_id: Number(body.emprestimo_id),
     valor: await converterString(body.valor),
     juro: await converterString(body.juro),
     prazo: body.prazo,
@@ -23,8 +23,8 @@ export async function POST(req: NextRequest) {
   };
 
   try {
-    await sequelize.authenticate()
-    await sequelize.sync()
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const emprestimoNegociado = await NegocearEmprestimos.findOne({
       where: {
@@ -34,11 +34,14 @@ export async function POST(req: NextRequest) {
       },
     });
     if (emprestimoNegociado) {
-      return NextResponse.json({message:'Emprestimo já negociado'}, { status: 200 });
+      return NextResponse.json(
+        { message: "Emprestimo já negociado" },
+        { status: 200 }
+      );
     }
 
     const user = await User.findByPk(userId, {
-      include: [{ model: Investidor, as:"Investidor", attributes: ["id"] }],
+      include: [{ model: Investidor, as: "Investidor", attributes: ["id"] }],
       raw: false,
     });
     const investidor: any = await user?.get("Investidor");
@@ -84,43 +87,48 @@ export async function GET(req: NextRequest) {
   const email = searchParams.get("email");
 
   try {
-
-    await sequelize.authenticate()
-    await sequelize.sync()
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const user = await User.findOne({
       where: { email: email },
       attributes: ["id"],
-      include: [{ model: Proponente,as:"Proponente", attributes: ["id"] }],
+      include: [
+        {
+          model: Proponente,
+          as: "Proponente",
+          attributes: ["id"],
+        },
+      ],
     });
+
+    if (!user?.toJSON().Proponente) {
+      return NextResponse.json(
+        { message: "Consulta recusada!" },
+        { status: 500 }
+      );
+    }
+
     const emprestimo = await Emprestimo.findOne({
-      where: { estado: true, proponente_id: user?.toJSON().Proponente.id },
+      where: {
+        estado: true,
+        progresso: "CONCLUIDO",
+        proponente_id: user?.toJSON().Proponente.id,
+      },
     });
+    if (!emprestimo) {
+      return NextResponse.json(
+        { message: "Consulta recusada!" },
+        { status: 500 }
+      );
+    }
+
     const result = await NegocearEmprestimos.findAll({
       where: {
         pendencia: true,
         estado: true,
-        emprestimo_id: emprestimo?.toJSON().id,
+        emprestimo_id: emprestimo?.id,
       },
-      include: [
-        {
-          model: Investidor,
-          as:"Investidor",
-          attributes: ["id"],
-          include: [
-            {
-              model: User,
-              as:"User",
-              attributes: ["id", "primeiro_nome", "segundo_nome"],
-            },
-          ],
-        },
-        {
-          model: Emprestimo,
-          as:"Emprestimos",
-          attributes: ["id"],
-        },
-      ],
     });
 
     return NextResponse.json(result, { status: 200 });
