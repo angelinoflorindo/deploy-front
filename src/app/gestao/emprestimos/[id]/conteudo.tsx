@@ -117,8 +117,8 @@ export default function Conteudo() {
                       {dep.estado ? "Retido" : "Reembolsado"}
                     </td>
                     <td className="py-2 px-4 border-b">
-                      {new Date(dep.createdAt).getDay()} /{" "}
-                      {new Date(dep.createdAt).getMonth()}
+                      {new Date(dep.created_at).getDay()} /{" "}
+                      {new Date(dep.created_at).getMonth()}
                     </td>
                     <td className="py-2 px-4 border-b text-right">
                       <select
