@@ -94,7 +94,7 @@ const Detalhes = () => {
               <span>Prazo </span>
               <h3>
                 {" "}
-                <b>{data.prazo.split("T")[0]}</b>{" "}
+                <b>{data.prazo ? (data.prazo.split("T")[0]):(<></>)}</b>{" "}
               </h3>
             </div>
           </div>

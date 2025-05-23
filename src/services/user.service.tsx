@@ -1,4 +1,4 @@
-import { DiversificacaoProps } from "./Emprestimo.service";
+import { DiversificacaoProps, EmprestimoNegociar } from "./Emprestimo.service";
 
 export interface UserInfo {
   id: any;
@@ -255,6 +255,16 @@ export interface NegociarEmprestimoProps {
   user_id: any;
   createdAt: any;
   updatedAt: any;
+}
+
+export interface NegociarEmprestimoDef{
+  id:any,
+  primeiro_nome:any,
+  segundo_nome:any,
+  Proponente:{
+    id:any,
+    Emprestimos:EmprestimoNegociar[]
+  }
 }
 
 export interface ContaVinculadaProps {

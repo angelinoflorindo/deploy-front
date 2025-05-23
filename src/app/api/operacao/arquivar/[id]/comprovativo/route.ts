@@ -5,6 +5,7 @@ import path from "path";
 import { converterString } from "@/app/actions/auth";
 import { getToken } from "next-auth/jwt";
 import {Documento} from "@/models/Documento";
+import { sequelize } from "@/lib/sequelize";
 
 export async function GET(
   req: NextRequest,
@@ -20,6 +21,8 @@ export async function GET(
   }
 
   try {
+    await sequelize.authenticate()
+    await sequelize.sync()
 
     const arquivo = await Documento.findOne({ where: { id: uuid } });
 

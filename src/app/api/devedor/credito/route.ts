@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
     where.devedor_id = { [Op.ne]: devedorId }; // exibir expto do devedor que consulta
   }
   if (progresso) {
-    where.progresso;
+    where.progresso = "CONCLUIDO"
   }
   // console.log('conditions',  where)
   try {
@@ -111,10 +111,12 @@ export async function POST(req: NextRequest) {
       tipo_credito: body.duracao,
     });
 
-    if (body.guardiao === "on" || body.guardiao === true) {
+
+    if (body.guardiao == "on" || body.guardiao == 'true') {
       const solidarios = await Solidario.findAll({
         where: { user_id: userId, estado: false },
       });
+      console.log(solidarios)
       if (solidarios.length > 0) {
         solidarios.forEach(async (aval) => {
           await CreditoSolidario.create({

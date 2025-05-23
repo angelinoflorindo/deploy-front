@@ -1,13 +1,14 @@
 "use client";
 
 import { CreditoProps } from "@/services/Credito.service";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Conteudo() {
   const [depositos, setDepositos] = useState<CreditoProps[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const router = useRouter()
 
   const handleAcao = async (acao: string, id: number) => {
     switch (acao) {
@@ -31,7 +32,7 @@ export default function Conteudo() {
         fetchData()
         break;
       case "garantias":
-        redirect(`/gestao/creditos/${id}`)
+        router.push(`/gestao/creditos/${id}`)
       default:
         break;
     }

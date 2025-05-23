@@ -4,18 +4,22 @@ import global from "@/modules/global.module.css";
 import styles from "@/modules/Login.module.css";
 import { EmprestimoDef, UserInfo } from "@/services/user.service";
 import { SubmitButton } from "@/components/submitButton";
-import {  useEffect, useState } from "react";
-import { buscarEmprestimoById, buscarUser, calcularPrestacaoSimples, concederEmprestimo } from "@/app/actions/auth";
+import { useEffect, useState } from "react";
+import {
+  buscarEmprestimoById,
+  buscarUser,
+  calcularPrestacaoSimples,
+  concederEmprestimo,
+} from "@/app/actions/auth";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 
 const Conteudo = () => {
+  const params = useParams();
+  const id = params.id;
 
-  const params = useParams()
-  const  id  = params.id
-
-  const [saldo, setSaldo] = useState('')
-  const {data:session, status} = useSession() 
+  const [saldo, setSaldo] = useState("");
+  const { data: session, status } = useSession();
   const [userData, setUserData] = useState<UserInfo>({
     id: "",
     bilhete: "",
@@ -151,7 +155,7 @@ const Conteudo = () => {
       },
     },
     Proponente: {
-      id: '',
+      id: "",
       solicitacao: undefined,
       reembolsar: undefined,
       satisfeitos: undefined,
@@ -161,7 +165,7 @@ const Conteudo = () => {
       createdAt: undefined,
       updatedAt: undefined,
       User: {
-        id: '',
+        id: "",
         primeiro_nome: undefined,
         segundo_nome: undefined,
         password: undefined,
@@ -190,71 +194,71 @@ const Conteudo = () => {
       createdAt: undefined,
       updatedAt: undefined,
     },
-  })
+  });
   const [formData, setFormData] = useState<EmprestimoDef>({
-    id:'',
-    pendencia:undefined,
-    juro:undefined,
-    estado:true,
-    Diversificacaos:[],
-    EmprestimoSolidarios:[],
-    prazo:undefined,
-    prestacao:undefined,
-    progresso:undefined,
-    Proponente:{
-        id: '',
-        User: {
-            id: '',
-            primeiro_nome: undefined,
-            segundo_nome: undefined,
-            password: undefined,
-            email: undefined,
-            bilhete: undefined,
-            telemovel: undefined,
-            genero: undefined
-        },
-        ContaVinculadas: []
+    id: "",
+    pendencia: undefined,
+    juro: undefined,
+    estado: true,
+    Diversificacaos: [],
+    EmprestimoSolidarios: [],
+    prazo: undefined,
+    prestacao: undefined,
+    progresso: undefined,
+    Proponente: {
+      id: "",
+      User: {
+        id: "",
+        primeiro_nome: undefined,
+        segundo_nome: undefined,
+        password: undefined,
+        email: undefined,
+        bilhete: undefined,
+        telemovel: undefined,
+        genero: undefined,
+      },
+      ContaVinculadas: [],
     },
-    proponente_id:undefined,
-    totalTaxa:'',
-    totalGuardiaos:undefined,
-    user_id:undefined,
-    valor:undefined,
-    taxaDiversificada:undefined,
-    createdAt:undefined,
-    updatedAt:undefined
+    proponente_id: undefined,
+    totalTaxa: "",
+    totalGuardiaos: undefined,
+    user_id: undefined,
+    valor: undefined,
+    taxaDiversificada: undefined,
+    createdAt: undefined,
+    updatedAt: undefined,
+  });
 
-})
+  const fetchData = async () => {
+    const result: EmprestimoDef = await buscarEmprestimoById(id);
+    const res: UserInfo = await buscarUser(session?.user.email);
+    const diversificado: any = {};
+    if (result.Diversificacaos.length>0) {
+      result.Diversificacaos.forEach((data) => {
+        if (res.Investidor.id === data.investidor_id) {
+        }
+        let income = data.valor * (data.taxa / 100);
+        let inteiro = Math.round(income);
+        diversificado.saldo = inteiro;
+      });
+      const parcela = await calcularPrestacaoSimples(
+        diversificado.saldo,
+        (result.juro - 2) / 100,
+        result.prestacao
+      );
 
+      setSaldo(`${parcela}`);
+    }
 
+    setSaldo(result.valor);
 
+    setFormData(result);
+    setUserData(res);
+  };
 
-  const fetchData =  async ()=>{
-    
-  const result:EmprestimoDef = await buscarEmprestimoById(id);
-  const res:UserInfo = await buscarUser(session?.user.email)
-  const diversificado:any = {}
-  result.Diversificacaos.forEach((data)=>{
-    if(res.Investidor.id === data.investidor_id){}
-    let income = data.valor * (data.taxa/ 100);
-    let inteiro = Math.round(income);
-    diversificado.saldo = inteiro; 
-  })
-
-  const parcela = await calcularPrestacaoSimples(diversificado.saldo, ((result.juro-2)/100), result.prestacao) 
-  setSaldo(`${parcela}`) 
-  
-  setFormData(result)
-  setUserData(res)
-
-  }
-
-  useEffect(()=>{
-    fetchData()
-  }, [])
-
-
-
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleValor = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSaldo(e.target.value);
@@ -263,12 +267,12 @@ const Conteudo = () => {
   useEffect(() => {
     if (
       formData.taxaDiversificada > 100 ||
-      formData.taxaDiversificada === 100
+      formData.taxaDiversificada == 0
     ) {
       setSaldo(formData.valor);
     }
-
   }, []);
+
 
   return (
     <div className={global.grid}>
@@ -293,10 +297,11 @@ const Conteudo = () => {
           />
         </div>
       </header>
-      <form action={concederEmprestimo}
+      <form
+        action={concederEmprestimo}
         className="flex flex-col justify-center items-center"
       >
-          <input
+        <input
           type="text"
           name="emprestimoId"
           readOnly={true}

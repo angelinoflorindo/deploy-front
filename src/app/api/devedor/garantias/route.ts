@@ -1,10 +1,10 @@
-export const dynamic = 'force-dynamic';
-import { converterString, validarEstado } from "@/app/actions/auth"; 
+export const dynamic = "force-dynamic";
+import { converterString, validarEstado } from "@/app/actions/auth";
 import { sequelize } from "@/lib/sequelize";
-import {Credito} from "@/models/Credito";
-import {CreditoSolidario} from "@/models/CreditoSolidario";
-import {DebitoVinculado} from "@/models/DebitoVinculado";
-import {Solidario} from "@/models/Solidario";
+import { Credito } from "@/models/Credito";
+import { CreditoSolidario } from "@/models/CreditoSolidario";
+import { DebitoVinculado } from "@/models/DebitoVinculado";
+import { Solidario } from "@/models/Solidario";
 import { NextRequest, NextResponse } from "next/server";
 
 // ÁREA REZERVADA A LISTAGEM DE GARANTIAS DO DEVEDOR
@@ -23,48 +23,47 @@ export async function GET(req: NextRequest) {
   where.credito_id = creditoId;
 
   try {
+    await sequelize.authenticate();
+    await sequelize.sync();
 
-    await sequelize.authenticate()
-    await sequelize.sync()
-
-  const credito = await Credito.findOne({
-    where: { id: creditoId },
-  });
-
-  const { rows: vinculadaData, count: vinculos } =
-    await DebitoVinculado.findAndCountAll({
-      where: { devedor_id: credito?.devedor_id, },
-      offset,
-      limit: Number(limit),
-      order: [[`${orderBy}`, "DESC"]],
+    const credito = await Credito.findOne({
+      where: { id: creditoId },
     });
 
-  const { rows: solidariosData, count: aval } =
-    await CreditoSolidario.findAndCountAll({
-      where,
-      offset,
-      limit: Number(limit),
-      order: [[`${orderBy}`, "DESC"]],
-      include: [{ model: Solidario, where:{estado:status} }],
-    });
+    const { rows: vinculadaData, count: vinculos } =
+      await DebitoVinculado.findAndCountAll({
+        where: { devedor_id: credito?.devedor_id },
+        offset,
+        limit: Number(limit),
+        order: [[`${orderBy}`, "DESC"]],
+      });
 
-  const result = {
-    data: {
-      solidariosData,
-      vinculadaData,
-    },
+    const { rows: solidariosData, count: aval } =
+      await CreditoSolidario.findAndCountAll({
+        where,
+        offset,
+        limit: Number(limit),
+        order: [[`${orderBy}`, "DESC"]],
+        include: [
+          { model: Solidario, as: "Solidario", where: { estado: status } },
+        ],
+      });
 
-    totalPages: {
-      aval: Math.ceil(aval / Number(limit)),
-      vinculos: Math.ceil(vinculos / Number(limit)),
-    },
-    currentPage: Number(page),
-  };
+    const result = {
+      data: {
+        solidariosData,
+        vinculadaData,
+      },
 
-  return NextResponse.json(result, { status: 200 });
+      totalPages: {
+        aval: Math.ceil(aval / Number(limit)),
+        vinculos: Math.ceil(vinculos / Number(limit)),
+      },
+      currentPage: Number(page),
+    };
 
+    return NextResponse.json(result, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 404 });
   }
-
 }

@@ -236,11 +236,11 @@ const router = useRouter()
     const result: EmprestimoValidado = await buscarEmprestimoValidadoByEmail(
       session?.user.email
     );
-   // console.log("resultados falam", result)
+    //console.log("resultados falam", result.Proponente.Emprestimos[0])
     if (result.Proponente) {
       setDiverseData(result.Proponente.Emprestimos[0].Diversificacaos);
 
-      if (result.Proponente.Emprestimos[0] &&  result.Proponente.Emprestimos[0].Diversificacaos.length > 0) {
+      if (result.Proponente.Emprestimos[0] &&  diverseData.length > 0) {
         diverseData.forEach((data, index) => {
           multipleIncome.push({
             investidorId: data.investidor_id,
@@ -322,6 +322,7 @@ const router = useRouter()
       );
     }
   
+    
   
   return (
     <div className={styles.container}>
@@ -404,7 +405,7 @@ const router = useRouter()
                               {emprestimo.Proponente.Emprestimos[0].prestacao}
                             </span>
                             <span className="flex flex-row justify-between">
-                              <b>Valor:</b> {multipleIncome[index].content},00kz
+                              <b>Valor:</b> {multipleIncome[index] ?(multipleIncome[index].content):(emprestimo.Proponente.Emprestimos[0].valor) },00kz
                             </span>
                           </div>
                         </Link>

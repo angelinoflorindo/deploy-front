@@ -53,7 +53,7 @@ const Conteudo = () => {
       user_id: "",
     },
     Investidor: {
-      id: undefined,
+      id: "",
       maior_risco: false,
       maior_seguranca: false,
       saque_antecipado: false,
@@ -64,7 +64,7 @@ const Conteudo = () => {
       createdAt: undefined,
       updatedAt: undefined,
       User: {
-        id: undefined,
+        id: "",
         primeiro_nome: undefined,
         segundo_nome: undefined,
         password: undefined,
@@ -76,7 +76,7 @@ const Conteudo = () => {
       Diversificacaos: [],
     },
     Documentos: {
-      id: undefined,
+      id: "",
       tipo: undefined,
       titulo: undefined,
       nome_salvado: undefined,
@@ -86,7 +86,7 @@ const Conteudo = () => {
       createdAt: undefined,
       updatedAt: undefined,
       User: {
-        id: undefined,
+        id: "",
         primeiro_nome: undefined,
         segundo_nome: undefined,
         password: undefined,
@@ -97,11 +97,11 @@ const Conteudo = () => {
       },
     },
     Papel: {
-      id: undefined,
+      id: "",
       perfil: undefined,
     },
     Pessoa: {
-      id: undefined,
+      id: "",
       estado_civil: undefined,
       provincia: undefined,
       municipio: undefined,
@@ -191,26 +191,26 @@ const Conteudo = () => {
     },
   });
   const [creditoData, setCreditoData] = useState<CreditoDef>({
-    id: undefined,
-    juro: undefined,
+    id: "",
+    juro: "",
     estado: false,
-    prazo: undefined,
+    prazo: "",
     totalTaxa: "",
-    pendencia: undefined,
-    prestacao: undefined,
-    progresso: undefined,
+    pendencia: true,
+    prestacao: "",
+    progresso: "",
     totalGuardiaos: 0,
-    user_id: undefined,
-    valor: undefined,
-    devedor_id: undefined,
+    user_id: "",
+    valor: "",
+    devedor_id: "",
     updatedAt: undefined,
     createdAt: undefined,
     taxaDiversificada: undefined,
     CreditoSolidarios: [],
     Devedor: {
-      id: undefined,
+      id: "",
       User: {
-        id: undefined,
+        id: "",
         primeiro_nome: undefined,
         segundo_nome: undefined,
         password: undefined,
@@ -226,7 +226,7 @@ const Conteudo = () => {
   const { data: session, status } = useSession();
   const params = useParams();
   const id = params.id;
-  const router = useRouter()
+  const router = useRouter();
   const handleValor = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValor(e.target.value);
   };
@@ -238,18 +238,13 @@ const Conteudo = () => {
     setCreditoData(result);
   };
 
-      useEffect(() => {
-        if (!id) {
-          console.error('ID inválido');
-          router.push("/")
-          return  
-        }
-      }, [id]);
-
   useEffect(() => {
     fetchData();
-    setValor(creditoData.valor);
   }, []);
+
+  useEffect(() => {
+    setValor(creditoData.valor);
+  }, [creditoData.valor]);
 
   return (
     <div className={global.grid}>

@@ -30,13 +30,13 @@ const Conteudo = () => {
   const [creditoData, setCreditoData] = useState<CreditoUserProps>({
     bilhete: undefined,
     email: undefined,
-    id: undefined,
-    primeiro_nome: undefined,
-    segundo_nome: undefined,
+    id: "",
+    primeiro_nome: "",
+    segundo_nome: "",
     Devedor: {
-      id: undefined,
+      id: "",
       estado: undefined,
-      user_id: undefined,
+      user_id: "",
       createdAt: undefined,
       updatedAt: undefined,
       Creditos: [],
@@ -69,7 +69,6 @@ const Conteudo = () => {
   const [saldo, setSaldo] = useState(0);
   const [prestacao, setPrestacao] = useState(0);
   const [montante, setMontante] = useState(0);
-  const [limite, setLimite] = useState(0);
 
   const fetchData = async () => {
     const creditoByUser: CreditoUserProps = await buscarCreditoValidadoByEmail(
@@ -77,19 +76,20 @@ const Conteudo = () => {
     );
     const investidordata: InvestidorProps = await buscarInvestidor(id);
 
-    const limitePrestacao =
-      investidordata.Diversificacaos[0].Emprestimo.prestacao;
+    //const limitePrestacao =investidordata.Diversificacaos[0].Emprestimo.prestacao;
 
     // calcular a prestação
     const pagamentoData: PagamentosProps = await buscarPagamentoByDev(
       creditoByUser.Devedor.id
     );
 
-    let novaPrestacao = 1; // Default
-    if (pagamentoData && pagamentoData.prestacao < 3) {
-      novaPrestacao = pagamentoData.prestacao + 1;
+    
+    if (!pagamentoData || pagamentoData === undefined) {
+      setPrestacao(1);
+    } else if (pagamentoData && pagamentoData.prestacao < 3) {
+      setPrestacao(pagamentoData.prestacao + 1);
     }
-/*
+    /*
     const saldo = Math.round(
       investidordata.Diversificacaos[0].Emprestimo.valor *
         (investidordata.Diversificacaos[0].taxa / 100)
@@ -109,8 +109,6 @@ const Conteudo = () => {
 
     setMontante(montante);
     setSaldo(parcela);
-    setPrestacao(novaPrestacao);
-    setLimite(limitePrestacao);
     setUserData(investidordata);
     setCreditoData(creditoByUser);
   };
@@ -162,16 +160,31 @@ const Conteudo = () => {
           </span>
         </div>
 
-        <input type="hidden" name="investidorId" value={userData.id} />
-        <input type="hidden" name="investUserId" value={userData.User.id} />
-        <input type="hidden" name="prestacao" value={prestacao} />
+        <input type="hidden" readOnly name="investidorId" value={userData.id} />
+        <input
+          type="hidden"
+          readOnly
+          name="investUserId"
+          value={userData.User.id}
+        />
+        <input type="hidden" readOnly name="prestacao" value={prestacao} />
         <input
           type="hidden"
           name="creditoId"
-          value={creditoData.Devedor.Creditos[0].id}
+          readOnly
+          value={
+            creditoData.Devedor.Creditos[0]
+              ? creditoData.Devedor.Creditos[0].id
+              : ""
+          }
         />
-        <input type="hidden" name="devUserId" value={creditoData.id} />
-        <input type="hidden" name="devedorId" value={creditoData.Devedor.id} />
+        <input type="hidden" readOnly name="devUserId" value={creditoData.id} />
+        <input
+          type="hidden"
+          readOnly
+          name="devedorId"
+          value={creditoData.Devedor.id}
+        />
 
         <input
           type="text"

@@ -12,7 +12,7 @@ export function setCreditoAssociation() {
     foreignKey: "credito_id",
   });
   CreditoSolidario.belongsTo(Credito, { as:"Credito", foreignKey: "credito_id" });
-  Devedor.hasMany(Credito, {as:"Credito", foreignKey: "devedor_id",  });
+  Devedor.hasMany(Credito, {as:"Creditos", foreignKey: "devedor_id",  });
 
   Solidario.hasMany(CreditoSolidario, {as:"CreditoSolidarios", foreignKey: "solidario_id" });
   CreditoSolidario.belongsTo(Solidario, {as:"Solidario", foreignKey: "solidario_id" });

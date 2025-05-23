@@ -862,7 +862,7 @@ export async function calcularPrestacaoSimples(
 
 export async function aceitarSolidario(data: any) {
   const res = await fetch(
-    `${process.env.CLIENT_URL}/api/pessoa/solidario/${data.solidario}`,
+    `${process.env.CLIENT_URL}/api/pessoa/solidario/${data.solidarioId}`,
     {
       method: "PUT",
       headers: {
@@ -871,7 +871,7 @@ export async function aceitarSolidario(data: any) {
       body: JSON.stringify({
         pessoa_id: data.pessoa,
         user_id: data.user,
-        tipo: data.tipo,
+        tipo: data.operacao,
       }),
     }
   );

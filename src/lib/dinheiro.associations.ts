@@ -25,8 +25,9 @@ export function setDinheiroAssociation(): void {
   });
 
 
+
   EmprestimoSolidario.belongsTo(Emprestimo, {
-    as: "Emprestimo",
+    as: "Emprestimos",
     foreignKey: "emprestimo_id",
   });
   EmprestimoSolidario.belongsTo(Solidario, {
@@ -34,13 +35,15 @@ export function setDinheiroAssociation(): void {
     foreignKey: "solidario_id",
   });
   NegocearEmprestimo.belongsTo(Emprestimo, {
-    as: "Emprestimo",
+    as: "Emprestimos",
     foreignKey: "emprestimo_id",
   });
   Diversificacao.belongsTo(Emprestimo, {
-    as: "Emprestimo",
+    as: "Emprestimos",
     foreignKey: "emprestimo_id",
   });
+
+
 
 
 }

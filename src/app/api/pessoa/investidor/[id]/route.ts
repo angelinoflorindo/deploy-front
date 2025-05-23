@@ -1,10 +1,10 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import { sequelize } from "@/lib/sequelize";
 import Diversificacao from "@/models/Diversificacao";
 import Emprestimo from "@/models/Emprestimo";
 import Investidor from "@/models/Investidor";
-import {Pessoa} from "@/models/Pessoa";
-import {User} from "@/models/User";
+import { Pessoa } from "@/models/Pessoa";
+import { User } from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 // Buscar informações do investidor, incluido os investimentos(credito e emprestimo)
@@ -15,31 +15,31 @@ export async function GET(
   //const { searchParams } = new URL(req.url);
   const { id } = await context.params;
   const investidorId = Number(id);
+
   try {
-    await sequelize.authenticate()
-    await sequelize.sync()
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const result = await Investidor.findOne({
       where: { id: investidorId },
       include: [
         {
           model: User,
-          as:"User",
+          as: "User",
           attributes: [
             "id",
             "primeiro_nome",
             "segundo_nome",
             "email",
             "bilhete",
-            "telemovel"
+            "telemovel",
           ],
-          include: [{ model: Pessoa, as:"Pessoa"}],
+          include: [{ model: Pessoa, as: "Pessoa" }],
         },
         {
           model: Diversificacao,
-          as:"Diversificacaos",
-          where: { investidor_id: investidorId, protencao: true, estado: true },
-          include: [{ model: Emprestimo, as:"Emprestimos" }],
+          as: "Diversificacaos",
+          include: [{ model: Emprestimo, as: "Emprestimos" }],
         },
       ],
     });
@@ -63,8 +63,8 @@ export async function PUT(
   const body = await req.json();
 
   try {
-    await sequelize.authenticate()
-    await sequelize.sync()
+    await sequelize.authenticate();
+    await sequelize.sync();
 
     const result = await Investidor.update(body, { where: { id: uuid } });
     return NextResponse.json(result, { status: 200 });

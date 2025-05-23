@@ -6,10 +6,10 @@ import Footer from "@/components/footer";
 import global from "@/modules/global.module.css";
 import Image from "next/image";
 import Link from "next/link";
-import { UserInfo, UserProps } from "@/services/user.service";
+import { UserInfo } from "@/services/user.service";
 import { buscarCreditoValidadoByEmail, buscarUser } from "@/app/actions/auth";
 import { CreditoProps, CreditoUserProps } from "@/services/Credito.service";
-import { redirect, useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 const Credito = () => {
@@ -190,7 +190,9 @@ const Credito = () => {
       updatedAt: undefined,
     },
   });
-  let credito = new Array<CreditoProps>();
+  const [credito, setCredito] = useState<CreditoProps[]>([])
+
+  //let credito = new Array<CreditoProps>();
 
   const router = useRouter();
 
@@ -199,9 +201,12 @@ const Credito = () => {
     const credit: CreditoUserProps = await buscarCreditoValidadoByEmail(
       session?.user.email
     );
+    //console.log()
     setUser(user);
+      //console.log('creditos', credit.Devedor.Creditos)
+
     if (credit && credit.Devedor && credit.Devedor.Creditos) {
-      credito = credit.Devedor.Creditos;
+      setCredito(credit.Devedor.Creditos)
     }
   };
 
@@ -268,6 +273,7 @@ const Credito = () => {
       </div>
     );
   }
+
 
   return (
     <div className={styles.container}>

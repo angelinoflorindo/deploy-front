@@ -272,12 +272,12 @@ const Conteudo = () => {
     }
   }, []);
 
-  console.log("resultados", negoData)
   const onAccept = async () => {
     const info = {
-      solidario: formData.pessoa_id,
+      solidarioId: formData.id,
+      pessoa:formData.pessoa_id,
       user: formData.user_id,
-      tipo: formData.tipo,
+      operacao: formData.tipo, // crédito ou empréstimo
     };
     await aceitarSolidario(info);
 

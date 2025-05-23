@@ -17,6 +17,8 @@ export async function GET(req: NextRequest) {
   const email = searchParams.get("email");
 
   try {
+    await sequelize.authenticate()
+    await sequelize.sync()
 
     const result = await User.findOne({
       where: { email: email },
@@ -31,12 +33,14 @@ export async function GET(req: NextRequest) {
       include: [
         {
           model: Devedor,
+          as:"Devedor",
           include: [
             {
               model: Credito,
+              as:"Creditos",
               where: { estado: true, progresso: "CONCLUIDO", pendencia: false },
               include: [
-                { model: Credora, where: { estado: true, corrente: true } },
+                { model: Credora, as:"Credoras", where: { estado: true, corrente: true } },
               ],
             },
           ],
@@ -64,6 +68,8 @@ export async function POST(req: NextRequest) {
   const income: any = {};
 
   try {
+    await sequelize.authenticate()
+    await sequelize.sync()
 
     const carteira = await Carteira.findOne({ where: { user_id: userId } }); // carteira do  investidor
 
